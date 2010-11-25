@@ -8,21 +8,33 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-public class SksImporterTest {
-    public static File SHAKCompleate = new File("./src/test/resources/testdata/sks/SHAKCOMPLETE.TXT");
-    public static File wrong = new File("./src/test/resources/testdata/sks/SHAKCOMPLETE.XML");
+import com.trifork.sdm.importer.TestHelper;
 
-    @Test
-    public void testAreRequiredInputFilesPresent() {
-        SksImporter importer = new SksImporter();
-        ArrayList<File> files = new ArrayList<File>();
-        assertFalse(importer.areRequiredInputFilesPresent(files));
-        files.add(SHAKCompleate);
-        assertTrue(importer.areRequiredInputFilesPresent(files));
-        files.remove(SHAKCompleate);
-        files.add(wrong);
-        assertFalse(importer.areRequiredInputFilesPresent(files));
-    }
+
+public class SksImporterTest {
+
+	public static File SHAKComplete = TestHelper.getFile("testdata/sks/SHAKCOMPLETE.TXT");
+
+	// This field does not use the TestHelper because the file does not exist,
+	// and the test helper would fail.
+	public static File wrong = new File("testdata/sks/SHAKCOMPLETE.XML");
+
+
+	@Test
+	public void testAreRequiredInputFilesPresent() {
+
+		SksImporter importer = new SksImporter();
+
+		ArrayList<File> files = new ArrayList<File>();
+
+		assertFalse(importer.areRequiredInputFilesPresent(files));
+		files.add(SHAKComplete);
+		assertTrue(importer.areRequiredInputFilesPresent(files));
+
+		files.remove(SHAKComplete);
+		files.add(wrong);
+		assertFalse(importer.areRequiredInputFilesPresent(files));
+	}
 
 
 }

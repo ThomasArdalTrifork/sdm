@@ -21,28 +21,28 @@ import com.trifork.sdm.persistence.annotations.Output;
 import com.trifork.sdm.util.DateUtils;
 
 
-public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
-{
+public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
+
 	@Before
-	public void setupTable() throws SQLException
-	{
+	public void setupTable() throws SQLException {
+
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
-		
-		try
-		{
+
+		try {
 			stmt.executeUpdate("drop table SDE");
 		}
-		catch (Exception e)
-		{
-		}
+		catch (Exception e) {}
 
-		try
-		{
-			con.createStatement().executeUpdate("create table SDE( " + "id VARCHAR(20) NOT NULL, " + "data VARCHAR(20)," + "date DATETIME," + "				 ModifiedBy VARCHAR(200) NOT NULL," + "				 ModifiedDate DATETIME NOT NULL," + "				 ValidFrom DATETIME ," + "				 ValidTo DATETIME," + "				 CreatedBy VARCHAR(200)," + "				 CreatedDate DATETIME);");
+		try {
+			con.createStatement().executeUpdate(
+					"create table SDE( " + "id VARCHAR(20) NOT NULL, " + "data VARCHAR(20),"
+							+ "date DATETIME," + "				 ModifiedBy VARCHAR(200) NOT NULL,"
+							+ "				 ModifiedDate DATETIME NOT NULL," + "				 ValidFrom DATETIME ,"
+							+ "				 ValidTo DATETIME," + "				 CreatedBy VARCHAR(200),"
+							+ "				 CreatedDate DATETIME);");
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			// it probably already existed
 		}
 		stmt.close();
@@ -51,8 +51,8 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 
 
 	@Test
-	public void testPersistCompleteDataset() throws Exception
-	{
+	public void testPersistCompleteDataset() throws Exception {
+
 		CompleteDataset<SDE> dataset = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		dataset.addEntity(new SDE(t0, DateUtils.FUTURE));
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
@@ -68,8 +68,8 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 
 
 	@Test
-	public void testPersistCompleteDatasetX2() throws Exception
-	{
+	public void testPersistCompleteDatasetX2() throws Exception {
+
 		CompleteDataset<SDE> dataset = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		dataset.addEntity(new SDE(t0, DateUtils.FUTURE));
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
@@ -86,8 +86,8 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 
 
 	@Test
-	public void testPersistCompleteDatasetChangedStringSameValidity() throws Exception
-	{
+	public void testPersistCompleteDatasetChangedStringSameValidity() throws Exception {
+
 		CompleteDataset<SDE> dataset1 = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		CompleteDataset<SDE> dataset2 = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		dataset1.addEntity(new SDE(t0, DateUtils.FUTURE, "1", "a"));
@@ -107,8 +107,8 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 
 
 	@Test
-	public void testPersistCompleteDatasetChangedDateSameValidity() throws Exception
-	{
+	public void testPersistCompleteDatasetChangedDateSameValidity() throws Exception {
+
 		CompleteDataset<SDE> dataset1 = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		CompleteDataset<SDE> dataset2 = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		dataset1.addEntity(new SDE(t0, DateUtils.FUTURE, "1", "a", t3.getTime()));
@@ -128,8 +128,8 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 
 
 	@Test
-	public void testPersistCompleteDatasetChangedDataNewValidFrom() throws Exception
-	{
+	public void testPersistCompleteDatasetChangedDataNewValidFrom() throws Exception {
+
 		CompleteDataset<SDE> dataset1 = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		CompleteDataset<SDE> dataset2 = new CompleteDataset<SDE>(SDE.class, t1, t2);
 		dataset1.addEntity(new SDE(t0, DateUtils.FUTURE, "1", "a"));
@@ -154,8 +154,8 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 
 
 	@Test
-	public void testPersistCompleteDatasetChangedDataNewValidToNoDataChange() throws Exception
-	{
+	public void testPersistCompleteDatasetChangedDataNewValidToNoDataChange() throws Exception {
+
 		CompleteDataset<SDE> dataset1 = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		CompleteDataset<SDE> dataset2 = new CompleteDataset<SDE>(SDE.class, t1, t2);
 		CompleteDataset<SDE> dataset3 = new CompleteDataset<SDE>(SDE.class, t2, t1000);
@@ -196,23 +196,23 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 
 
 	@Output
-	private static class SDE implements Entity
-	{
+	private static class SDE implements Entity {
+
 		Calendar validfrom, validto;
 		String id = "1"; // default value
 		String data = "a"; // default value
 		Date date = DateUtils.toCalendar(2001, 1, 1, 1, 2, 3).getTime();
 
 
-		public SDE(Calendar validFrom, Calendar validTo)
-		{
+		public SDE(Calendar validFrom, Calendar validTo) {
+
 			this.validfrom = validFrom;
 			this.validto = validTo;
 		}
 
 
-		public SDE(Calendar validFrom, Calendar validTo, String id, String data)
-		{
+		public SDE(Calendar validFrom, Calendar validTo, String id, String data) {
+
 			this.validfrom = validFrom;
 			this.validto = validTo;
 			this.data = data;
@@ -220,8 +220,8 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		}
 
 
-		public SDE(Calendar validFrom, Calendar validTo, String id, String data, Date date)
-		{
+		public SDE(Calendar validFrom, Calendar validTo, String id, String data, Date date) {
+
 			this.validfrom = validFrom;
 			this.validto = validTo;
 			this.data = data;
@@ -230,46 +230,46 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		}
 
 
-		public Calendar getValidFrom()
-		{
+		public Calendar getValidFrom() {
+
 			// TODO Auto-generated method stub
 			return validfrom;
 		}
 
 
-		public Calendar getValidTo()
-		{
+		public Calendar getValidTo() {
+
 			// TODO Auto-generated method stub
 			return validto;
 		}
 
 
-		public Map<String, Object> serialize()
-		{
+		public Map<String, Object> serialize() {
+
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 
 		@Output
-		public String getData()
-		{
+		public String getData() {
+
 			return data;
 		}
 
 
 		@Id
 		@Output(name = "id")
-		public Object getEntityId()
-		{
+		public Object getEntityId() {
+
 			// TODO Auto-generated method stub
 			return id;
 		}
 
 
 		@Output
-		public Date getDate()
-		{
+		public Date getDate() {
+
 			return date;
 		}
 	}

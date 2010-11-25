@@ -1,5 +1,15 @@
 package com.trifork.sdm.importer.persistence.mysql;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,40 +26,34 @@ import com.trifork.sdm.models.takst.Takst;
 import com.trifork.sdm.models.takst.TakstDataset;
 import com.trifork.sdm.util.DateUtils;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
 
-
-public class MySQLStamDAOTest
-{
+public class MySQLStamDAOTest {
 
 	private Takst takst;
 	private Laegemiddel laegemiddel;
 	private MySQLTemporalDao dao;
-	
+
 	private MySQLTemporalTable laegemiddeltableMock;
 
 
 	@Before
-	public void setUp() throws Exception
-	{
+	public void setUp() throws Exception {
+
 		takst = new Takst(DateUtils.toCalendar(2009, 7, 1), DateUtils.toCalendar(2009, 7, 14));
-		
+
 		// Add a dataset to the takst with one member
-		
+
 		List<Laegemiddel> list = new ArrayList<Laegemiddel>();
-		
+
 		laegemiddel = new Laegemiddel();
 		laegemiddel.setDrugid(1l);
 		laegemiddel.setNavn("Zymedolinatexafylitungebraekker");
-		
+
 		list.add(laegemiddel);
-		
+
 		TakstDataset<Laegemiddel> dataset = new TakstDataset<Laegemiddel>(takst, list,
 				Laegemiddel.class);
-		
+
 		takst.addDataset(dataset);
 
 		/*
@@ -67,24 +71,24 @@ public class MySQLStamDAOTest
 				DivEnheder.class);
 		takst.addDataset(hiddenDataset);
 
-		
+
 		// Setup database mocking.
-		
+
 		Connection con = mock(Connection.class);
-		
+
 		MySQLTemporalDao realDao = new MySQLTemporalDao(con);
-		
+
 		dao = spy(realDao);
-		
+
 		laegemiddeltableMock = mock(MySQLTemporalTable.class);
-		
+
 		doReturn(laegemiddeltableMock).when(dao).getTable(Laegemiddel.class);
 	}
 
 
 	@Test
-	public void testPersistOneLaegemiddel() throws Exception
-	{
+	public void testPersistOneLaegemiddel() throws Exception {
+
 		when(
 				laegemiddeltableMock.fetchEntityVersions(anyObject(), any(Calendar.class),
 						any(Calendar.class))).thenReturn(false);
@@ -98,8 +102,8 @@ public class MySQLStamDAOTest
 
 
 	@Test
-	public void testDeltaPutChanged() throws Exception
-	{
+	public void testDeltaPutChanged() throws Exception {
+
 		// Simulate that the entity is already present.
 		when(
 				laegemiddeltableMock.fetchEntityVersions(anyObject(), any(Calendar.class),
@@ -112,8 +116,7 @@ public class MySQLStamDAOTest
 		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(DateUtils.FUTURE);
 
 		// Simulate that the entity has changed.
-		when(laegemiddeltableMock.dataInCurrentRowEquals(any(Entity.class))).thenReturn(
-				false);
+		when(laegemiddeltableMock.dataInCurrentRowEquals(any(Entity.class))).thenReturn(false);
 
 		dao.persistCompleteDatasets(takst.getDatasets());
 
@@ -128,8 +131,8 @@ public class MySQLStamDAOTest
 
 
 	@Test
-	public void testDeltaPutUnchanged() throws Exception
-	{
+	public void testDeltaPutUnchanged() throws Exception {
+
 		// Simulate that the entity is already present.
 		when(
 				laegemiddeltableMock.fetchEntityVersions(anyObject(), any(Calendar.class),
@@ -141,8 +144,7 @@ public class MySQLStamDAOTest
 		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(DateUtils.FUTURE);
 
 		// Simulate that the entity is unchanged.
-		when(laegemiddeltableMock.dataInCurrentRowEquals(any(Entity.class))).thenReturn(
-				true);
+		when(laegemiddeltableMock.dataInCurrentRowEquals(any(Entity.class))).thenReturn(true);
 
 		dao.persistCompleteDatasets(takst.getDatasets());
 
@@ -156,8 +158,8 @@ public class MySQLStamDAOTest
 
 
 	@Test
-	public void testDeltaPutRemoved() throws Exception
-	{
+	public void testDeltaPutRemoved() throws Exception {
+
 		// An empty takst
 		takst = new Takst(DateUtils.toCalendar(2009, 7, 1), DateUtils.toCalendar(2009, 7, 14));
 		// ..with an empty dataset

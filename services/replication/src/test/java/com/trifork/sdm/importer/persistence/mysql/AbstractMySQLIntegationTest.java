@@ -8,9 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 
+public class AbstractMySQLIntegationTest {
 
-public class AbstractMySQLIntegationTest
-{
 	protected Calendar t0 = Calendar.getInstance();
 	protected Calendar t1 = Calendar.getInstance();
 	protected Calendar t2 = Calendar.getInstance();
@@ -20,8 +19,8 @@ public class AbstractMySQLIntegationTest
 
 
 	@Before
-	public void setup() throws Exception
-	{
+	public void setup() throws Exception {
+
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
 		stmt.executeUpdate("truncate table TakstVersion");
@@ -31,8 +30,8 @@ public class AbstractMySQLIntegationTest
 
 
 	@Before
-	public void initDates()
-	{
+	public void initDates() {
+
 		t0.clear();
 		t1.clear();
 		t2.clear();
@@ -49,8 +48,8 @@ public class AbstractMySQLIntegationTest
 
 
 	@Test
-	public void dummyTest()
-	{
+	public void dummyTest() {
+
 	}
 
 }

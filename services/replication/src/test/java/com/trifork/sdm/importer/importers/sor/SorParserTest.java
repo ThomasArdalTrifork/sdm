@@ -9,6 +9,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 
+import com.trifork.sdm.importer.TestHelper;
 import com.trifork.sdm.importer.importers.sor.xml.SpecialityMapper;
 import com.trifork.sdm.importer.importers.sor.xml.UnitTypeMapper;
 import com.trifork.sdm.models.AbstractEntity;
@@ -18,34 +19,38 @@ import com.trifork.sdm.models.sor.Sygehus;
 import com.trifork.sdm.models.sor.SygehusAfdeling;
 import com.trifork.sdm.models.sor.Yder;
 
+
 public class SorParserTest {
-	public static File onePraksis = new File("./src/test/resources/testdata/sor/ONE_PRAKSIS.xml");
-	public static File oneSygehus = new File("./src/test/resources/testdata/sor/ONE_SYGEHUS.xml");
-	public static File oneApotek = new File("./src/test/resources/testdata/sor/ONE_APOTEK.xml");
-	public static File fullSor = new File("./src/test/resources/testdata/sor/SOR_FULL.xml");
-	public static File fullSor2 = new File("./src/test/resources/testdata/sor/SOR_FULL2.xml");
-	   
+
+	public static File onePraksis = TestHelper.getFile("testdata/sor/ONE_PRAKSIS.xml");
+	public static File oneSygehus = TestHelper.getFile("testdata/sor/ONE_SYGEHUS.xml");
+	public static File oneApotek = TestHelper.getFile("testdata/sor/ONE_APOTEK.xml");
+	public static File fullSor = TestHelper.getFile("testdata/sor/SOR_FULL.xml");
+	public static File fullSor2 = TestHelper.getFile("testdata/sor/SOR_FULL2.xml");
+
+
 	@Test
 	public void testSinglePraksis() throws Exception {
+
 		SORDataSets dataSets = SORParser.parse(onePraksis);
-		
+
 		Collection<Praksis> praksis = dataSets.getPraksisDS().getEntities();
 		Collection<Yder> yder = dataSets.getYderDS().getEntities();
-		
-		assertEquals(1, praksis.size()); 
+
+		assertEquals(1, praksis.size());
 		assertEquals(1, yder.size());
-		
+
 		Praksis p = praksis.iterator().next();
-		
+
 		assertEquals("Michael Filtenborg & co", p.getNavn());
 		assertEquals(new Long(8331000016009L), p.getSorNummer());
 		assertEquals(new Long(1084L), p.getRegionCode());
 		assertEquals(SOREventHandler.toCalendar("1999-03-25"), p.getValidFrom());
 		assertEquals(AbstractEntity.FUTURE, p.getValidTo());
 		assertEquals(new Long(5790000141227L), p.getEanLokationsnummer());
-		
+
 		Yder y = yder.iterator().next();
-		
+
 		assertEquals("19062", y.getNummer());
 		assertEquals(new Long(8341000016002L), y.getSorNummer());
 		assertEquals(new Long(8331000016009L), y.getPraksisSorNummer());
@@ -57,24 +62,26 @@ public class SorParserTest {
 		assertEquals("48300204", y.getTelefon());
 		assertEquals(new Long(5790000141227L), y.getEanLokationsnummer());
 
-		assertEquals(new Long(408443003L) ,y.getHovedSpecialeKode());
-		assertEquals(SpecialityMapper.kodeToString(408443003L),y.getHovedSpecialeTekst());
+		assertEquals(new Long(408443003L), y.getHovedSpecialeKode());
+		assertEquals(SpecialityMapper.kodeToString(408443003L), y.getHovedSpecialeTekst());
 
 		assertEquals(SOREventHandler.toCalendar("1999-03-25"), y.getValidFrom());
 		assertEquals(AbstractEntity.FUTURE, y.getValidTo());
 	}
 
+
 	@Test
 	public void testSingleSygehus() throws Exception {
+
 		SORDataSets dataSets = SORParser.parse(oneSygehus);
-		
+
 		Collection<Sygehus> sygehus = dataSets.getSygehusDS().getEntities();
 		Collection<SygehusAfdeling> afdeling = dataSets.getSygehusAfdelingDS().getEntities();
-		
+
 		assertEquals(1, sygehus.size());
-		
+
 		Sygehus s = sygehus.iterator().next();
-		
+
 		assertNull(s.getEanLokationsnummer());
 		assertEquals("2529", s.getNummer());
 		assertEquals(new Long(347811000016004L), s.getSorNummer());
@@ -86,12 +93,12 @@ public class SorParserTest {
 		assertEquals("46361266", s.getTelefon());
 		assertEquals("www.roskildeojenklinik.dk", s.getWww());
 		assertEquals("J.Thulesen@dadlnet.dk", s.getEmail());
-		
+
 		assertEquals(SOREventHandler.toCalendar("2009-10-08"), s.getValidFrom());
 		assertEquals(AbstractEntity.FUTURE, s.getValidTo());
 
 		assertEquals(2, afdeling.size());
-		
+
 		SygehusAfdeling sa = dataSets.getSygehusAfdelingDS().getEntityById(347821000016008L);
 		assertNotNull(sa);
 		assertNull(sa.getEanLokationsnummer());
@@ -100,7 +107,7 @@ public class SorParserTest {
 		assertEquals(new Long(347811000016004L), sa.getSygehusSorNummer());
 		assertNull(sa.getOverAfdelingSorNummer());
 		assertEquals(new Long(347811000016004L), sa.getUnderlagtSygehusSorNummer());
-		
+
 		assertEquals("Roskilde Øjenklinik, afdeling", sa.getNavn());
 		assertEquals("Hestetorvet 8", sa.getVejnavn());
 		assertEquals("4000", sa.getPostnummer());
@@ -108,21 +115,22 @@ public class SorParserTest {
 		assertEquals("46361266", sa.getTelefon());
 		assertEquals("www.roskildeojenklinik.dk", sa.getWww());
 		assertEquals("J.Thulesen@dadlnet.dk", sa.getEmail());
-		
-		assertEquals(new Long(550811000005108L) , sa.getAfdelingTypeKode());
-		assertEquals(UnitTypeMapper.kodeToString(new Long(550811000005108L)) , sa.getAfdelingTypeTekst());
+
+		assertEquals(new Long(550811000005108L), sa.getAfdelingTypeKode());
+		assertEquals(UnitTypeMapper.kodeToString(new Long(550811000005108L)),
+				sa.getAfdelingTypeTekst());
 		assertEquals(SOREventHandler.toCalendar("2009-10-07"), sa.getValidFrom());
 		assertEquals(AbstractEntity.FUTURE, sa.getValidTo());
 
 		sa = dataSets.getSygehusAfdelingDS().getEntityById(347831000016005L);
-		assertNotNull(sa);		
+		assertNotNull(sa);
 		assertNull(sa.getEanLokationsnummer());
 		assertEquals("2529010", sa.getNummer());
 		assertEquals(new Long(347831000016005L), sa.getSorNummer());
 		assertNull(sa.getSygehusSorNummer());
 		assertEquals(new Long(347821000016008L), sa.getOverAfdelingSorNummer());
 		assertEquals(new Long(347811000016004L), sa.getUnderlagtSygehusSorNummer());
-		
+
 		assertEquals("Roskilde Øjenklinik, beh. afsnit", sa.getNavn());
 		assertEquals("Hestetorvet 8", sa.getVejnavn());
 		assertEquals("4000", sa.getPostnummer());
@@ -130,30 +138,33 @@ public class SorParserTest {
 		assertEquals("46361266", sa.getTelefon());
 		assertEquals("www.roskildeojenklinik.dk", sa.getWww());
 		assertEquals("J.Thulesen@dadlnet.dk", sa.getEmail());
-		
-		assertEquals(new Long(550851000005109L) , sa.getAfdelingTypeKode());
-		assertEquals(UnitTypeMapper.kodeToString(new Long(550851000005109L)) , sa.getAfdelingTypeTekst());
-		assertEquals(new Long(394594003L) ,sa.getHovedSpecialeKode());
-		assertEquals(SpecialityMapper.kodeToString(394594003L),sa.getHovedSpecialeTekst());
+
+		assertEquals(new Long(550851000005109L), sa.getAfdelingTypeKode());
+		assertEquals(UnitTypeMapper.kodeToString(new Long(550851000005109L)),
+				sa.getAfdelingTypeTekst());
+		assertEquals(new Long(394594003L), sa.getHovedSpecialeKode());
+		assertEquals(SpecialityMapper.kodeToString(394594003L), sa.getHovedSpecialeTekst());
 
 		assertEquals(SOREventHandler.toCalendar("2009-10-08"), sa.getValidFrom());
 		assertEquals(AbstractEntity.FUTURE, sa.getValidTo());
 	}
-	
+
+
 	@Test
 	public void testSingleApotek() throws Exception {
+
 		SORDataSets dataSets = SORParser.parse(oneApotek);
-		
+
 		Collection<Apotek> apotek = dataSets.getApotekDS().getEntities();
-		
+
 		assertEquals(1, apotek.size());
-		
-		
+
+
 		Apotek a = apotek.iterator().next();
 		assertEquals(new Long(5790000173624L), a.getEanLokationsnummer());
 		assertEquals(new Long(362L), a.getApotekNummer());
 		assertEquals(new Long(1L), a.getFilialNummer());
-		
+
 		assertEquals("Værløse Apotek", a.getNavn());
 		assertEquals("Bymidten 13", a.getVejnavn());
 		assertEquals("3500", a.getPostnummer());
@@ -161,41 +172,42 @@ public class SorParserTest {
 		assertEquals("42482209", a.getTelefon());
 		assertNull(a.getWww());
 		assertNull(a.getEmail());
-		
+
 		assertEquals(SOREventHandler.toCalendar("1995-02-20"), a.getValidFrom());
 		assertEquals(AbstractEntity.FUTURE, a.getValidTo());
 	}
-	
+
 
 	@Test
 	public void testFullTest() throws Exception {
+
 		SORDataSets dataSets = SORParser.parse(fullSor);
-		
+
 		Collection<Praksis> praksis = dataSets.getPraksisDS().getEntities();
 		Collection<Yder> yder = dataSets.getYderDS().getEntities();
 		Collection<Sygehus> sygehus = dataSets.getSygehusDS().getEntities();
 		Collection<SygehusAfdeling> sygehusAfdeling = dataSets.getSygehusAfdelingDS().getEntities();
 		Collection<Apotek> apotek = dataSets.getApotekDS().getEntities();
 
-		assertEquals(3148, praksis.size()); 
-		assertEquals(5434, yder.size()); 
-		assertEquals(469, sygehus.size()); 
-		assertEquals(2890, sygehusAfdeling.size()); 
-		assertEquals(328, apotek.size()); 
-		
+		assertEquals(3148, praksis.size());
+		assertEquals(5434, yder.size());
+		assertEquals(469, sygehus.size());
+		assertEquals(2890, sygehusAfdeling.size());
+		assertEquals(328, apotek.size());
+
 		dataSets = SORParser.parse(fullSor2);
-		
+
 		praksis = dataSets.getPraksisDS().getEntities();
 		yder = dataSets.getYderDS().getEntities();
 		sygehus = dataSets.getSygehusDS().getEntities();
 		sygehusAfdeling = dataSets.getSygehusAfdelingDS().getEntities();
 		apotek = dataSets.getApotekDS().getEntities();
 
-		assertEquals(3159, praksis.size()); 
-		assertEquals(5456, yder.size()); 
-		assertEquals(475, sygehus.size()); 
-		assertEquals(2922, sygehusAfdeling.size()); 
-		assertEquals(329, apotek.size()); 
-		
+		assertEquals(3159, praksis.size());
+		assertEquals(5456, yder.size());
+		assertEquals(475, sygehus.size());
+		assertEquals(2922, sygehusAfdeling.size());
+		assertEquals(329, apotek.size());
+
 	}
 }

@@ -14,8 +14,8 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 
-public class Configuration
-{
+public class Configuration {
+
 	private static Logger logger = Logger.getLogger(Configuration.class.getName());
 
 	private static Configuration defaultInstance = new Configuration();
@@ -23,59 +23,57 @@ public class Configuration
 	private List<Properties> properties = new ArrayList<Properties>();
 
 
-	private void loadPropertyFile(String path, Map<String, InputStream> fileList)
-	{
-		InputStream in = getClass().getResourceAsStream(path);
+	private void loadPropertyFile(String path, Map<String, InputStream> fileList) {
 
-		if (in != null)
-		{
+		InputStream in = Configuration.class.getClassLoader().getResourceAsStream(path);
+
+		if (in != null) {
+			
 			fileList.put(path, in);
 		}
-		else
-		{
+		else {
+			
 			logger.warning(String.format("Could not find property file '%s'.", path));
+			
+			// FIXME (thb): We should fail with a bang here!
 		}
 	}
 
 
-	public Configuration()
-	{
+	public Configuration() {
+
 		Map<String, InputStream> propFiles = new HashMap<String, InputStream>();
 
-		loadPropertyFile("/config.properties", propFiles);
-		loadPropertyFile("/spooler.config.properties", propFiles);
+		loadPropertyFile("config.properties", propFiles);
+		loadPropertyFile("spooler.config.properties", propFiles);
 
-		for (Map.Entry<String, InputStream> propFile : propFiles.entrySet())
-		{
+		for (Map.Entry<String, InputStream> propFile : propFiles.entrySet()) {
+			
 			logger.info("Property file '" + propFile.getKey() + "':");
 
 			Properties properties = new Properties();
 
-			try
-			{
+			try {
+				
 				properties.load(propFile.getValue());
-
 				this.properties.add(properties);
 			}
-			catch (IOException e)
-			{
-				logger.warning(propFile.getKey() + " not found or read");
+			catch (IOException e) {
+				
+				logger.warning(propFile.getKey() + " not found or read.");
 			}
 
 			// Print out the properties.
 
-			for (String propertyKey : properties.stringPropertyNames())
-			{
+			for (String propertyKey : properties.stringPropertyNames()) {
 				String value;
 
 				// Mask the passwords.
 
-				if (propertyKey.indexOf("pwd") > -1 || propertyKey.indexOf("pasword") > -1)
-				{
+				if (propertyKey.indexOf("pwd") > -1 || propertyKey.indexOf("password") > -1) {
 					value = "********";
 				}
-				else
-				{
+				else {
 					value = getProperty(propertyKey);
 				}
 
@@ -85,26 +83,23 @@ public class Configuration
 	}
 
 
-	public Configuration(String file)
-	{
-		try
-		{
+	public Configuration(String file) {
+
+		try {
 			Properties properties = new Properties();
 			properties.load(new FileInputStream("/" + file));
 
 			this.properties.add(properties);
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 
-	public String getNotNullProperty(String key)
-	{
-		for (Properties properties : this.properties)
-		{
+	public String getNotNullProperty(String key) {
+
+		for (Properties properties : this.properties) {
 			String result = properties.getProperty(key);
 
 			if (result != null && result.length() > 0) return result;
@@ -114,42 +109,39 @@ public class Configuration
 	}
 
 
-	public int getIntProperty(String key)
-	{
+	public int getIntProperty(String key) {
+
 		return Integer.parseInt(getNotNullProperty(key));
 	}
 
 
-	public Date getDateProperty(String key)
-	{
+	public Date getDateProperty(String key) {
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		try
-		{
+		try {
 			return sdf.parse(getNotNullProperty(key));
 		}
-		catch (ParseException e)
-		{
+		catch (ParseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 
-	public static String getString(String key)
-	{
+	public static String getString(String key) {
+
 		return defaultInstance.getProperty(key);
 	}
 
 
-	public static Integer getInt(String key)
-	{
+	public static Integer getInt(String key) {
+
 		return Integer.parseInt(defaultInstance.getProperty(key));
 	}
 
 
-	private String getProperty(String key)
-	{
-		for (Properties properties : this.properties)
-		{
+	private String getProperty(String key) {
+
+		for (Properties properties : this.properties) {
 			String result = properties.getProperty(key);
 			if (result != null) return result;
 		}
@@ -158,8 +150,8 @@ public class Configuration
 	}
 
 
-	public static void setDefaultInstance(Configuration conf)
-	{
+	public static void setDefaultInstance(Configuration conf) {
+
 		// Only for unit tests
 		defaultInstance = conf;
 	}

@@ -7,15 +7,16 @@ import java.util.Calendar;
 import static org.junit.Assert.assertEquals;
 
 
-public class TestImportTimeManager
-{
+public class TestImportTimeManager {
+
 	@Test
-	public void test()
-	{
+	public void test() {
+
 		Calendar now = Calendar.getInstance();
 		now.set(Calendar.MILLISECOND, 0);
 
 		ImportTimeManager.setImportTime("testSpooler", now);
-		assertEquals(now.getTimeInMillis(), ImportTimeManager.getLastImportTime("testSpooler").getTimeInMillis());
+		assertEquals(now.getTimeInMillis(), ImportTimeManager.getLastImportTime("testSpooler")
+				.getTimeInMillis());
 	}
 }

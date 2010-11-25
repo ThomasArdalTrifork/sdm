@@ -1,15 +1,37 @@
+import org.apache.tools.ant.filters.*
+
 apply plugin: 'war'
 apply plugin: 'jetty'
 
 dependencies {
 	compile project(':api')
-	
+
 	compile group: 'cron4j', name: 'cron4j', version: '2.2.3'
 	compile group: 'log4j', name: 'log4j', version: '1.2.16'
 	compile group: 'commons-io', name: 'commons-io', version: '2.0'
 	compile group: 'joda-time', name: 'joda-time', version: '1.6.2'
 	compile group: 'javax.servlet', name: 'servlet-api', version: '2.4'
-	compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.13'
+	runtime group: 'mysql', name: 'mysql-connector-java', version: '5.1.13'
 	
 	testCompile group: 'org.mockito', name: 'mockito-core', version: '1.8.5'
+}
+
+afterEvaluate {
+	configure(allProcessResourcesTasks()) {
+		// TODO (thb): Don't write out every property here. Send all project properties.
+		filter(ReplaceTokens, tokens: [
+			dbURL:dbURL,
+			dbDriver: dbDriver,
+			dbSchema: dbSchema,
+			dbUsername: dbUsername,
+			dbPassword: dbPassword,
+		])
+		println "Moo"
+    }
+}
+
+def allProcessResourcesTasks() {
+	sourceSets.all.processResourcesTaskName.collect {
+		tasks[it]
+	}
 }

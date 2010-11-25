@@ -10,37 +10,36 @@ import com.trifork.sdm.importer.jobs.Job;
 
 
 /**
- * FileSpoolerTest. Tests that setup of files and filesets are handled correct.
+ * FileSpoolerTest. Tests that setup of files and file sets are handled correct.
  * 
  * @author Jan Buchholdt
  */
+public class JobSpoolerSetupTest implements Job {
 
-public class JobSpoolerSetupTest implements Job
-{
 	@Before
-	public void setupTest() throws Exception
-	{
+	public void setupTest() throws Exception {
+
 	}
 
 
 	@After
-	public void cleanUpTest() throws Exception
-	{
+	public void cleanUpTest() throws Exception {
+
 	}
 
 
 	@Test
-	public void runSetupTest() throws Exception
-	{
+	public void runSetupTest() throws Exception {
+
 		JobSpoolerSetup setup = new JobSpoolerSetup("testjobspooler");
-		
+
 		Assert.assertEquals(this.getClass().getName(), setup.getJobExecutorClass().getName());
 		Assert.assertEquals("* 1 * * *", setup.getSchedule());
 	}
 
 
-	public void run()
-	{
+	public void run() {
+
 		// Do nothing.
 	}
 }

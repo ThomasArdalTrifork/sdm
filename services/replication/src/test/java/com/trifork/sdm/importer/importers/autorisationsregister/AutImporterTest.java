@@ -17,38 +17,64 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.trifork.sdm.importer.TestHelper;
 import com.trifork.sdm.importer.importers.autorisationsregisteret.AutImporter;
 import com.trifork.sdm.importer.importers.autorisationsregisteret.AutorisationsregisterParser;
 import com.trifork.sdm.importer.persistence.mysql.MySQLTemporalDao;
 import com.trifork.sdm.persistence.CompleteDataset;
 
+
 public class AutImporterTest {
-	public static File valid = new File("./src/test/resources/testdata/aut/valid/20090915AutDK.csv");
+
+	public static File valid = TestHelper.getFile("testdata/aut/valid/20090915AutDK.csv");
 	private AutImporter importer;
 
+
 	@Before
-	public void Setup(){
+	public void Setup() {
+
 		importer = new AutImporter();
 	}
-	
-	@Test
-	public void testAreRequiredInputFilesPresent() throws IOException{
-		List<File> files = new ArrayList<File>();
-		assertFalse(importer.areRequiredInputFilesPresent(files)); // empty set
-		files.add(new File("blabla.nowayamigo"));
-		assertFalse(importer.areRequiredInputFilesPresent(files)); // wrong file name and empty file
-		files.add(valid);
-		assertFalse(importer.areRequiredInputFilesPresent(files)); // one bad and one good file.
-		files = new ArrayList<File>();
-		files.add(valid);
-		assertTrue(importer.areRequiredInputFilesPresent(files)); // one good file
-		files.add(valid);
-		assertTrue(importer.areRequiredInputFilesPresent(files)); // two good files
-	}
-	AutorisationsregisterParser parser = new AutorisationsregisterParser();
+
 
 	@Test
-	public void testImport() throws Exception{
+	public void testAreRequiredInputFilesPresent() throws IOException {
+
+		List<File> files = new ArrayList<File>();
+
+		// empty set
+
+		assertFalse(importer.areRequiredInputFilesPresent(files));
+		files.add(new File("blabla.nowayamigo"));
+
+		// wrong file name and empty file.
+
+		assertFalse(importer.areRequiredInputFilesPresent(files));
+		files.add(valid);
+
+		// one bad and one good file.
+
+		assertFalse(importer.areRequiredInputFilesPresent(files));
+		files = new ArrayList<File>();
+		files.add(valid);
+
+		// one good file
+
+		assertTrue(importer.areRequiredInputFilesPresent(files));
+		files.add(valid);
+
+		// two good files
+
+		assertTrue(importer.areRequiredInputFilesPresent(files));
+	}
+
+
+	AutorisationsregisterParser parser = new AutorisationsregisterParser();
+
+
+	@Test
+	public void testImport() throws Exception {
+
 		List<File> files = new ArrayList<File>();
 		files.add(valid);
 		MySQLTemporalDao daoMock = mock(MySQLTemporalDao.class);
@@ -56,8 +82,10 @@ public class AutImporterTest {
 		verify(daoMock).persistCompleteDataset(any(CompleteDataset.class));
 	}
 
+
 	@Test
-	public void testGetDateFromFileName(){
+	public void testGetDateFromFileName() {
+
 		AutImporter importer = new AutImporter();
 		Date date = importer.getDateFromInputFileName("19761110sgfdgfg").getTime();
 		assertEquals("19761110", new SimpleDateFormat("yyyyMMdd").format(date));

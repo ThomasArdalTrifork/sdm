@@ -6,84 +6,86 @@ import com.trifork.sdm.importer.configuration.Configuration;
 import com.trifork.sdm.importer.jobs.Job;
 
 
-public class JobSpoolerSetup
-{
+public class JobSpoolerSetup {
+
 	private static Logger logger = Logger.getLogger(FileSpoolerSetup.class);
-	
+
 	private final String jobName;
 	private Class<? extends Job> jobClass;
 
 
-	public JobSpoolerSetup(String jobName)
-	{
+	public JobSpoolerSetup(String jobName) {
+
 		super();
 		this.jobName = jobName;
 	}
 
 
-	public Class<? extends Job> getJobExecutorClass()
-	{
-		if (jobClass == null)
-		{
+	public Class<? extends Job> getJobExecutorClass() {
+
+		if (jobClass == null) {
 			String s = getConfig("jobExecutorClass", null);
 			resolveImporterClass(s);
 		}
-		
+
 		return jobClass;
 	}
 
 
-	public String getSchedule()
-	{
+	public String getSchedule() {
+
 		return getConfig("schedule", null);
 	}
 
 
 	@SuppressWarnings("unchecked")
-	private void resolveImporterClass(String executorName)
-	{
-		if (executorName == null)
-		{
+	private void resolveImporterClass(String executorName) {
+
+		if (executorName == null) {
+			
 			logger.error("Configuration error. You need to configure a executer class for the job '"
-					+ getName() + "'. Set property " + getConfigEntry("jobExecutorClass")
+					+ getName()
+					+ "'. Set property "
+					+ getConfigEntry("jobExecutorClass")
 					+ " to the class path of the job executor");
 		}
-		try
-		{
+		
+		try {
+			
 			Class<?> executor = Class.forName(executorName);
 			jobClass = (Class<? extends Job>) executor;
 		}
-		catch (ClassNotFoundException e)
-		{
+		catch (ClassNotFoundException e) {
+			
 			logger.error("Configuration error. The configured job executor class (" + executorName
 					+ " could not be found. " + "Set property "
 					+ getConfigEntry("jobExecutorClass") + " to a valid job executor");
 		}
-		catch (ClassCastException e)
-		{
+		catch (ClassCastException e) {
+			
 			logger.error("Configuration error. The configured job executor class (" + executorName
-					+ " didn't implement interface " + Job.class.getName()
-					+ ". Set property " + getConfigEntry("jobExecutorClass")
-					+ " to a valid job executor");
+					+ " didn't implement interface " + Job.class.getName() + ". Set property "
+					+ getConfigEntry("jobExecutorClass") + " to a valid job executor");
 		}
 	}
 
 
-	public String getName()
-	{
+	public String getName() {
+
 		return jobName;
 	}
 
 
-	String getConfigEntry(String key)
-	{
+	String getConfigEntry(String key) {
+
 		return "jobspooler." + getName() + "." + key;
 	}
 
 
-	String getConfig(String key, String Default)
-	{
-		String value = Configuration.getString(getConfigEntry(key));
+	String getConfig(String key, String Default) {
+
+		String property = getConfigEntry(key);
+		String value = Configuration.getString(property);
 		if (value != null) return value;
 		
 		return Default;

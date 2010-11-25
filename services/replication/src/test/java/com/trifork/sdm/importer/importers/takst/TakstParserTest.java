@@ -20,6 +20,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import com.trifork.sdm.importer.TestHelper;
 import com.trifork.sdm.importer.importers.FileParseException;
 import com.trifork.sdm.importer.importers.takst.factories.LaegemiddelFactory;
 import com.trifork.sdm.models.takst.ATCKoderOgTekst;
@@ -28,25 +29,28 @@ import com.trifork.sdm.models.takst.Pakning;
 import com.trifork.sdm.models.takst.Takst;
 import com.trifork.sdm.models.takst.TakstDataset;
 
+
 public class TakstParserTest {
 
-	public static final String PROJECT_BASE_DIR = ".";
-	public static final String TAKST_TESTDATA_DIR = "/src/test/resources/testdata/takst";
+	public static final String TAKST_TESTDATA_DIR = "testdata/takst";
+
 
 	@Test
 	public void testLMS01() throws Exception {
+
 		// Arrange
 		String line = "28100009555SPLMKEMADR00100065Kemadrin                      tabletter           TAB           5 mg                0000005000MG 059300059300 N04AA04OR               D                ";
-		
+
 		// Act
 		Laegemiddel drug = LaegemiddelFactory.parse(line);
-		
+
 		// Assert
 		List<Laegemiddel> drugs = new ArrayList<Laegemiddel>();
 		drugs.add(drug);
 		Calendar now = GregorianCalendar.getInstance();
 		Takst takst = new Takst(now, now);
-		TakstDataset<Laegemiddel> ds = new TakstDataset<Laegemiddel>(takst, drugs, Laegemiddel.class);
+		TakstDataset<Laegemiddel> ds = new TakstDataset<Laegemiddel>(takst, drugs,
+				Laegemiddel.class);
 		takst.addDataset(ds);
 
 		drug = drugs.get(0);
@@ -71,109 +75,129 @@ public class TakstParserTest {
 		assertEquals("LM", drug.getVaredeltype());
 		assertEquals("SP", drug.getVaretype());
 	}
-	
+
+
 	@Test
 	public void testLMS01_2() throws Exception {
+
 		// Arrange
-		String line = "28100110949SPLMXYLOCA00200985Xylocain                      inj.v�ske, opl�sningINJVSKO       10 mg/ml            0000010000MGM056100056100 N01BB02EDIRIVPE                          ";
-		
+		String line = "28100110949SPLMXYLOCA00200985Xylocain                      inj.væske, opløsningINJVSKO       10 mg/ml            0000010000MGM056100056100 N01BB02EDIRIVPE                          ";
+
 		// Act
 		Laegemiddel drug = LaegemiddelFactory.parse(line);
-		
+
 		// Assert
 		List<Laegemiddel> drugs = new ArrayList<Laegemiddel>();
 		drugs.add(drug);
 		Calendar now = GregorianCalendar.getInstance();
-		Takst takst = new Takst(now,now);
-		TakstDataset<Laegemiddel> ds = new TakstDataset<Laegemiddel>(takst, drugs, Laegemiddel.class);
+		Takst takst = new Takst(now, now);
+		TakstDataset<Laegemiddel> ds = new TakstDataset<Laegemiddel>(takst, drugs,
+				Laegemiddel.class);
 		takst.addDataset(ds);
 
 		drug = drugs.get(0);
 		assertEquals("Xylocain", drug.getNavn());
 		assertEquals(new Long(28100110949l), drug.getDrugid());
-		assertEquals(new Double (10), drug.getStyrkeNumerisk());
+		assertEquals(new Double(10), drug.getStyrkeNumerisk());
 		assertEquals("10 mg/ml", drug.getStyrkeKlarTekst());
 		assertEquals(new Integer(0), drug.getEgnetTilDosisdispensering());
 		assertEquals("N01BB02", drug.getATC());
 		assertEquals("INJVSKO", drug.getFormKode());
 		assertEquals("EDIRIVPE", drug.getAdministrationsvejKode());
-		assertEquals("inj.v�ske, opl�sning", drug.getLaegemiddelformTekst());
+		assertEquals("inj.væske, opløsning", drug.getLaegemiddelformTekst());
 	}
-	
+
+
 	@Test
 	public void getDateFromLineTest() throws Exception {
+
 		// Arrange
 		TakstParser takstParser = new TakstParser();
-		
+
 		// Act
-		Calendar c = takstParser.getValidFromDate("0012.0 LMS-TAKST                               20090713                0131LMS.ZIP     200929");
-		
+		Calendar c = takstParser
+				.getValidFromDate("0012.0 LMS-TAKST                               20090713                0131LMS.ZIP     200929");
+
 		// Assert
 		assertEquals(2009, c.get(Calendar.YEAR));
 		assertEquals(6, c.get(Calendar.MONTH)); // 0 indexed
 		assertEquals(13, c.get(Calendar.DAY_OF_MONTH));
 	}
 
+
 	@Test
 	public void exceptionHandlingTestEmptyInput() throws Exception {
-		// Arrange. Try parsing with empty list of files 
-		List<File> files = new ArrayList<File>(); 
+
+		// Arrange. Try parsing with empty list of files
+		List<File> files = new ArrayList<File>();
 		TakstParser takstParser = new TakstParser();
-		
+
 		try {
 			// Act
 			takstParser.parseTakst(files);
 			// Assert
 			fail("No exceptions thrown");
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			assertEquals(FileParseException.class, e.getClass());
 		}
 	}
+
 
 	@Test
 	public void exceptionHandlingRequiredFilesMissing() throws Exception {
-		// Arrange. Try parsing with empty list of files 
+
+		// Arrange. Try parsing with empty list of files
 		TakstParser takstParser = new TakstParser();
-		String dir = PROJECT_BASE_DIR + TAKST_TESTDATA_DIR + "/incomplete/";
-		List<File> files = 	Arrays.asList((new File(dir)).listFiles());
-		
+		String dir = TAKST_TESTDATA_DIR + "/incomplete/";
+
+		List<File> files = Arrays.asList(TestHelper.getFile(dir).listFiles());
+
 		try {
 			// Act
 			takstParser.parseTakst(files);
 			// Assert
 			fail("No exceptions thrown");
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			assertEquals(FileParseException.class, e.getClass());
 		}
 	}
+
 
 	@Test
 	public void exceptionHandlingUnparsable() throws Exception {
-		// Arrange. Try parsing with empty list of files 
+
+		// Arrange. Try parsing with empty list of files
+
 		TakstParser takstParser = new TakstParser();
-		String dir = PROJECT_BASE_DIR + TAKST_TESTDATA_DIR + "/unparsable/";
-		List<File> files = 	Arrays.asList((new File(dir)).listFiles());
-		
+		String dir = TAKST_TESTDATA_DIR + "/unparsable/";
+
+		List<File> files = Arrays.asList(TestHelper.getFile(dir).listFiles());
+
 		try {
 			// Act
 			takstParser.parseTakst(files);
 			// Assert
 			fail("No exceptions thrown");
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			assertEquals(FileParseException.class, e.getClass());
 		}
-		
+
 	}
 
-	
+
 	@Test
 	public void testWarningWrongVersion() throws Exception {
+
 		// Arrange. Try parsing a system file with unkown version number
 		TakstParser takstParser = new TakstParser();
-		String dir = PROJECT_BASE_DIR + TAKST_TESTDATA_DIR + "/unknown_version/";
-		List<File> files = 	Arrays.asList((new File(dir)).listFiles());
-		TakstParser.logger = mock(Logger.class); // Mock the logger to verify that a warning is logged
-		
+		String dir = TAKST_TESTDATA_DIR + "/unknown_version/";
+		List<File> files = Arrays.asList(TestHelper.getFile(dir).listFiles());
+		TakstParser.logger = mock(Logger.class); // Mock the logger to verify
+													// that a warning is logged
+
 		// Act
 		takstParser.parseTakst(files);
 
@@ -181,14 +205,16 @@ public class TakstParserTest {
 		verify(TakstParser.logger).warn(contains("version"));
 	}
 
+
 	@Test
-	public void testVetFiltering(){
+	public void testVetFiltering() {
+
 		// setup some objects
 		ATCKoderOgTekst atcVet = new ATCKoderOgTekst();
 		atcVet.setATCNiveau1("QQ"); // starter med Q = til dyr
 		ATCKoderOgTekst atcHum = new ATCKoderOgTekst();
 		atcHum.setATCNiveau1("AB"); // ikke starter med Q = til mennesker
-		
+
 		Laegemiddel lmVet = new Laegemiddel();
 		lmVet.setDrugid(1l);
 		lmVet.setATC("QQ"); // starter med Q = til dyr
@@ -212,17 +238,19 @@ public class TakstParserTest {
 		ArrayList<Laegemiddel> laegemidler = new ArrayList<Laegemiddel>();
 		laegemidler.add(lmHum);
 		laegemidler.add(lmVet);
-		
+
 		// Add the arrays to the takst as datasets
 		Takst takst = new Takst(new GregorianCalendar(), new GregorianCalendar());
-		TakstDataset<Laegemiddel> lmr = new TakstDataset<Laegemiddel>(takst, laegemidler, Laegemiddel.class);
+		TakstDataset<Laegemiddel> lmr = new TakstDataset<Laegemiddel>(takst, laegemidler,
+				Laegemiddel.class);
 		TakstDataset<Pakning> pkr = new TakstDataset<Pakning>(takst, pakninger, Pakning.class);
-		TakstDataset<ATCKoderOgTekst> atcr = new TakstDataset<ATCKoderOgTekst>(takst, atcKoder, ATCKoderOgTekst.class);
+		TakstDataset<ATCKoderOgTekst> atcr = new TakstDataset<ATCKoderOgTekst>(takst, atcKoder,
+				ATCKoderOgTekst.class);
 		takst.addDataset(lmr);
 		takst.addDataset(pkr);
 		takst.addDataset(atcr);
 
-		// check that all is behaving as expected before filtering 
+		// check that all is behaving as expected before filtering
 		assertFalse(pakVet.isTilHumanAnvendelse());
 		assertTrue(pakHuman.isTilHumanAnvendelse());
 		assertFalse(atcVet.isTilHumanAnvendelse());
@@ -233,10 +261,10 @@ public class TakstParserTest {
 		assertNotNull(takst.getEntity(Laegemiddel.class, lmHum.getEntityId()));
 		assertNotNull(takst.getEntity(ATCKoderOgTekst.class, atcVet.getEntityId()));
 		assertNotNull(takst.getEntity(ATCKoderOgTekst.class, atcHum.getEntityId()));
-		
+
 		// Filter the takst
 		TakstParser.filterOutVetDrugs(takst);
-		
+
 		// Check that the correct entities were removed from takst
 		assertNull(takst.getEntity(Pakning.class, pakVet.getEntityId()));
 		assertNotNull(takst.getEntity(Pakning.class, pakHuman.getEntityId()));
@@ -245,6 +273,5 @@ public class TakstParserTest {
 		assertNull(takst.getEntity(ATCKoderOgTekst.class, atcVet.getEntityId()));
 		assertNotNull(takst.getEntity(ATCKoderOgTekst.class, atcHum.getEntityId()));
 	}
-	
-}
 
+}
