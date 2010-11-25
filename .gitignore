@@ -1,0 +1,11 @@
+# Ignore user specific settings.
+gradle.settings
+
+# Ignore generated files.
+.gradle/
+build/
+bin/
+
+.project
+.settings/
+.classpath/

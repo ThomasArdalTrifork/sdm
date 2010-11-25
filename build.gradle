@@ -1,5 +1,17 @@
 allprojects {
-	group: 'com.trifork.public'
+	group: 'com.trifork'
 	version: '3.0-SNAPSHOT'
 }
 
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		compileTest group: 'junit', name: 'junit', version: '4.8.2'
+	}
+}
