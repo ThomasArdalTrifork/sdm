@@ -1,3 +1,6 @@
+apply plugin: 'war'
+apply plugin: 'jetty'
+
 dependencies {
 	compile project(':api')
 	
