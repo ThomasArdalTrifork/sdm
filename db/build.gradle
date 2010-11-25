@@ -1,0 +1,24 @@
+task(create, dependsOn: 'classes', type: JavaExec) {
+	main = 'com.trifork.sdm.DatabaseHelper'
+	classpath = sourceSets.main.runtimeClasspath
+	args = ["create", dbSchema, dbUsername, dbPassword, dbURL, dbDriver]
+}
+
+
+task(drop, dependsOn: 'classes', type: JavaExec) {
+	main = 'com.trifork.sdm.DatabaseHelper'
+	classpath = sourceSets.main.runtimeClasspath
+	args = ["drop", dbSchema, dbUsername, dbPassword, dbURL, dbDriver]
+}
+
+
+task(migrate, dependsOn: 'classes', type: JavaExec) {
+	main = 'com.trifork.sdm.DatabaseHelper'
+	classpath = sourceSets.main.runtimeClasspath
+	args = ["migrate", dbSchema, dbUsername, dbPassword, dbURL, dbDriver, projectDir.path + "/migrations"]
+}
+
+
+dependencies {
+	runtime group: 'mysql', name: 'mysql-connector-java', version: '5.1.13'
+}

@@ -6,6 +6,9 @@ allprojects {
 subprojects {
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
+	
+	downloadSources	= true
+	downloadJavadoc = true
 
 	repositories {
 		mavenCentral()
@@ -20,7 +23,7 @@ subprojects {
 
 	dependencies {
 		testCompile group: 'junit', name: 'junit', version: '4.8.2'
-		
+
 		// FIXME: Log4J should not be needed in the API project.
 		compile group: 'log4j', name: 'log4j', version: '1.2.16'
 	}

@@ -1,1 +1,1 @@
-include 'api', 'services:replication'
+include 'api', 'services:replication', 'db'

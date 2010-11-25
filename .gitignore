@@ -1,5 +1,5 @@
 # Ignore user specific settings.
-gradle.settings
+gradle.properties
 
 # Ignore generated files.
 .gradle/
