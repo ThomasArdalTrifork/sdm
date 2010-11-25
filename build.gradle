@@ -1,0 +1,5 @@
+allprojects {
+	group: 'com.trifork.public'
+	version: '3.0-SNAPSHOT'
+}
+
