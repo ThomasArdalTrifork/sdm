@@ -1,9 +1,11 @@
+DROP TABLE IF EXISTS sdm_housekeeping.Import;
 CREATE TABLE sdm_housekeeping.Import (
  importtime DATETIME,
  spoolername VARCHAR(100)
 ) ENGINE=InnoDB
 ;
 
+DROP TABLE IF EXISTS sdm_housekeeping.AdresseBeskyttelse;
 CREATE TABLE sdm_housekeeping.AdresseBeskyttelse (
  CPR VARCHAR(10) NOT NULL,
  Fornavn VARCHAR(60),
