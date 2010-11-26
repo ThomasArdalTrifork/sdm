@@ -16,22 +16,3 @@ dependencies {
 	testCompile project(':api')
 	testCompile group: 'org.mockito', name: 'mockito-core', version: '1.8.5'
 }
-
-afterEvaluate {
-	configure(allProcessResourcesTasks()) {
-		// TODO (thb): Don't write out every property here. Send all project properties.
-		filter(ReplaceTokens, tokens: [
-			dbURL:dbURL,
-			dbDriver: dbDriver,
-			dbSchema: dbSchema,
-			dbUsername: dbUsername,
-			dbPassword: dbPassword,
-		])
-    }
-}
-
-def allProcessResourcesTasks() {
-	sourceSets.all.processResourcesTaskName.collect {
-		tasks[it]
-	}
-}
