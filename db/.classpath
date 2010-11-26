@@ -2,16 +2,7 @@
   <classpathentry kind="output" path="bin"/>
   <classpathentry output="build/classes/main" kind="src" path="src/main/java"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" exported="true"/>
-  <classpathentry sourcepath="GRADLE_CACHE/junit/junit/sources/junit-4.8.2-sources.jar" kind="var" path="GRADLE_CACHE/junit/junit/jars/junit-4.8.2.jar" exported="true"/>
-  <classpathentry kind="var" path="GRADLE_CACHE/org.gradle/gradle-core/jars/gradle-core-0.9-preview-3.jar" exported="true"/>
-  <classpathentry sourcepath="GRADLE_CACHE/log4j/log4j/sources/log4j-1.2.16-sources.jar" kind="var" path="GRADLE_CACHE/log4j/log4j/bundles/log4j-1.2.16.jar" exported="true"/>
-  <classpathentry output="build/classes/main" kind="src" path="src/main/groovy"/>
-  <classpathentry kind="var" path="GRADLE_CACHE/asm/asm-analysis/jars/asm-analysis-3.2.jar" exported="true"/>
-  <classpathentry kind="var" path="GRADLE_CACHE/antlr/antlr/jars/antlr-2.7.7.jar" exported="true"/>
-  <classpathentry kind="var" path="GRADLE_CACHE/asm/asm/jars/asm-3.2.jar" exported="true"/>
-  <classpathentry kind="var" path="GRADLE_CACHE/asm/asm-util/jars/asm-util-3.2.jar" exported="true"/>
-  <classpathentry kind="var" path="GRADLE_CACHE/asm/asm-tree/jars/asm-tree-3.2.jar" exported="true"/>
-  <classpathentry kind="var" path="GRADLE_CACHE/asm/asm-commons/jars/asm-commons-3.2.jar" exported="true"/>
-  <classpathentry sourcepath="GRADLE_CACHE/org.codehaus.groovy/groovy/sources/groovy-1.7.5-sources.jar" kind="var" path="GRADLE_CACHE/org.codehaus.groovy/groovy/jars/groovy-1.7.5.jar" exported="true"/>
   <classpathentry kind="var" path="GRADLE_CACHE/mysql/mysql-connector-java/jars/mysql-connector-java-5.1.13.jar" exported="true"/>
+  <classpathentry sourcepath="GRADLE_CACHE/junit/junit/sources/junit-4.8.2-sources.jar" kind="var" path="GRADLE_CACHE/junit/junit/jars/junit-4.8.2.jar" exported="true"/>
+  <classpathentry sourcepath="GRADLE_CACHE/log4j/log4j/sources/log4j-1.2.16-sources.jar" kind="var" path="GRADLE_CACHE/log4j/log4j/bundles/log4j-1.2.16.jar" exported="true"/>
 </classpath>

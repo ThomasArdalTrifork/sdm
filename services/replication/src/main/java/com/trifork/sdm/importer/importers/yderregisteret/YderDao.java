@@ -59,7 +59,7 @@ public class YderDao extends MySQLTemporalDao
 		catch (SQLException sqle)
 		{
 			throw new FilePersistException(
-					"Det opstoed en fejl ved skrivning af l¿benummer til databasen under indl¾sning af et yderregister: "
+					"Det opstoed en fejl ved skrivning af lÂ¿benummer til databasen under indlÂ¾sning af et yderregister: "
 							+ sqle.getMessage(), sqle);
 		}
 	}

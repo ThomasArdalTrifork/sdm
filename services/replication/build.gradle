@@ -13,6 +13,7 @@ dependencies {
 	compile group: 'javax.servlet', name: 'servlet-api', version: '2.4'
 	runtime group: 'mysql', name: 'mysql-connector-java', version: '5.1.13'
 	
+	testCompile project(':api')
 	testCompile group: 'org.mockito', name: 'mockito-core', version: '1.8.5'
 }
 
@@ -26,7 +27,6 @@ afterEvaluate {
 			dbUsername: dbUsername,
 			dbPassword: dbPassword,
 		])
-		println "Moo"
     }
 }
 

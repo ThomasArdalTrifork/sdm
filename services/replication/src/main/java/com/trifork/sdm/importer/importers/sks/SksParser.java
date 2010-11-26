@@ -17,7 +17,7 @@ public class SksParser {
     /*
      * NOTE KOPIERET FRA PEM:
      * 
-     * �ndringer til SKS-registeret (sgh/afd) indl�ses via deltafiler.
+     * Ændringer til SKS-registeret (sgh/afd) indlæses via deltafiler.
      * Ved etablering af registeret anvendes en deltafil der indeholder samtlige sgh/afd
      * dvs. indlæsningen foretages på præcis samme måde hvadenten der indlæses/opdateres et fuld register eller blot ændringer siden sidst (delta)
      * 
@@ -39,7 +39,7 @@ public class SksParser {
      * Det garanteres dog at der ikke optræder overlap på gyldighedsperioden for samme nummer.
      * 
      * Operationskoden (action) (position 187-188) angiver om recorden skal betragtes som ny, opdatering eller sletning.
-     * Med den m�de hvorp� SKS-registeret anvendes i PEM gælder det at alle entries/versioner af hvert nummer skal være placeret
+     * Med den måde hvorpå SKS-registeret anvendes i PEM gælder det at alle entries/versioner af hvert nummer skal være placeret
      *  i Organisationshistorik-tabellen (og altså ikke kun gamle versioner i denne tabel) dvs. det er altid muligt heri at finde den gyldige/aktive sgh/afd
      *  for en bestemt dato. I Organisations-tabellen derimod placeres kun den nyeste record for en given sgh/afd dvs. recorden med nyeste gyldighedsdato. 
      * For at sikre denne versionering skal enhver entry (med operationskode 1 eller 3) altid skal indsættes/opdateres i Organisationshistorik-tabellen,
@@ -49,10 +49,10 @@ public class SksParser {
      * 
      * Flow for indlæsning:
      * 1) For hver record i filen ->
-     * 1.1) Check om operationskode er angivet. Hvis kode = 1 eller 3 forts�ttes.
+     * 1.1) Check om operationskode er angivet. Hvis kode = 1 eller 3 fortsættes.
      * 1.2) Afled oplysninger for hver record i filen.
-     * 1.3) Opdater inds�t i historik-tabellen. En opdatering foretages udfra nummer og validFrom.
-     * 1.4) Check om denne record er den nyeste i filen med det p� g�ldende nummer. Hvis den er nyeste (indtil videre) -> Gem oplysningerne da de evt. skal opdateres/indsættes i Organisations-tabellen.
+     * 1.3) Opdater indsæt i historik-tabellen. En opdatering foretages udfra nummer og validFrom.
+     * 1.4) Check om denne record er den nyeste i filen med det på gældende nummer. Hvis den er nyeste (indtil videre) -> Gem oplysningerne da de evt. skal opdateres/indsættes i Organisations-tabellen.
      * 2) Listen af nyeste sgh/afd gennemløbes.
      * 2.1) For hvert objekt heri indsættes/opdateres i Organisations-tabellen. Det gælder at hvis der ikke kan opdateres (udfra nummer) laves en insert istedet.  
      * 

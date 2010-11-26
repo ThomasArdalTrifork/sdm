@@ -116,13 +116,13 @@ public class SOREventHandler extends DefaultHandler
 				if (hie.getInstitutionType() == 394761003L
 						|| hie.getInstitutionType() == 550671000005100L)
 				{
-					// L¾gepraksis og speciall¾ger.
+					// LÂ¾gepraksis og speciallÂ¾ger.
 					
 					Praksis p = XMLModelMapper.toPraksis(hie);
 					
 					for (OrganizationalUnitEntity oue : hie.getOrganizationalUnitEntities())
 					{
-						// Yder for L¾gepraksis.
+						// Yder for LÂ¾gepraksis.
 						
 						Yder y = XMLModelMapper.toYder(oue);
 						
@@ -130,7 +130,7 @@ public class SOREventHandler extends DefaultHandler
 						
 						if (!oue.getSons().isEmpty())
 						{
-							new SAXException("L¾gepraksis skal ikke have en level 2 OrganizationalUnitEntity. SORId=" 
+							new SAXException("LÃ¦gepraksis skal ikke have en level 2 OrganizationalUnitEntity. SORId=" 
 									+ oue.getSorIdentifier() + " har!!"); // TODO: what does 'har' mean?
 						}
 					}
