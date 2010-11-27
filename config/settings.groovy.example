@@ -1,10 +1,10 @@
 // Default settings
 
 db {
-	driver = "com.mysql.jdbc.Driver"
+	driver = "com.mysql.jdbc.Driver" // TODO (thb): Is there really any need to include this?
 	url = "jdbc:mysql://localhost/"
 	username = "root"
-	password = "root"
+	password = ""
 }	
 
 
