@@ -2,8 +2,9 @@ import org.apache.tools.ant.filters.*
 
 processResources.configure {
 	// Replace any tokens with properties.
+	// We convert the config objects to java properties.
 	from(sourceSets.main.resources.srcDirs) {
-		filter(ReplaceTokens, tokens: settings.production)
+		filter(ReplaceTokens, tokens: settings.production.toProperties())
 		include '**/*.properties'
 	}
 	from(sourceSets.main.resources.srcDirs) {
@@ -11,15 +12,11 @@ processResources.configure {
 	}
 }
 
-processTestResources.doFirst {
-	println settings.test
-}
-
 processTestResources.configure {
 	// First copy any resources from the production
 	// resources.
 	from(sourceSets.main.resources.srcDirs) {
-		filter(ReplaceTokens, tokens: settings.test)
+		filter(ReplaceTokens, tokens: settings.test.toProperties())
 		include '**/*.properties'
 	}
 	from(sourceSets.main.resources.srcDirs) {
@@ -28,7 +25,7 @@ processTestResources.configure {
 	
 	// Then overwrite them with any test resources.
 	from(sourceSets.test.resources.srcDirs) {
-		filter(ReplaceTokens, tokens: settings.test)
+		filter(ReplaceTokens, tokens: settings.test.toProperties())
 		include '**/*.properties'
 		overwrite = true
 	}

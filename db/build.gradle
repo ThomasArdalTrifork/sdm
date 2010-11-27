@@ -1,24 +1,135 @@
+import org.apache.tools.ant.filters.*
+
+// TODO: This file is full of duplication.
+
+dependencies {
+	runtime group: 'mysql', name: 'mysql-connector-java', version: '5.1.13'
+}
+
+// Process migrations.
+
+def migrationDir = projectDir.path + "/migrations"
+def migrationBuildDir = project.buildDir.path + "/migrations"
+
+// HACK: This is actually a semi hack that prepares the database with
+// the housekeeping tables. These will be removed once we stop MySQL replication.
+// The build system is really only wired to use one db schema.
+
+task(processMigrations, type: Copy) {
+	destinationDir = new File(migrationBuildDir)
+	from(migrationDir) {
+		filter(ReplaceTokens, tokens: settings.production.toProperties())
+	}
+}
+
+task(processTestMigrations, type: Copy) {
+	destinationDir = new File(migrationBuildDir)
+	from(migrationDir) {
+		filter(ReplaceTokens, tokens: settings.test.toProperties())
+	}
+}
+
+processMigrations.doFirst {
+	ant.delete(dir:migrationBuildDir, failonerror:false)
+	// Make sure the migration dirs exist.
+	new File(migrationBuildDir).mkdirs()
+}
+
+processTestMigrations.doFirst {
+	ant.delete(dir:migrationBuildDir, failonerror:false)
+	// Make sure the migration dirs exist.
+	new File(migrationBuildDir).mkdirs()
+}
+
+// Production DB
+
 task(create, dependsOn: 'classes', type: JavaExec) {
 	main = 'com.trifork.sdm.DatabaseHelper'
 	classpath = sourceSets.main.runtimeClasspath
-	args = ["create", dbSchema, dbUsername, dbPassword, dbURL, dbDriver]
+	args = [
+		"create",
+		settings.production.db.schema,
+		settings.production.db.username,
+		settings.production.db.password,
+		settings.production.db.url,
+		settings.production.db.driver,
+		settings.production.db.housekeeping.schema // TODO: Remove
+	]
 }
 
 
 task(drop, dependsOn: 'classes', type: JavaExec) {
 	main = 'com.trifork.sdm.DatabaseHelper'
 	classpath = sourceSets.main.runtimeClasspath
-	args = ["drop", dbSchema, dbUsername, dbPassword, dbURL, dbDriver]
+	args = [
+		"drop",
+		settings.production.db.schema,
+		settings.production.db.username,
+		settings.production.db.password,
+		settings.production.db.url,
+		settings.production.db.driver,
+		settings.production.db.housekeeping.schema // TODO: Remove
+	]
 }
 
 
-task(migrate, dependsOn: 'classes', type: JavaExec) {
+task(migrate, dependsOn: ['classes', 'processMigrations'], type: JavaExec) {
 	main = 'com.trifork.sdm.DatabaseHelper'
 	classpath = sourceSets.main.runtimeClasspath
-	args = ["migrate", dbSchema, dbUsername, dbPassword, dbURL, dbDriver, projectDir.path + "/migrations"]
+	args = [
+		"migrate",
+		settings.production.db.schema,
+		settings.production.db.username,
+		settings.production.db.password,
+		settings.production.db.url,
+		settings.production.db.driver,
+		migrationBuildDir
+	]
 }
 
 
-dependencies {
-	runtime group: 'mysql', name: 'mysql-connector-java', version: '5.1.13'
+// Test DB
+
+task(testCreate, dependsOn: 'classes', type: JavaExec) {
+	main = 'com.trifork.sdm.DatabaseHelper'
+	classpath = sourceSets.main.runtimeClasspath
+	args = [
+		"create",
+		settings.test.db.schema,
+		settings.test.db.username,
+		settings.test.db.password,
+		settings.test.db.url,
+		settings.test.db.driver,
+		settings.test.db.housekeeping.schema // TODO: Remove
+	]
+}
+
+
+task(testDrop, dependsOn: 'classes', type: JavaExec) {
+	main = 'com.trifork.sdm.DatabaseHelper'
+	classpath = sourceSets.main.runtimeClasspath
+	args = [
+		"drop",
+		settings.test.db.schema,
+		settings.test.db.username,
+		settings.test.db.password,
+		settings.test.db.url,
+		settings.test.db.driver,
+		settings.test.db.housekeeping.schema // TODO: Remove
+	]
+}
+
+
+task(testMigrate, dependsOn: ['classes', 'processTestMigrations'], type: JavaExec) {
+	main = 'com.trifork.sdm.DatabaseHelper'
+	classpath = sourceSets.main.runtimeClasspath
+	args = [
+		"migrate",
+		settings.test.db.schema,
+		settings.test.db.username,
+		settings.test.db.password,
+		settings.test.db.url,
+		settings.test.db.driver,
+		migrationBuildDir
+	]
 }

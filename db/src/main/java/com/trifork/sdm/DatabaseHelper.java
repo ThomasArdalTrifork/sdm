@@ -24,6 +24,11 @@ public class DatabaseHelper {
 	 * The name of the database schema to create.
 	 */
 	private String schema;
+	
+	/**
+	 * The name of the database schema to create.
+	 */
+	private String housekeeping_schema; // TODO: REMOVE
 
 	/**
 	 * The user name used to connect to the database.
@@ -56,14 +61,16 @@ public class DatabaseHelper {
 		final String driver = args[5];
 		Class.forName(driver).newInstance();
 		
-		if (action.equals("create"))
+		if (action.equals("create")) {
 			
+			helper.housekeeping_schema = args[6]; // TODO: REMOVE
 			helper.createDB();
-		
-		else if (action.equals("drop"))
+		}
+		else if (action.equals("drop")) {
 			
+			helper.housekeeping_schema = args[6]; // TODO: REMOVE
 			helper.dropDB();
-		
+		}
 		else if (action.equals("migrate")) {
 			
 			helper.migrationDirectory = args[6];
@@ -78,12 +85,14 @@ public class DatabaseHelper {
 	public void createDB() {
 
 		executeSQL("CREATE SCHEMA " + schema, MYSQL_DEFAULT_SCHEMA);
+		executeSQL("CREATE SCHEMA " + housekeeping_schema, MYSQL_DEFAULT_SCHEMA); // TODO: Remove
 	}
 
 
 	public void dropDB() {
 
 		executeSQL("DROP SCHEMA " + schema, MYSQL_DEFAULT_SCHEMA);
+		executeSQL("DROP SCHEMA " + housekeeping_schema, MYSQL_DEFAULT_SCHEMA); // TODO: Remove
 	}
 
 
@@ -91,7 +100,6 @@ public class DatabaseHelper {
 
 		Connection connection = null;
 		Statement statement = null;
-
 
 		try {
 			

@@ -5,8 +5,8 @@ def productionSettings = new ConfigSlurper('production').parse(new File('config/
 def testSettings = new ConfigSlurper('test').parse(new File('config/settings.groovy').toURL())
 
 def settings = [
-	test:testSettings.toProperties(),
-	production:productionSettings.toProperties()
+	test:testSettings,
+	production:productionSettings
 ]
 
 project.setProperty("settings", settings)

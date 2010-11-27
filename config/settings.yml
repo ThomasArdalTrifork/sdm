@@ -1,5 +1,0 @@
-def test = [
-	dbSchema: 
-]
-
-project.properties
