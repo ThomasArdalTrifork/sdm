@@ -1,23 +1,25 @@
+apply from: 'config/environment.groovy'
 
 allprojects {
 	group: 'com.trifork'
 	version: '3.0-SNAPSHOT'
-	
 }
 
 subprojects {
 	apply plugin: 'java'
-	apply plugin: 'eclipse'
-	
-	
 	sourceCompatibility = 1.6
 	sourceCompatibility = 1.6
-	
 	compileJava.options.encoding = "UTF-8"
 	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-	
+
+
+	apply from: "${rootProject.projectDir}/config/cobertura.groovy"
+	apply from: "${rootProject.projectDir}/config/resources.groovy"
+
+	apply plugin: 'eclipse'
 	downloadSources	= true
 	downloadJavadoc = true
+
 
 	repositories {
 		mavenCentral()
