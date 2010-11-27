@@ -82,9 +82,7 @@ public class MySQLConnectionManager {
 
 	public static String getHousekeepingDBName() {
 
-		// TODO: Should not be needed anymore.
-		String confName = Configuration.getString(HOUSEKEEPING_DATABASE_KEY);
-		return (confName != null) ? confName : getDBName() + "_housekeeping";
+		return Configuration.getString(HOUSEKEEPING_DATABASE_KEY);
 	}
 
 
