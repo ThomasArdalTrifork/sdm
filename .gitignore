@@ -9,3 +9,7 @@ bin/
 .project
 .settings/
 .classpath
+
+# This should be removed once we get cobertura to not
+# place files in the project root dirs.
+**/cobertura.ser
