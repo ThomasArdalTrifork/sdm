@@ -24,7 +24,8 @@ public class JobSpoolerSetup {
 	public Class<? extends Job> getJobExecutorClass() {
 
 		if (jobClass == null) {
-			String s = getConfig("jobExecutorClass", null);
+
+			String s = getConfig("jobExecutorClass");
 			resolveImporterClass(s);
 		}
 
@@ -34,7 +35,7 @@ public class JobSpoolerSetup {
 
 	public String getSchedule() {
 
-		return getConfig("schedule", null);
+		return getConfig("schedule");
 	}
 
 
@@ -46,7 +47,7 @@ public class JobSpoolerSetup {
 			logger.error("Configuration error. You need to configure a executer class for the job '"
 					+ getName()
 					+ "'. Set property "
-					+ getConfigEntry("jobExecutorClass")
+					+ getConfigEntryName("jobExecutorClass")
 					+ " to the class path of the job executor");
 		}
 		
@@ -59,13 +60,13 @@ public class JobSpoolerSetup {
 			
 			logger.error("Configuration error. The configured job executor class (" + executorName
 					+ " could not be found. " + "Set property "
-					+ getConfigEntry("jobExecutorClass") + " to a valid job executor");
+					+ getConfigEntryName("jobExecutorClass") + " to a valid job executor");
 		}
 		catch (ClassCastException e) {
 			
 			logger.error("Configuration error. The configured job executor class (" + executorName
 					+ " didn't implement interface " + Job.class.getName() + ". Set property "
-					+ getConfigEntry("jobExecutorClass") + " to a valid job executor");
+					+ getConfigEntryName("jobExecutorClass") + " to a valid job executor");
 		}
 	}
 
@@ -76,19 +77,21 @@ public class JobSpoolerSetup {
 	}
 
 
-	String getConfigEntry(String key) {
+	String getConfigEntryName(String key) {
 
 		return "jobspooler." + getName() + "." + key;
 	}
 
 
-	String getConfig(String key, String Default) {
+	String getConfig(String key) {
 
-		String property = getConfigEntry(key);
+		String property = getConfigEntryName(key);
 		String value = Configuration.getString(property);
-		if (value != null) return value;
 		
-		return Default;
+		if (value == null) {
+			throw new RuntimeException(String.format("Could not find configuration entry '%s'.", property));
+		}
+		
+		return value;
 	}
-
 }
