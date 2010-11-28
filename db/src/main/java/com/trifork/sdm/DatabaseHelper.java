@@ -91,8 +91,8 @@ public class DatabaseHelper {
 
 	public void dropDB() {
 
-		executeSQL("DROP SCHEMA " + schema, MYSQL_DEFAULT_SCHEMA);
-		executeSQL("DROP SCHEMA " + housekeeping_schema, MYSQL_DEFAULT_SCHEMA); // TODO: Remove
+		executeSQL("DROP SCHEMA IF EXISTS " + schema, MYSQL_DEFAULT_SCHEMA);
+		executeSQL("DROP SCHEMA IF EXISTS " + housekeeping_schema, MYSQL_DEFAULT_SCHEMA); // TODO: Remove
 	}
 
 
