@@ -221,7 +221,7 @@ public class SchemaTest {
 
 		// Make sure that v3 only includes properties for v3.
 
-		String pathB3 = schemaGenerator.target + "/TestB_v3.xsd";
+		String pathB3 = schemaGenerator.target + "/testb_v3.xsd";
 		Document documentB3 = builder.parse(new FileInputStream(pathB3));
 
 
