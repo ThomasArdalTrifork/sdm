@@ -61,7 +61,7 @@ public class SchemaTest {
 		
 		SchemaGenerator schemaGenerator = new SchemaGenerator(tmpDir, TestA.class.getPackage().getName());
 
-		String path = schemaGenerator.target + "/TestA_v1.xsd";
+		String path = schemaGenerator.target + "/testa_v1.xsd";
 		
 		schemaGenerator.execute();
 
@@ -123,7 +123,7 @@ public class SchemaTest {
 
 		schemaGenerator.execute();
 
-		String path = schemaGenerator.target + "/TestA_v1.xsd";
+		String path = schemaGenerator.target + "/testa_v1.xsd";
 
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
@@ -200,13 +200,13 @@ public class SchemaTest {
 
 		// Make sure that schema B2 is not created.
 
-		String pathB2 = schemaGenerator.target + "/TestB_v2.xsd";
+		String pathB2 = schemaGenerator.target + "/testb_v2.xsd";
 		assertFalse(new File(pathB2).exists());
 
 
 		// Make sure that v1 only includes properties for v1.
 
-		String pathB1 = schemaGenerator.target + "/TestB_v1.xsd";
+		String pathB1 = schemaGenerator.target + "/testb_v1.xsd";
 		Document documentB1 = builder.parse(new FileInputStream(pathB1));
 
 		String query = "//element[@name='%s'][1]";

@@ -23,7 +23,6 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
-import com.sun.corba.se.impl.util.PackagePrefixChecker;
 import com.trifork.sdm.persistence.annotations.Output;
 
 
