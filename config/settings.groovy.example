@@ -5,7 +5,11 @@ db {
 	url = "jdbc:mysql://localhost/"
 	username = "root"
 	password = ""
-}	
+}
+
+cobertura {
+	format = "html"
+}
 
 
 // Environment specific settings.

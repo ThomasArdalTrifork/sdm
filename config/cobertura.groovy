@@ -42,9 +42,15 @@ test.doLast {
 			move(file: classesCopy, tofile: classesOriginal)
 		}
 		
+		def outputFormat = 'html'
+		
+		if (settings.test.cobertura != null && settings.test.cobertura.format != null) {
+			outputFormat = settings.test.cobertura.format
+		}
+		
 		// Create cobertura HTML reports.
 		ant.'cobertura-report'(destdir:"${project.reportsDir}/coverage",
-			format:'html', srcdir:'src/main/java', datafile:cobSerFile)
+			format:outputFormat, srcdir:'src/main/java', datafile:cobSerFile)
 		
 		//TODO: Figure out why we can't have the ser file in the build dir
 		// If we do so it creates two files...
