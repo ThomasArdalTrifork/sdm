@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:sd="http://www.stamdata.dk/2010/StamdataXML"
+	targetNamespace="http://www.stamdata.dk/2010/StamdataXML">
+	
+	<xs:annotation>
+		<xs:documentation>
+		<![CDATA[
+			Alle felter i et stamdata dokument kan være censureret.
+			Hvilke felter der er
+			censurerede er afhængigt af dine rettigheder som bruger,
+			og hvilke felter myndighederne vælge at
+			censurere. Alle felter bør undersøges
+			om de indeholder strengen '!CENSURERET!'.
+			Hvilke felter der er
+			censureret for dig kan ændres fra forespørgsel til forespørgsel.
+		]]>
+		</xs:documentation>
+	</xs:annotation>
+	
+	<xs:simpleType name="censured">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="$CENSURERET$"></xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="secureString">
+		<xs:union memberTypes="xs:string sd:censured" />
+	</xs:simpleType>
+
+	<xs:simpleType name="secureInteger">
+		<xs:union memberTypes="xs:integer sd:censured" />
+	</xs:simpleType>
+
+	<xs:simpleType name="secureBoolean">
+		<xs:union memberTypes="xs:boolean sd:censured" />
+	</xs:simpleType>
+	
+	<xs:simpleType name="secureDate">
+		<xs:union memberTypes="xs:dateTime sd:censured" />
+	</xs:simpleType>
+	
+	<xs:simpleType name="secureDouble">
+		<xs:union memberTypes="xs:double sd:censured" />
+	</xs:simpleType>
+</xs:schema>

@@ -1,1 +1,1 @@
-include 'api', 'db', 'importer'
+include 'api', 'api:schemas', 'db', 'importer'

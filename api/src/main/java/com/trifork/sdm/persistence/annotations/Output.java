@@ -26,7 +26,7 @@ public @interface Output
 	 * be generated and are supported. If specified on a method it denotes which
 	 * versions of the schema this element should be output in.
 	 */
-	public int[] supportedVersions() default {};
+	public int[] supportedVersions() default {1};
 	
 	/**
 	 * The documentation string that will be written to the XML Schemas.

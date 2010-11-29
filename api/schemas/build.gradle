@@ -1,0 +1,18 @@
+repositories {
+	mavenRepo urls:'http://reflections.googlecode.com/svn/repo'
+}
+
+dependencies {
+	compile project(':api')
+	compile 'org.reflections:reflections:0.9.5-RC2'
+	compile 'commons-io:commons-io:2.0'
+}
+
+task(generate, dependsOn: [':api:classes', 'classes'], type: JavaExec) {
+	main = 'com.trifork.sdm.schema.SchemaGenerator'
+	classpath = files(sourceSets.main.runtimeClasspath, project(":api").sourceSets.main.classesDir)
+	args = [
+		new File(project(":api").buildDir, "schemas"),
+		"com.trifork.sdm.models"
+	]
+}
