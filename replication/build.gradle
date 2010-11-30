@@ -1,0 +1,25 @@
+repositories {
+	mavenRepo urls:'http://reflections.googlecode.com/svn/repo'
+}
+
+dependencies {
+	
+	// Entities
+	
+	compile project(':api')
+	compile 'org.reflections:reflections:0.9.5-RC2'
+	
+	// Server
+	
+	compile 'org.mortbay.jetty:jetty:6.1.25'
+	
+	
+	// Injection
+	
+	def GUICE_VERSION = "3.0-SNAPSHOT-20101120"
+	
+	compile "aopalliance:aopalliance:1.0"
+	compile "javax.inject:javax.inject:1.0"
+	compile "com.google.code.inject:guice:$GUICE_VERSION"
+	compile "com.google.code.inject:guice-servlet:$GUICE_VERSION"
+}
