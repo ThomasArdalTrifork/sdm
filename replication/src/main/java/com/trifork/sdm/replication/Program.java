@@ -43,7 +43,7 @@ public final class Program {
 			// Start the server.
 			
 			Server server = injector.getInstance(Server.class);
-			server.start();
+			server.run();
 			
 			System.exit(1);
 		}

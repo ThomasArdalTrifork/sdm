@@ -19,6 +19,7 @@ import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.sdm.persistence.annotations.Output;
+import com.trifork.sdm.replication.security.SecurityServlet;
 
 
 public class ServerConfiguration extends GuiceServletContextListener {
@@ -30,6 +31,12 @@ public class ServerConfiguration extends GuiceServletContextListener {
 			
 			@Override
 		    protected void configureServlets() {
+				
+				// Set up the security gateway.
+				// This servlet generates authentication tokens for the user.
+				
+				serve("/authorize").with(SecurityServlet.class);
+				
 				
 				// Find all entities.
 				
@@ -51,7 +58,7 @@ public class ServerConfiguration extends GuiceServletContextListener {
 					
 					final String path = String.format("/%s", entity.getSimpleName().toLowerCase());
 					
-					serve(path).with(new EntityServlet(entity, 1));
+					serve(path).with(new EntityServlet(entity));
 				}
 				
 				

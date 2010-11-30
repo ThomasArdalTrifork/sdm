@@ -14,11 +14,18 @@ import java.util.List;
 import com.trifork.sdm.persistence.annotations.Output;
 
 
-public class EntityTemplateBuilder {
+/**
+ * Class that given an entity type, can output instances of that entity to an
+ * output stream in XML format.
+ * 
+ * The class uses the information entity's {@link Output} annotations, and the
+ * naming convention to infer names.
+ */
+public class XMLEntityWriter implements EntityWriter {
 
 	private final String startTag;
 	private final String endTag;
-	
+
 	private final List<EntityEntry> elements = new ArrayList<EntityEntry>();
 
 
@@ -42,7 +49,7 @@ public class EntityTemplateBuilder {
 
 			name = inferElementName(method);
 			startTag = String.format("\t<%s>", name);
-			endTag = String.format("</%s>", name);
+			endTag = String.format("</%s>\n", name);
 		}
 
 
@@ -75,13 +82,15 @@ public class EntityTemplateBuilder {
 	}
 
 
-	public EntityTemplateBuilder(Class<?> entity) {
+	public XMLEntityWriter(Class<?> entity) {
 
 		// Calculate all tags.
 		
-		startTag = String.format("<%s>\n", entity.getSimpleName());
-		endTag = String.format("</%s>\n", entity.getSimpleName());
+		String entityXMLName = entity.getSimpleName().toLowerCase();
 		
+		startTag = String.format("<%s>\n", entityXMLName);
+		endTag = String.format("</%s>\n", entityXMLName);
+
 		for (Method method : entity.getMethods()) {
 
 			Output annotation = method.getAnnotation(Output.class);
@@ -107,7 +116,7 @@ public class EntityTemplateBuilder {
 
 
 	public void write(Object instance, OutputStream outputStream) throws IOException {
-		
+
 		final Object[] NO_ARGUMENTS = new Object[] {};
 
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
@@ -141,5 +150,12 @@ public class EntityTemplateBuilder {
 
 		writer.write(builder.toString());
 		writer.flush();
+	}
+
+
+	@Override
+	public String getContentType() {
+
+		return "application/xml";
 	}
 }

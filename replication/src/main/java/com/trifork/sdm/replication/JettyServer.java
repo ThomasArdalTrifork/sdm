@@ -1,10 +1,9 @@
 package com.trifork.sdm.replication;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServlet;
-
 import org.mortbay.jetty.servlet.Context;
-
-import com.google.inject.name.Named;
 import com.google.inject.servlet.GuiceFilter;
 
 
@@ -12,10 +11,11 @@ public class JettyServer implements Server {
 
 	protected String host;
 	protected int port;
-	
+
 	protected org.mortbay.jetty.Server server;
 
 
+	@Inject
 	public JettyServer(@Named("Host") String host, @Named("Port") int port) {
 
 		assert host != null;
@@ -27,11 +27,14 @@ public class JettyServer implements Server {
 
 
 	@Override
-	public void start() {
+	public void run() {
 
 		// Start an embedded Jetty server.
 
 		server = new org.mortbay.jetty.Server(port);
+
+		// TODO: Set the servers host.
+
 		Context root = new Context(server, "/", Context.NO_SESSIONS);
 
 		// Set up the server to use Guice.
@@ -57,13 +60,16 @@ public class JettyServer implements Server {
 
 	@Override
 	public void stop() {
-		
-		if (server.isRunning()) {
+
+		if (server != null && server.isRunning()) {
 			try {
 				server.stop();
 			}
 			catch (Exception e) {
 				e.printStackTrace(); // TODO: Handle this exception.
+			}
+			finally {
+				server = null;
 			}
 		}
 	}
