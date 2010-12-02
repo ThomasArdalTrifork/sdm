@@ -22,29 +22,31 @@ import com.trifork.sdm.persistence.annotations.Output;
  * Only versions marked as supported in the {@link Output} annotations will 
  * be served.
  */
-public class EntityServlet extends HttpServlet {
+public class ResourceServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
 	private EntityWriter writer;
+	//private Class<?> entity;
 
 	
-	public EntityServlet(Class<?> entity) {
-
+	public ResourceServlet(Class<?> entity) {
+		
+		//this.entity = entity;
 		this.writer = new XMLEntityWriter(entity);
 	}
 
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.getAttribute("entity");
+		
 		Apotek a = new Apotek();
-		a.setApotekNummer(123l);
-		a.setCvr(1234512l);
+		a.setApotekNummer(100l);
 		a.setEmail("thomas@borlum.dk");
-
-		writer.write(a, resp.getOutputStream());
-
-		resp.setContentType(writer.getContentType());
+		
+		writer.write(a, response.getOutputStream());
+		response.setContentType(writer.getContentType());
 	}
 }

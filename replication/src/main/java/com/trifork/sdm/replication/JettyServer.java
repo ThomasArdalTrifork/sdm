@@ -1,12 +1,15 @@
 package com.trifork.sdm.replication;
 
+import java.util.EventListener;
+
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.servlet.http.HttpServlet;
 
 import org.mortbay.jetty.servlet.Context;
 
 import com.google.inject.servlet.GuiceFilter;
+import com.trifork.sdm.replication.configuration.properties.Host;
+import com.trifork.sdm.replication.configuration.properties.Port;
 
 
 public class JettyServer implements Server {
@@ -15,16 +18,18 @@ public class JettyServer implements Server {
 	protected int port;
 
 	protected org.mortbay.jetty.Server server;
-
+	private final EventListener dispatcher;
 
 	@Inject
-	public JettyServer(@Named("Host") String host, @Named("Port") int port) {
+	JettyServer(@Host String host, @Port int port, EventListener dispatcher) {
 
 		assert host != null;
 		assert port >= 0;
+		assert dispatcher != null;
 
 		this.host = host;
 		this.port = port;
+		this.dispatcher = dispatcher;
 	}
 
 
@@ -43,7 +48,7 @@ public class JettyServer implements Server {
 		// This part is equivalent to the web.xml file.
 
 		root.addFilter(GuiceFilter.class, "/*", 0);
-		root.addEventListener(new ServerConfiguration());
+		root.addEventListener(dispatcher);
 
 		// Add a dummy servet to the server, or
 		// Jetty won't serve anything at all.

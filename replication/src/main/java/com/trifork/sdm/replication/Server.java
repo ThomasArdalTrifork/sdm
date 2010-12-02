@@ -1,7 +1,7 @@
 package com.trifork.sdm.replication;
 
 
-public interface Server {
+public interface Server extends Runnable {
 	
 	/**
 	 * Runs the server.

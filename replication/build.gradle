@@ -9,6 +9,7 @@ dependencies {
 	compile project(':api')
 	compile 'org.reflections:reflections:0.9.5-RC2'
 	
+	
 	// Server
 	
 	compile 'org.mortbay.jetty:jetty:6.1.25'
@@ -23,7 +24,13 @@ dependencies {
 	compile "com.google.code.inject:guice:$GUICE_VERSION"
 	compile "com.google.code.inject:guice-servlet:$GUICE_VERSION"
 	
+	
 	// Encryption
 	
 	compile 'bouncycastle:bcprov-jdk16:140'
+	
+	
+	// Token Encoding
+	
+	compile "commons-codec:commons-codec:1.4"
 }
