@@ -57,7 +57,6 @@ public class JettyServer implements Server {
 
 		try {
 			server.start();
-			server.join();
 		}
 		catch (Exception e) {
 			e.printStackTrace(); // TODO: Handle this exception.

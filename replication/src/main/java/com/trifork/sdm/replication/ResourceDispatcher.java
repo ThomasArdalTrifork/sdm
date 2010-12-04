@@ -1,4 +1,4 @@
-package com.trifork.sdm.replication.configuration;
+package com.trifork.sdm.replication;
 
 import javax.inject.Inject;
 
@@ -12,7 +12,7 @@ public class ResourceDispatcher extends GuiceServletContextListener {
 	@Inject
 	ResourceDispatcher(Injector injector) {
 
-		this.injector = injector;
+		this.injector = injector.createChildInjector();
 	}
 
 	@Override

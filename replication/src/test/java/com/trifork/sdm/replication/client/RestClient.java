@@ -5,13 +5,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 
-import javax.net.ssl.HttpsURLConnection;
-
-public class Client {
+public class RestClient {
 	
 	private final URL server;
 	
-	public Client(URL server, String userID, String privateKey) {
+	public RestClient(URL server, String userID, String privateKey) {
 		
 		this.server = server;
 	}
@@ -33,8 +31,7 @@ public class Client {
 		
 		connection.connect();
 		
-		Response response = new Response(connection.getResponseCode(), connection.getResponseMessage());
 		
-		return response;
+		return null;
 	}
 }

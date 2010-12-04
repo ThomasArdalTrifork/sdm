@@ -4,6 +4,8 @@ apply from: 'config/environment.groovy'
 allprojects {
 	group: 'com.trifork'
 	version: '3.0-SNAPSHOT'
+	
+	apply plugin: 'eclipse'
 }
 
 
@@ -13,11 +15,11 @@ subprojects {
 	sourceCompatibility = 1.6
 	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 	
+	
 	apply from: "${rootProject.projectDir}/config/resources.groovy"
 	apply from: "${rootProject.projectDir}/config/cobertura.groovy"
 
-	
-	apply plugin: 'eclipse'
+
 	downloadSources	= true
 	downloadJavadoc = true
 
