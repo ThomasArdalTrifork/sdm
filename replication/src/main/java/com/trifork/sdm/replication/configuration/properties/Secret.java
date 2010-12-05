@@ -6,4 +6,4 @@ import javax.inject.Qualifier;
 
 @Qualifier
 @Retention(RUNTIME)
-public @interface Key {}
+public @interface Secret {}

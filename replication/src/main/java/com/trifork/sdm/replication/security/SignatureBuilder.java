@@ -1,11 +1,16 @@
 package com.trifork.sdm.replication.security;
 
 import java.security.SignatureException;
+import java.util.Date;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
+
 
 public class SignatureBuilder {
 
@@ -14,58 +19,52 @@ public class SignatureBuilder {
 
 		private final String name;
 
+
 		private HTTPMethod(String name) {
+
 			this.name = name;
 		}
 
+
 		@Override
 		public String toString() {
+
 			return name;
 		}
 	}
 
+
 	private HTTPMethod method;
-	private String resource;
-	private String key;
-	// private String contentType;
-	private long expires ;
-
+	private String bucket;
+	private String password;
+	private long expires;
+	private Map<String,String> queryParameters;
+	
+	
 	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
-
-	public SignatureBuilder(String key, String resource, long expires) {
-
-		this.resource = resource;
-		this.key = key;
-		this.expires = expires;
-
-		method = HTTPMethod.GET;
-	}
-
-	public SignatureBuilder setMethod(HTTPMethod method) {
+	private final String username;
+	
+	
+	public SignatureBuilder(HTTPMethod method, String username, String password, String bucket, long expires) {
+		
+		assert method != null;
+		assert username != null;
+		assert password != null;
+		assert bucket != null;
 
 		this.method = method;
-		return this;
-	}
-
-	public SignatureBuilder setSecret(String secret) {
-
-		this.key = secret;
-		return this;
-	}
-
-	public SignatureBuilder setExpires(long expires) {
-
+		this.username = username;
+		this.bucket = bucket;
+		this.password = password;
 		this.expires = expires;
-		return this;
 	}
-
+	
+	
 	/*
-	public SignatureBuilder setContentType(String contentType) {
-
-		this.contentType = contentType;
-		return this;
-	}
-	*/
+	 * public SignatureBuilder setContentType(String contentType) {
+	 * 
+	 * this.contentType = contentType; return this; }
+	 */
 
 	public String build() throws IllegalStateException, SignatureException {
 
@@ -77,19 +76,20 @@ public class SignatureBuilder {
 
 		// TODO: A GET request should not include a content type.
 
-		if (resource == null) {
-			throw new IllegalStateException("A signature must have a resource field.");
+		if (bucket == null) {
+			throw new IllegalStateException("A signature must have a bucket field.");
 		}
 
-		String messageDescription = this.toString();
-
-		return calculateRFC2104HMAC(messageDescription, key);
+		return calculateRFC2104HMAC(toString(), password);
 	}
+
 
 	@Override
 	public String toString() {
 
 		final StringBuilder signature = new StringBuilder();
+		
+		// TODO: Look into header unfolding and trimming which might cause trouble.
 
 		signature.append(method);
 		signature.append('\n');
@@ -100,12 +100,15 @@ public class SignatureBuilder {
 		// final String contentMD5 = request.getHeader("Content-Md5");
 
 		// if (contentMD5 != null) builder.append(contentMD5);
-		//signature.append('\n'); // We leave this in for forward compatibility.
+		signature.append('\n'); // We leave this in for forward compatibility.
 
 		// Expected content type is also required.
 
 		// if (contentType != null) builder.append(contentType);
 		signature.append('\n'); // We leave this in for forward compatibility.
+		
+		signature.append(username);
+		signature.append('\n');
 
 		// Since the client might not be able to set the date
 		// header in the framework they use, we require a custom header
@@ -114,12 +117,21 @@ public class SignatureBuilder {
 		signature.append(expires);
 		signature.append('\n');
 
-		// Lastly we append the resource path.
-
-		signature.append(resource);
-
+		// Lastly we append the canonical resource.
+		signature.append("/" + bucket);
+		
+		// and the query parameters attached.
+		if (queryParameters != null)
+		for (Entry<String, String> queryEntry : queryParameters.entrySet()) {
+			signature.append('\n');
+			signature.append(queryEntry.getKey());
+			signature.append(':');
+			signature.append(queryEntry.getValue());
+		}
+		
 		return signature.toString().toLowerCase();
 	}
+
 
 	/**
 	 * Computes RFC 2104-complaint HMAC signature.
@@ -132,13 +144,11 @@ public class SignatureBuilder {
 	 * @throws java.security.SignatureException
 	 *             when signature generation fails
 	 */
-	private static String calculateRFC2104HMAC(String data, String key)
-			throws SignatureException {
+	private static String calculateRFC2104HMAC(String data, String key) throws SignatureException {
 
 		String result;
 
 		try {
-
 			// get an hmac_sha1 key from the raw key bytes
 			SecretKeySpec signingKey = new SecretKeySpec(key.getBytes(), HMAC_SHA1_ALGORITHM);
 
@@ -151,12 +161,27 @@ public class SignatureBuilder {
 
 			// base64-encode the hmac
 			result = Base64.encodeBase64URLSafeString(rawHmac);
-
 		}
 		catch (Exception e) {
-			throw new SignatureException("Failed to generate HMAC : " + e.getMessage());
+			throw new SignatureException("Failed to generate HMAC encoding: " + e.getMessage());
 		}
 
 		return result;
+	}
+
+
+	public SignatureBuilder setSince(Date since) {
+
+		addQueryParameter("since", Long.toString(since.getTime()));
+		return this;
+	}
+	
+	public void addQueryParameter(String key, String value) {
+		
+		if (queryParameters == null) {
+			queryParameters = new TreeMap<String, String>();
+		}
+		
+		queryParameters.put(key, value);
 	}
 }

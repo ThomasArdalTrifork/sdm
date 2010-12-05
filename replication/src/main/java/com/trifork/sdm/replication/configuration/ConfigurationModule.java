@@ -5,7 +5,7 @@ import java.util.Properties;
 
 import com.google.inject.AbstractModule;
 import com.trifork.sdm.replication.configuration.properties.AuthorizationTTL;
-import com.trifork.sdm.replication.configuration.properties.Key;
+import com.trifork.sdm.replication.configuration.properties.Secret;
 import com.trifork.sdm.replication.configuration.properties.PageSize;
 
 public class ConfigurationModule extends AbstractModule {
@@ -19,7 +19,7 @@ public class ConfigurationModule extends AbstractModule {
 		
 		// Token Settings
 
-		bindConstant().annotatedWith(Key.class).to("secret");
+		bindConstant().annotatedWith(Secret.class).to("secret");
 		
 		bindConstant().annotatedWith(PageSize.class).to(1000);
 		bindConstant().annotatedWith(AuthorizationTTL.class).to(15);

@@ -18,6 +18,7 @@ import org.junit.runners.model.Statement;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.trifork.sdm.replication.configuration.DateFormatModule;
 import com.trifork.sdm.replication.configuration.TestServerModule;
 
 
@@ -35,7 +36,7 @@ public class TestRunner extends BlockJUnit4ClassRunner {
 
 		Module testModule = (Module) type.getConstructor().newInstance();
 
-		injector = Guice.createInjector(new TestServerModule(), testModule);
+		injector = Guice.createInjector(new TestServerModule(), new DateFormatModule(), testModule);
 	}
 
 

@@ -1,8 +1,11 @@
 package com.trifork.sdm.replication.security;
 
 import java.io.IOException;
-import java.security.SignatureException;
-import java.util.Date;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.DateFormat;
+import java.util.Calendar;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -12,8 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.trifork.sdm.replication.configuration.properties.AuthorizationTTL;
-import com.trifork.sdm.replication.configuration.properties.Key;
+import com.trifork.sdm.replication.configuration.properties.Host;
 import com.trifork.sdm.replication.configuration.properties.PageSize;
+import com.trifork.sdm.replication.configuration.properties.Port;
+import com.trifork.sdm.replication.configuration.properties.Secret;
 
 
 @Singleton
@@ -21,23 +26,30 @@ public class GatewayServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final int UNDEFINED = -1;
-
 	private final int timeToLive;
-	private final int defaultPageSize;
+
+	private final String username = "gateway";
 	private final String key;
+
+	private final DateFormat dateFormat;
+	private final URL baseURL;
 
 
 	@Inject
-	GatewayServlet(@Key String key, @AuthorizationTTL int ttl, @PageSize int defaultPageSize) {
+	GatewayServlet(@Secret String key, @AuthorizationTTL int ttl, @PageSize int defaultPageSize,
+			DateFormat dateFormat, @Host String host, @Port int port) throws MalformedURLException {
 
+		
 		assert key != null && !key.isEmpty();
 		assert ttl > 0;
 		assert defaultPageSize > 0;
+		assert dateFormat != null;
+		assert host != null;
 
 		this.key = key;
 		this.timeToLive = ttl;
-		this.defaultPageSize = defaultPageSize;
+		this.dateFormat = dateFormat;
+		this.baseURL = new URL("http", host, port, "");
 	}
 
 
@@ -45,51 +57,55 @@ public class GatewayServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 
-		try {
-			// FIXME: Pull the request's data from the SOAP envelope, and
-			// authenticate.
+		// FIXME: Pull the request's data from the SOAP envelope, and
+		// authenticate.
 
-			// Since is represented in milliseconds since the last epoch.
-			
+		final String bucket = request.getHeader("X-Sdm-Bucket");
 
-			final long sinceMillisecs = System.currentTimeMillis() / 1000 + 30;
-			final Date since = new Date(sinceMillisecs);
-			
-			final String resourceHeader = request.getHeader("X-Sdm-Resource");
+		if (bucket == null || bucket.isEmpty()) {
 
-			int pageSize = UNDEFINED; // TODO: Read pageSize from request.
-
-			if (pageSize == UNDEFINED) pageSize = defaultPageSize;
-
-			// Define the time window where the resource will be accessible.
+			response.setStatus(HttpURLConnection.HTTP_BAD_REQUEST);
+			response.getOutputStream().println("A request must contain a 'X-Sdm-Bucket'-header.");
+		}
+		else {
 
 			// Authorize the user for a time window.
-
-			long expires = System.currentTimeMillis() / 1000 + timeToLive;
-
-			SignatureBuilder signatureBuilder = new SignatureBuilder(key, resourceHeader, expires);
-
-			String signature = null;
-
-			signature = signatureBuilder.build();
-
-			// Create the response.
-
-			// TODO: Use response.setContentType("application/soap+xml"); instead.
-			response.setContentType("text");
-			response.setStatus(200);
+			Calendar expires = Calendar.getInstance();
+			expires.add(Calendar.SECOND, timeToLive);
 
 			// HACK: Don't hard-code the host and port.
-			final String templateURL = "http://0.0.0.0:3001/%s?signature=%s&expires=%s";
-			String resourceURL = String.format(templateURL, resourceHeader, signature, expires);
+			final URL bucketURL = new URL(baseURL, "/" + bucket);
+
+			URLBuilder builder = new URLBuilder(bucketURL, username, key, expires.getTime());
+
+			// Query parameters
+
+			// NOTE: At the moment we only support one query parameter,
+			// namely since. This should be generalized in the future.
+
+			final String sinceHeader = request.getHeader("X-Sdm-Since");
+
+			// Since is not required. If it isn't there we make an
+			// initialization.
+			if (sinceHeader != null) {
+				// We parse the header to make sure it is a value date.
+				// TODO: We might make this a bit more advanced.
+				final long since = Long.parseLong(sinceHeader);
+				builder.setQueryParameter("since", Long.toString(since));
+			}
+
+			// Create the response.
+			response.setContentType("application/soap+xml; charset=UTF-8");
+			response.setStatus(200);
+
+			String resourceURL = builder.build();
 
 			// TODO: Should be written in a DGWS envelope.
 			response.getOutputStream().println(resourceURL);
 		}
-		catch (SignatureException e) {
-
-			// TODO: Notify the operator. This should not happen, and is a
-			// programming error.
-		}
+		
+		// TODO: Should we even do this?
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
 	}
 }
