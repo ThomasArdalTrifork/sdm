@@ -1,7 +1,13 @@
 package com.trifork.sdm.replication.security;
 
-import java.io.IOException;
+import static java.net.HttpURLConnection.*;
 
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -12,18 +18,36 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.codec.binary.Base64;
+import com.trifork.sdm.replication.configuration.properties.Secret;
+import com.trifork.sdm.replication.security.SignatureBuilder.HTTPMethod;
+
 
 @Singleton
 public class SecurityFilter implements Filter {
 
-	private static int HTTP_BAD_REQUEST = 400;
-	private static int HTTP_UNAUTHORIZED = 401;
+	private final String secret;
+
+	private static final Set<String> specialParams = new HashSet<String>();
+	{
+		specialParams.add("signature");
+		specialParams.add("expires");
+		specialParams.add("username");
+		specialParams.add("contenttype");
+	}
+
+
+	@Inject
+	SecurityFilter(@Secret String secret) {
+
+		this.secret = secret;
+	}
+
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 
 	}
+
 
 	@Override
 	public void doFilter(ServletRequest rawRequest, ServletResponse rawResponse, FilterChain chain)
@@ -32,142 +56,80 @@ public class SecurityFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) rawRequest;
 		HttpServletResponse response = (HttpServletResponse) rawResponse;
 
-		if (validateAuthorization(request, response)) {
-			
-			chain.doFilter(request, response);
-		}
-	}
+		String bucket = request.getRequestURI().substring(1);
 
-	/**
-	 * The connection is secure we want to extract the Authorization
-	 * 
-	 * information from the headers.
-	 * 
-	 * We expect a Authorization header with the format:
-	 * 
-	 * <code>Authorization: SDM [public user id]:[signed headers]</code>
-	 * 
-	 * Where the string in front of the colon is the user name, and the string
-	 * after it is the message headers signed with the user's key.
-	 * 
-	 * See {@link Token} for more information about the authorization protocol.
-	 * 
-	 * @throws IOException
-	 */
-	private boolean validateAuthorization(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+		// TODO: Validate the existence of these parameters.
 
-		final String authorization = request.getHeader("Authorization");
-		
-		if (authorization == null) {
-			writeResponse(response, HTTP_UNAUTHORIZED, "The 'Authorization' header is missing the the HTTP request.");
-			return false;
-		}
+		String signature = request.getParameter("signature");
+		String username = request.getParameter("username");
+		String expiresString = request.getParameter("expires");
+
+		long expires;
 
 		try {
-			// TODO: Clean the splitting up.
-			final String protocol = authorization.split(" ")[0];
-			final String credentials = authorization.split(" ")[1];
-			final String userID = credentials.split(":")[0];
-			final String signature = credentials.split(":")[1];
-
-			if (!protocol.equals("SDM")) {
-
-			}
-			else if (!userID.equals("gateway")) {
-
-				// Right now we only support one user, the gateway.
-				// In future we might support additional users so it should be
-				// included.
-
-			}
-			else {
-				
-				// Missing headers are left out but their '\n' separators are still required.
-
-				final StringBuilder builder = new StringBuilder();
-				
-				final String method = request.getMethod();
-				
-				if (!"GET".equals(method)) {
-					// We only support the GET verb and might
-					// also only support this in the future.
-					writeResponse(response, HTTP_BAD_REQUEST, "The resource path is missing from the request.");
-					return false;
-				}
-				
-				builder.append(method);
-				builder.append('\n');
-				
-				// NOTE: A place-holder for future compatibility with content checking,
-				// e.g. for using the PUT verb.
-				
-				final String contentMD5 = request.getHeader("Content-Md5");
-				
-				if (contentMD5 != null) builder.append(contentMD5);
-				builder.append('\n');
-				
-				// Expected content type is also required.
-				
-				final String contentType = request.getContentType();
-				
-				// PUT and POST require a content type. 
-				
-				if ((method.equals("PUT") || method.equals("POST")) && contentType == null) {
-					writeResponse(response, HTTP_BAD_REQUEST, "The Content-Type header is missing from the request.");
-					return false;
-				}
-				
-				if (contentMD5 != null) builder.append(contentType);
-				builder.append('\n');
-				
-				// Since the client might not be able to set the date
-				// header in the framework they use, we require a custom header
-				// for the same purpose.
-
-				final String date = request.getHeader("X-Sdm-Date");
-
-				if (date == null) {
-					writeResponse(response, HTTP_BAD_REQUEST, "The Date header is missing from the request.");
-					return false;
-				}
-				
-				builder.append("x-sdm-date:" + date);
-				builder.append('\n');
-				
-				final String resource = request.getRequestURI();
-				
-				if (resource == null) {
-					writeResponse(response, HTTP_BAD_REQUEST, "The resource path is missing from the request.");
-					return false;
-				}
-				
-				builder.append(resource);
-				
-				// Using the service's public key we verify that the request was
-				// authorized by the server. In future we might have to authenticate
-				// individual clients instead.
-				
-				String expectedSignature = builder.toString().toLowerCase();
-				expectedSignature = new String(Base64.decodeBase64(signature));
-				
-				if (!signature.equals(expectedSignature)) {
-					writeResponse(response, HTTP_UNAUTHORIZED, "The message signature in the 'Authorization' header was incorrect.\nThe event has been logged.");
-					// TODO: Notify or Log.
-					return false;
-				}
-			}
-
+			expires = Long.parseLong(expiresString);
 		}
-		catch (ArrayIndexOutOfBoundsException e) {
-			writeResponse(response, HTTP_UNAUTHORIZED, "The authentication header was not formatted correctly.");
-			return false;
+		catch (NumberFormatException e) {
+			expires = Long.MIN_VALUE;
 		}
 
-		// The user was authorized to access the requested resource.
-		
-		return true;
+		if (expires == Long.MIN_VALUE) {
+			writeResponse(response, HTTP_BAD_REQUEST, "The request had an invalid 'expires'-parameter.");
+		}
+		else if (expires < System.currentTimeMillis()) {
+			writeResponse(response, HTTP_GONE, "The requested resource has expired.");
+		}
+		else if (signature == null) {
+			writeResponse(response, HTTP_FORBIDDEN, "The request did not contain a 'signature'-parameter.");
+		}
+		else if (username == null) {
+			writeResponse(response, HTTP_FORBIDDEN, "The request did not contain a 'username'-parameter.");
+		}
+		else if (expiresString == null) {
+			writeResponse(response, HTTP_FORBIDDEN, "The request did not contain a 'expires'-parameter.");
+		}
+		else if (verifySignature(request, bucket, signature, username, expires)) {
+			chain.doFilter(request, response);
+		}
+		else {
+			writeResponse(response, HTTP_FORBIDDEN, "The request's signature did not match the query.");
+			// TODO: We might want to log this but it would make DOS attacks hurt more.
+		}
 	}
+
+
+	private boolean verifySignature(HttpServletRequest request,
+			String bucket, String signature, String username, long expires) throws IOException, ServletException {
+
+		HTTPMethod method = getMethod(request);
+
+		SignatureBuilder builder = new SignatureBuilder(method, username, secret, bucket, expires);
+
+		addQueryParameters(request, builder);
+
+		String expectedSignature = builder.build();
+
+		return expectedSignature.equals(signature);
+	}
+
+
+	private void addQueryParameters(HttpServletRequest request, final SignatureBuilder builder) {
+
+		@SuppressWarnings("rawtypes")
+		final Enumeration paramNames = request.getParameterNames();
+
+		while (paramNames.hasMoreElements()) {
+
+			final String parameter = (String) paramNames.nextElement();
+
+			if (!specialParams.contains(parameter)) {
+
+				final String value = request.getParameter(parameter);
+				builder.addQueryParameter(parameter, value);
+			}
+		}
+	}
+
 
 	private void writeResponse(HttpServletResponse response, int statusCode, String message)
 			throws IOException {
@@ -177,9 +139,34 @@ public class SecurityFilter implements Filter {
 		response.getOutputStream().println(output);
 	}
 
+
 	@Override
 	public void destroy() {
 
 	}
 
+
+	private HTTPMethod getMethod(HttpServletRequest request) {
+
+		// TODO: This is an ugly and combersome way of getting the method. We
+		// should change it.
+
+		String method = request.getMethod();
+
+		if (method.equals("GET")) {
+			return HTTPMethod.GET;
+		}
+		else if (method.equals("PUT")) {
+			return HTTPMethod.PUT;
+		}
+		else if (method.equals("POST")) {
+			return HTTPMethod.POST;
+		}
+		else if (method.equals("DELETE")) {
+			return HTTPMethod.DELETE;
+		}
+		else {
+			return HTTPMethod.HEAD;
+		}
+	}
 }

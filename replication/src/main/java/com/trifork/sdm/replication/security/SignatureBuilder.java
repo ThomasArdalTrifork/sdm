@@ -59,28 +59,20 @@ public class SignatureBuilder {
 		this.expires = expires;
 	}
 	
-	
-	/*
-	 * public SignatureBuilder setContentType(String contentType) {
-	 * 
-	 * this.contentType = contentType; return this; }
-	 */
 
-	public String build() throws IllegalStateException, SignatureException {
+	public String build() {
 
-		// Validate the signature.
-
-		if (method == null) {
-			throw new IllegalStateException("A signature must have a HTTP method field.");
+		String signature = null;
+		
+		try {
+			signature = calculateRFC2104HMAC(toString(), password);
+		}
+		catch (Exception e) {
+			// This should never happen, and is a programming error.
+			// TODO: Notify.
 		}
 
-		// TODO: A GET request should not include a content type.
-
-		if (bucket == null) {
-			throw new IllegalStateException("A signature must have a bucket field.");
-		}
-
-		return calculateRFC2104HMAC(toString(), password);
+		return signature;
 	}
 
 

@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
-import com.trifork.sdm.replication.configuration.Resource;
+import com.trifork.sdm.replication.configuration.Bucket;
 import com.trifork.sdm.replication.configuration.properties.Secret;
 import com.trifork.sdm.replication.security.GatewayServlet;
 import com.trifork.sdm.replication.security.SignatureBuilder;
@@ -41,7 +41,7 @@ public class GatewayTest extends ReplicationTest {
 	@Override
 	public void initialize() {
 
-		bindConstant().annotatedWith(Resource.class).to("/gateway");
+		bindConstant().annotatedWith(Bucket.class).to("/gateway");
 		serve("/gateway").with(GatewayServlet.class);
 
 		bindConstant().annotatedWith(Secret.class).to(secret);

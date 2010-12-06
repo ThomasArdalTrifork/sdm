@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 
 import com.google.inject.Provides;
 import com.google.inject.servlet.ServletModule;
-import com.trifork.sdm.replication.configuration.Resource;
+import com.trifork.sdm.replication.configuration.Bucket;
 import com.trifork.sdm.replication.configuration.properties.Host;
 import com.trifork.sdm.replication.configuration.properties.Port;
 
@@ -39,7 +39,7 @@ public abstract class ReplicationTest extends ServletModule {
 
 	@Inject
 	@Provides
-	public URL provideURL(@Host String host, @Port int port, @Resource String resource) throws IOException {
+	public URL provideURL(@Host String host, @Port int port, @Bucket String resource) throws IOException {
 
 		return new URL("http", host, port, resource);
 	}
