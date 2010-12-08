@@ -1,7 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class OplysningerOmDosisdispensering extends TakstEntity
-{
+public class OplysningerOmDosisdispensering extends TakstEntity {
 
 	private Long drugid; // Ref. t. LMS01, felt 01
 	private Long varenummer; // Ref. t. LMS02, felt 02
@@ -16,104 +15,104 @@ public class OplysningerOmDosisdispensering extends TakstEntity
 	private Long billigsteDrugid; // Henvisning til billigste Drugid
 
 
-	public Long getDrugid()
-	{
+	public Long getDrugid() {
+
 		return this.drugid;
 	}
 
 
-	public void setDrugid(Long drugid)
-	{
+	public void setDrugid(Long drugid) {
+
 		this.drugid = drugid;
 	}
 
 
-	public Long getVarenummer()
-	{
+	public Long getVarenummer() {
+
 		return this.varenummer;
 	}
 
 
-	public void setVarenummer(Long varenummer)
-	{
+	public void setVarenummer(Long varenummer) {
+
 		this.varenummer = varenummer;
 	}
 
 
-	public String getLaegemidletsSubstitutionsgruppe()
-	{
+	public String getLaegemidletsSubstitutionsgruppe() {
+
 		return this.laegemidletsSubstitutionsgruppe;
 	}
 
 
-	public void setLaegemidletsSubstitutionsgruppe(String laegemidletsSubstitutionsgruppe)
-	{
+	public void setLaegemidletsSubstitutionsgruppe(String laegemidletsSubstitutionsgruppe) {
+
 		this.laegemidletsSubstitutionsgruppe = laegemidletsSubstitutionsgruppe;
 	}
 
 
-	public Long getMindsteAIPPrEnhed()
-	{
+	public Long getMindsteAIPPrEnhed() {
+
 		return this.mindsteAIPPrEnhed;
 	}
 
 
-	public void setMindsteAIPPrEnhed(Long mindsteAIPPrEnhed)
-	{
+	public void setMindsteAIPPrEnhed(Long mindsteAIPPrEnhed) {
+
 		this.mindsteAIPPrEnhed = mindsteAIPPrEnhed;
 	}
 
 
-	public Long getMindsteRegisterprisEnh()
-	{
+	public Long getMindsteRegisterprisEnh() {
+
 		return this.mindsteRegisterprisEnh;
 	}
 
 
-	public void setMindsteRegisterprisEnh(Long mindsteRegisterprisEnh)
-	{
+	public void setMindsteRegisterprisEnh(Long mindsteRegisterprisEnh) {
+
 		this.mindsteRegisterprisEnh = mindsteRegisterprisEnh;
 	}
 
 
-	public Long getTSPPrEnhed()
-	{
+	public Long getTSPPrEnhed() {
+
 		return this.tSPPrEnhed;
 	}
 
 
-	public void setTSPPrEnhed(Long tSPPrEnhed)
-	{
+	public void setTSPPrEnhed(Long tSPPrEnhed) {
+
 		this.tSPPrEnhed = tSPPrEnhed;
 	}
 
 
-	public String getKodeForBilligsteDrugid()
-	{
+	public String getKodeForBilligsteDrugid() {
+
 		return this.kodeForBilligsteDrugid;
 	}
 
 
-	public void setKodeForBilligsteDrugid(String kodeForBilligsteDrugid)
-	{
+	public void setKodeForBilligsteDrugid(String kodeForBilligsteDrugid) {
+
 		this.kodeForBilligsteDrugid = kodeForBilligsteDrugid;
 	}
 
 
-	public Long getBilligsteDrugid()
-	{
+	public Long getBilligsteDrugid() {
+
 		return this.billigsteDrugid;
 	}
 
 
-	public void setBilligsteDrugid(Long billigsteDrugid)
-	{
+	public void setBilligsteDrugid(Long billigsteDrugid) {
+
 		this.billigsteDrugid = billigsteDrugid;
 	}
 
 
-	public Long getEntityId()
-	{
+	public Long getEntityId() {
+
 		return varenummer;
 	}
 

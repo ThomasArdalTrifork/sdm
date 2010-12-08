@@ -1,39 +1,40 @@
 package com.trifork.sdm.models.takst;
 
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-@Output
-public class Pakningsstoerrelsesenhed extends TakstEntity
-{
+
+@Entity
+public class Pakningsstoerrelsesenhed extends TakstEntity {
 
 	private final DivEnheder enheder;
 
 
-	public Pakningsstoerrelsesenhed(DivEnheder enheder)
-	{
+	public Pakningsstoerrelsesenhed(DivEnheder enheder) {
+
 		this.enheder = enheder;
 	}
 
 
 	@Id
-	@Output
-	public String getPakningsstoerrelsesenhedKode()
-	{
+	@Column
+	public String getPakningsstoerrelsesenhedKode() {
+
 		return enheder.getKode();
 	}
 
 
-	@Output
-	public String getPakningsstoerrelsesenhedTekst()
-	{
+	@Column
+	public String getPakningsstoerrelsesenhedTekst() {
+
 		return enheder.getTekst();
 	}
 
 
 	@Override
-	public String getEntityId()
-	{
+	public String getEntityId() {
+
 		return enheder.getKode();
 	}
 

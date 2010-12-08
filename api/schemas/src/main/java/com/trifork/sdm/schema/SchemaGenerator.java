@@ -16,6 +16,10 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import org.apache.commons.io.FileUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
@@ -24,8 +28,8 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
+import com.trifork.sdm.Documented;
+import com.trifork.sdm.Versioned;
 
 
 /**
@@ -75,23 +79,29 @@ public class SchemaGenerator {
 			FileUtils.copyFile(typesFile, typesFileDestination);
 		}
 
-		Set<Class<?>> entities = reflections.getTypesAnnotatedWith(Output.class);
+		Set<Class<?>> entities = reflections.getTypesAnnotatedWith(Entity.class);
 
 		for (Class<?> entity : entities) {
 
 			System.out.println("Entity: " + entity.getSimpleName());
 
-			Output typeAnnotation = entity.getAnnotation(Output.class);
+			Entity typeAnnotation = entity.getAnnotation(Entity.class);
+			Versioned versioned = entity.getAnnotation(Versioned.class);
 
-			for (int version : typeAnnotation.supportedVersions()) {
+			if (versioned.value() == null || versioned.value().length == 0) {
 
-				generateSchemaVersion(entity, typeAnnotation, version);
+				generateSchemaVersion(entity, typeAnnotation, 1);
 			}
+			else
+				for (int version : versioned.value()) {
+
+					generateSchemaVersion(entity, typeAnnotation, version);
+				}
 		}
 	}
 
 
-	private void generateSchemaVersion(Class<?> type, Output typeAnnotation, int version) throws IOException {
+	private void generateSchemaVersion(Class<?> type, Entity typeAnnotation, int version) throws IOException {
 
 		final String STAMDATA_NAMESPACE = "http://www.stamdata.dk/2010/StamdataXML";
 		final String XML_SCHEMA_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
@@ -161,17 +171,19 @@ public class SchemaGenerator {
 
 		// Write the documentation annotation if it exists.
 
-		if (!typeAnnotation.documentation().isEmpty()) {
+		Documented documentation = type.getAnnotation(Documented.class);
+
+		if (documentation != null && !documentation.value().isEmpty()) {
 
 			write(writer, 2, "<xs:annotation>");
 			write(writer, 3, "<xs:documentation><![CDATA[");
-			write(writer, 4, typeAnnotation.documentation());
+			write(writer, 4, documentation.value());
 			write(writer, 3, "]]></xs:documentation>");
 			write(writer, 2, "</xs:annotation>");
 		}
 		else {
 			System.err.println(String.format(
-					"The class '%s' is not documented! Add documentation to the @Output annotation.",
+					"The class '%s' is not documented! Add documentation to the @Column annotation.",
 					type.getSimpleName()));
 		}
 
@@ -184,6 +196,7 @@ public class SchemaGenerator {
 		// Output each of the found element properties to the schema.
 
 		for (Map.Entry<String, Method> entry : elements.entrySet()) {
+
 			String name = entry.getKey();
 			Method method = entry.getValue();
 
@@ -202,12 +215,12 @@ public class SchemaGenerator {
 
 			// Create the element in the schema.
 
-			Output annotation = method.getAnnotation(Output.class);
+			Column annotation = method.getAnnotation(Column.class);
 
 			// If the property has a length restriction we have to restrict the
 			// content.
 
-			if (annotation.length() == Output.UNDEFINED) {
+			if (annotation.length() == 255) {
 				String element = String.format("<xs:element name=\"%s\" type=\"%s\" %s />", name, xmlType,
 						occurString);
 				write(writer, 4, element);
@@ -319,11 +332,12 @@ public class SchemaGenerator {
 		SortedMap<String, Method> elements = new TreeMap<String, Method>();
 
 		for (Method method : type.getMethods()) {
+
 			for (Annotation annotation : method.getAnnotations()) {
 				// Skip properties that are not set as output.
 
-				if (annotation instanceof Output) {
-					Output outputAnnotation = (Output) annotation;
+				if (annotation instanceof Column) {
+					Column outputAnnotation = (Column) annotation;
 
 					// Output the property to this version if the version
 					// is specified in the list of supported versions or
@@ -331,19 +345,17 @@ public class SchemaGenerator {
 
 					boolean enabled = false;
 
-					for (int i : outputAnnotation.supportedVersions()) {
-						if (i == version) {
-							enabled = true;
-							break;
+					Versioned versioned = method.getAnnotation(Versioned.class);
+
+					if (versioned != null && versioned.value().length != 0)
+						for (int i : versioned.value()) {
+							if (i == version) {
+								enabled = true;
+								break;
+							}
 						}
-					}
-
-					// Special case no supported version is specified,
-					// include in all versions.
-
-					if (outputAnnotation.supportedVersions().length == 0) {
+					else
 						enabled = true;
-					}
 
 					if (enabled) {
 						String elementName = getElementNameFromMethod(method, outputAnnotation);
@@ -371,7 +383,7 @@ public class SchemaGenerator {
 	}
 
 
-	protected String getElementNameFromMethod(Method method, Output outputAnnotation) {
+	protected String getElementNameFromMethod(Method method, Column outputAnnotation) {
 
 		// TODO: Use the entity helper class instead.
 

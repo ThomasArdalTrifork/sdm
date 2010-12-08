@@ -2,12 +2,16 @@ package com.trifork.sdm.models.doseringsforslag;
 
 import java.util.Calendar;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+import com.trifork.sdm.Documented;
 import com.trifork.sdm.models.AbstractEntity;
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
 
 
-@Output(documentation = "Indeholder anvendte doseringsenheder.\n"
+@Entity
+@Documented("Indeholder anvendte doseringsenheder.\n"
 		+ "Doseringsenhederne stammer dels fra Lægemiddelstyrelsens takst (her er code <= 1000),\n"
 		+ "dels er der tale om nye data (code > 1000).")
 public class DosageUnit extends AbstractEntity {
@@ -34,7 +38,7 @@ public class DosageUnit extends AbstractEntity {
 
 
 	// Don't output this.
-	// @Output(length = 15)
+	// @Column(length = 15)
 	public long getReleaseNumber() {
 
 		return releaseNumber;
@@ -48,7 +52,7 @@ public class DosageUnit extends AbstractEntity {
 
 
 	@Id
-	@Output(length = 4)
+	@Column(length = 4)
 	public int getCode() {
 
 		return code;
@@ -61,7 +65,7 @@ public class DosageUnit extends AbstractEntity {
 	}
 
 
-	@Output(length = 100)
+	@Column(length = 100)
 	public String getTextSingular() {
 
 		return textSingular;
@@ -74,7 +78,7 @@ public class DosageUnit extends AbstractEntity {
 	}
 
 
-	@Output(length = 100)
+	@Column(length = 100)
 	public String getTextPlural() {
 
 		return textPlural;

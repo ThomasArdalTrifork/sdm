@@ -3,10 +3,10 @@ package com.trifork.sdm.models.takst;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Column;
 
-public class Priser extends TakstEntity
-{
+
+public class Priser extends TakstEntity {
 
 	private Long varenummer; // Ref. t. LMS02, felt 02
 	private Long aIP; // Apotekets indkøbspris
@@ -25,115 +25,115 @@ public class Priser extends TakstEntity
 	private final NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("da", "DK"));
 
 
-	public Long getVarenummer()
-	{
+	public Long getVarenummer() {
+
 		return this.varenummer;
 	}
 
 
-	public void setVarenummer(Long varenummer)
-	{
+	public void setVarenummer(Long varenummer) {
+
 		this.varenummer = varenummer;
 	}
 
 
-	@Output(name = "apoteketsIndkoebspris")
-	public NumeriskMedEnhed getAIP()
-	{
+	@Column(name = "apoteketsIndkoebspris")
+	public NumeriskMedEnhed getAIP() {
+
 		return new NumeriskMedEnhed(takst, nf.format(this.aIP / 100.0), this.aIP / 100.0, "DKK");
 	}
 
 
-	public void setAIP(Long aIP)
-	{
+	public void setAIP(Long aIP) {
+
 		this.aIP = aIP;
 	}
 
 
-	@Output
-	public NumeriskMedEnhed getRegisterpris()
-	{
-		return new NumeriskMedEnhed(takst, nf.format(this.registerpris / 100.0),
-				this.registerpris / 100.0, "DKK");
+	@Column
+	public NumeriskMedEnhed getRegisterpris() {
+
+		return new NumeriskMedEnhed(takst, nf.format(this.registerpris / 100.0), this.registerpris / 100.0,
+				"DKK");
 	}
 
 
-	public void setRegisterpris(Long registerpris)
-	{
+	public void setRegisterpris(Long registerpris) {
+
 		this.registerpris = registerpris;
 	}
 
 
-	@Output(name = "ekspeditionensSamledePris")
-	public NumeriskMedEnhed getEkspeditionensSamlPrisESP()
-	{
+	@Column(name = "ekspeditionensSamledePris")
+	public NumeriskMedEnhed getEkspeditionensSamlPrisESP() {
+
 		return new NumeriskMedEnhed(takst, nf.format(this.ekspeditionensSamlPrisESP / 100.0),
 				this.ekspeditionensSamlPrisESP / 100.0, "DKK");
 	}
 
 
-	public void setEkspeditionensSamlPrisESP(Long ekspeditionensSamlPrisESP)
-	{
+	public void setEkspeditionensSamlPrisESP(Long ekspeditionensSamlPrisESP) {
+
 		this.ekspeditionensSamlPrisESP = ekspeditionensSamlPrisESP;
 	}
 
 
-	@Output(name = "tilskudspris")
-	public NumeriskMedEnhed getTilskudsprisTSP()
-	{
+	@Column(name = "tilskudspris")
+	public NumeriskMedEnhed getTilskudsprisTSP() {
+
 		return new NumeriskMedEnhed(takst, nf.format(this.tilskudsprisTSP / 100.0),
 				this.tilskudsprisTSP / 100.0, "DKK");
 	}
 
 
-	public void setTilskudsprisTSP(Long tilskudsprisTSP)
-	{
+	public void setTilskudsprisTSP(Long tilskudsprisTSP) {
+
 		this.tilskudsprisTSP = tilskudsprisTSP;
 	}
 
 
-	@Output
-	public NumeriskMedEnhed getLeveranceprisTilHospitaler()
-	{
+	@Column
+	public NumeriskMedEnhed getLeveranceprisTilHospitaler() {
+
 		return new NumeriskMedEnhed(takst, nf.format(this.leveranceprisTilHospitaler / 100.0),
 				this.leveranceprisTilHospitaler / 100.0, "DKK");
 	}
 
 
-	public void setLeveranceprisTilHospitaler(Long leveranceprisTilHospitaler)
-	{
+	public void setLeveranceprisTilHospitaler(Long leveranceprisTilHospitaler) {
+
 		this.leveranceprisTilHospitaler = leveranceprisTilHospitaler;
 	}
 
 
-	@Output
-	public NumeriskMedEnhed getIkkeTilskudsberettigetDel()
-	{
+	@Column
+	public NumeriskMedEnhed getIkkeTilskudsberettigetDel() {
+
 		return new NumeriskMedEnhed(takst, nf.format(this.ikkeTilskudsberettigetDel / 100.0),
 				this.ikkeTilskudsberettigetDel / 100.0, "DKK");
 	}
 
 
-	public void setIkkeTilskudsberettigetDel(Long ikkeTilskudsberettigetDel)
-	{
+	public void setIkkeTilskudsberettigetDel(Long ikkeTilskudsberettigetDel) {
+
 		this.ikkeTilskudsberettigetDel = ikkeTilskudsberettigetDel;
 	}
 
 
-	public Long getEntityId()
-	{
+	public Long getEntityId() {
+
 		return this.varenummer;
 	}
 
 
-	public Takst getTakst()
-	{
+	public Takst getTakst() {
+
 		return takst;
 	}
 
 
-	public void setTakst(Takst takst)
-	{
+	public void setTakst(Takst takst) {
+
 		this.takst = takst;
 	}
 

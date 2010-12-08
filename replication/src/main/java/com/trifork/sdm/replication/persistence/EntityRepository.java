@@ -11,8 +11,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import com.trifork.sdm.models.EntityHelper;
-import com.trifork.sdm.persistence.annotations.Output;
 import com.trifork.sdm.replication.ConnectionManager;
 import com.trifork.sdm.replication.EntityWriter;
 import com.trifork.sdm.replication.UpdateQueryBuilder.UpdateQuery;
@@ -29,13 +32,20 @@ public class EntityRepository {
 
 	public EntityRepository(Class<?> entity, ConnectionManager connectionManager) {
 
-		Output typeAnnotation = entity.getAnnotation(Output.class);
+		Entity typeAnnotation = entity.getAnnotation(Entity.class);
 		assert typeAnnotation != null;
 
 		this.connectionManager = connectionManager;
 		assert connectionManager != null;
 
-		String tableName = typeAnnotation.name().isEmpty() ? entity.getSimpleName() : typeAnnotation.name();
+		String tableName;
+		
+		Table table = entity.getAnnotation(Table.class);
+		
+		if (table != null && !table.name().isEmpty())
+			tableName = table.name();
+		else
+			tableName = entity.getSimpleName();
 
 		// TODO: Clean this up.
 		
@@ -46,7 +56,7 @@ public class EntityRepository {
 		properties = new HashMap<String, Method>();
 		for (Method getter : entity.getMethods()) {
 
-			if (!getter.isAnnotationPresent(Output.class)) continue;
+			if (!getter.isAnnotationPresent(Column.class)) continue;
 
 			String columnName = EntityHelper.getPropetyName(getter);
 			Method setter = EntityHelper.getSetterFromGetter(entity, getter);

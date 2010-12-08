@@ -1,7 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class Tilskudsintervaller extends TakstEntity
-{
+public class Tilskudsintervaller extends TakstEntity {
 
 	private Long type; // Patienttype: almen, barn, kroniker, terminal
 	private Long niveau; // fx 1-4 for alment tilskud, 1-3 for barn
@@ -10,68 +9,68 @@ public class Tilskudsintervaller extends TakstEntity
 	private Double procent; // Tilskudsprocent
 
 
-	public Long getType()
-	{
+	public Long getType() {
+
 		return this.type;
 	}
 
 
-	public void setType(Long type)
-	{
+	public void setType(Long type) {
+
 		this.type = type;
 	}
 
 
-	public Long getNiveau()
-	{
+	public Long getNiveau() {
+
 		return this.niveau;
 	}
 
 
-	public void setNiveau(Long niveau)
-	{
+	public void setNiveau(Long niveau) {
+
 		this.niveau = niveau;
 	}
 
 
-	public Long getNedreGraense()
-	{
+	public Long getNedreGraense() {
+
 		return this.nedreGraense;
 	}
 
 
-	public void setNedreGraense(Long nedreGraense)
-	{
+	public void setNedreGraense(Long nedreGraense) {
+
 		this.nedreGraense = nedreGraense;
 	}
 
 
-	public Long getOevreGraense()
-	{
+	public Long getOevreGraense() {
+
 		return this.oevreGraense;
 	}
 
 
-	public void setOevreGraense(Long oevreGraense)
-	{
+	public void setOevreGraense(Long oevreGraense) {
+
 		this.oevreGraense = oevreGraense;
 	}
 
 
-	public Double getProcent()
-	{
+	public Double getProcent() {
+
 		return this.procent;
 	}
 
 
-	public void setProcent(Double procent)
-	{
+	public void setProcent(Double procent) {
+
 		this.procent = procent;
 	}
 
 
-	public String getEntityId()
-	{
+	public String getEntityId() {
+
 		return type + "-" + niveau;
 	}
 }

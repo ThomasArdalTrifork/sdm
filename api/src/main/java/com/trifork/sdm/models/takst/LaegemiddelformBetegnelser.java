@@ -1,59 +1,65 @@
 package com.trifork.sdm.models.takst;
 
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Output(name = "Formbetegnelse")
-public class LaegemiddelformBetegnelser extends TakstEntity
-{
 
-	private String kode; // Ref. t. LMS01, felt 08
+@Entity
+@Table(name = "Formbetegnelse")
+public class LaegemiddelformBetegnelser extends TakstEntity {
+
+	// Ref. t. LMS01, felt 08
+	private String kode;
 	private String tekst;
-	private String aktivInaktiv; // A (Aktiv)=DLS o.l.-I (inaktiv)=Ikke
-									// anerkendt term
+
+	// A (Aktiv)=DLS o.l.-I (inaktiv)=Ikke
+	// anerkendt term
+	private String aktivInaktiv;
 
 
 	@Id
-	@Output
-	public String getKode()
-	{
+	@Column
+	public String getKode() {
+
 		return this.kode;
 	}
 
 
-	public void setKode(String kode)
-	{
+	public void setKode(String kode) {
+
 		this.kode = kode;
 	}
 
 
-	@Output
-	public String getTekst()
-	{
+	@Column
+	public String getTekst() {
+
 		return this.tekst;
 	}
 
 
-	public void setTekst(String tekst)
-	{
+	public void setTekst(String tekst) {
+
 		this.tekst = tekst;
 	}
 
 
-	public Boolean getAktivInaktiv()
-	{
+	public Boolean getAktivInaktiv() {
+
 		return "A".equalsIgnoreCase(this.aktivInaktiv);
 	}
 
 
-	public void setAktivInaktiv(String aktivInaktiv)
-	{
+	public void setAktivInaktiv(String aktivInaktiv) {
+
 		this.aktivInaktiv = aktivInaktiv;
 	}
 
 
-	public String getEntityId()
-	{
+	public String getEntityId() {
+
 		return "" + this.kode;
 	}
 

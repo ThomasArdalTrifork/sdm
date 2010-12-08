@@ -9,21 +9,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.trifork.sdm.models.Entity;
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Table;
 
-public class Dataset<T extends Entity>
-{
+import com.trifork.sdm.models.Record;
+
+
+public class Dataset<T extends Record> {
 	private Map<Object, List<T>> entities = new HashMap<Object, List<T>>();
-	private Class<? extends Entity> type;
+	private Class<? extends Record> type;
 
 
-	public Dataset(List<T> entities, Class<? extends Entity> T)
-	{
+	public Dataset(List<T> entities, Class<? extends Record> T) {
+
 		this.type = T;
 
-		for (T entity : entities)
-		{
+		for (T entity : entities) {
 			List<T> ents = new ArrayList<T>();
 			ents.add(entity);
 			this.entities.put(entity.getEntityId(), ents);
@@ -31,18 +31,17 @@ public class Dataset<T extends Entity>
 	}
 
 
-	public Dataset(Class<? extends Entity> type)
-	{
+	public Dataset(Class<? extends Record> type) {
+
 		this.type = type;
 	}
 
 
-	public Collection<T> getEntities()
-	{
+	public Collection<T> getEntities() {
+
 		Collection<T> allEnts = new ArrayList<T>();
 
-		for (List<T> ents : entities.values())
-		{
+		for (List<T> ents : entities.values()) {
 			allEnts.addAll(ents);
 		}
 
@@ -50,8 +49,8 @@ public class Dataset<T extends Entity>
 	}
 
 
-	public T getEntityById(Object id)
-	{
+	public T getEntityById(Object id) {
+
 		List<T> ents = entities.get(id);
 
 		if (ents == null) return null;
@@ -62,14 +61,14 @@ public class Dataset<T extends Entity>
 	}
 
 
-	public List<T> getEntitiesById(Object id)
-	{
+	public List<T> getEntitiesById(Object id) {
+
 		return entities.get(id);
 	}
 
 
-	public Class<? extends Entity> getType()
-	{
+	public Class<? extends Record> getType() {
+
 		return type;
 	}
 
@@ -78,37 +77,42 @@ public class Dataset<T extends Entity>
 	 * @return the name that this entity type (class) should be displayed with
 	 *         when output
 	 */
-	public String getEntityTypeDisplayName()
-	{
-		Output output = type.getAnnotation(Output.class);
-		if (output != null && !"".equals(output.name())) return output.name();
-		return type.getSimpleName();
+	public String getEntityTypeDisplayName() {
+
+		return getEntityTypeDisplayName(type);
 	}
 
 
-	public static String getEntityTypeDisplayName(Class<? extends Entity> type)
-	{
-		Output output = type.getAnnotation(Output.class);
-		if (output != null && !"".equals(output.name())) return output.name();
-		return type.getSimpleName();
+	public static String getEntityTypeDisplayName(Class<? extends Record> type) {
+
+		String name;
+
+		Table output = type.getAnnotation(Table.class);
+
+		if (output != null) {
+			name = output.name();
+		}
+		else {
+			name = type.getSimpleName();
+		}
+
+		return name;
 	}
 
 
-	public void removeEntities(List<T> entities)
-	{
-		for (T entity : entities)
-		{
+	public void removeEntities(List<T> entities) {
+
+		for (T entity : entities) {
 			this.entities.remove(entity.getEntityId());
 		}
 	}
 
 
-	public void addEntity(T entity)
-	{
+	public void addEntity(T entity) {
+
 		Object id = entity.getEntityId();
 		List<T> ents = entities.get(id);
-		if (ents == null)
-		{
+		if (ents == null) {
 			ents = new ArrayList<T>();
 			entities.put(id, ents);
 		}
@@ -116,15 +120,15 @@ public class Dataset<T extends Entity>
 	}
 
 
-	public String getIdOutputName()
-	{
+	public String getIdOutputName() {
+
 		return getOutputFieldName(getIdMethod(type));
 	}
 
 
 	// TODO: What is this method for?
-	public static String getIdOutputName(Class<? extends Entity> type)
-	{
+	public static String getIdOutputName(Class<? extends Record> type) {
+
 		return getOutputFieldName(getIdMethod(type));
 	}
 }

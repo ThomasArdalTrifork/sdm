@@ -2,9 +2,9 @@ package com.trifork.sdm.schema.models.invalidE;
 
 import java.util.Date;
 
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Entity;
 
-@Output
+@Entity
 public class TestE
 {
 	public String getA()

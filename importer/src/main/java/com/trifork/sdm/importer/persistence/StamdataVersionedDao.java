@@ -2,7 +2,7 @@ package com.trifork.sdm.importer.persistence;
 
 import java.util.List;
 
-import com.trifork.sdm.models.Entity;
+import com.trifork.sdm.models.Record;
 import com.trifork.sdm.persistence.CompleteDataset;
 import com.trifork.sdm.persistence.Dataset;
 
@@ -28,20 +28,20 @@ public interface StamdataVersionedDao
 	 * another version exist.
 	 * 
 	 */
-	public void persistCompleteDataset(CompleteDataset<? extends Entity> dataset)
+	public void persistCompleteDataset(CompleteDataset<? extends Record> dataset)
 			throws FilePersistException;
 
 
 	/**
 	 * Like persistCompleteDataset, but with multiple complete datasets.
 	 */
-	public void persistCompleteDatasets(List<CompleteDataset<? extends Entity>> dataset)
+	public void persistCompleteDatasets(List<CompleteDataset<? extends Record>> dataset)
 			throws FilePersistException;
 
 
 	/**
 	 * Persist the records in the dataset.
 	 */
-	public void persistDeltaDataset(Dataset<? extends Entity> dataset)
+	public void persistDeltaDataset(Dataset<? extends Record> dataset)
 			throws FilePersistException;
 }

@@ -11,14 +11,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Column;
 
 
 /**
  * Class that given an entity type, can output instances of that entity to an
  * output stream in XML format.
  * 
- * The class uses the information entity's {@link Output} annotations, and the
+ * The class uses the information entity's {@link Column} annotations, and the
  * naming convention to infer names.
  */
 public class XMLEntityWriter implements EntityWriter {
@@ -60,7 +60,7 @@ public class XMLEntityWriter implements EntityWriter {
 
 			String name;
 
-			Output annotation = method.getAnnotation(Output.class);
+			Column annotation = method.getAnnotation(Column.class);
 
 			if (annotation != null && !annotation.name().isEmpty()) {
 
@@ -93,7 +93,7 @@ public class XMLEntityWriter implements EntityWriter {
 
 		for (Method method : entity.getMethods()) {
 
-			Output annotation = method.getAnnotation(Output.class);
+			Column annotation = method.getAnnotation(Column.class);
 
 			if (annotation != null) {
 

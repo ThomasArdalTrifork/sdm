@@ -11,13 +11,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.sdm.models.Entity;
+import com.trifork.sdm.models.Record;
 import com.trifork.sdm.persistence.CompleteDataset;
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
 import com.trifork.sdm.util.DateUtils;
 
 
@@ -195,8 +197,8 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 	}
 
 
-	@Output
-	private static class SDE implements Entity {
+	@Entity
+	private static class SDE implements Record {
 
 		Calendar validfrom, validto;
 		String id = "1"; // default value
@@ -251,7 +253,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		}
 
 
-		@Output
+		@Column
 		public String getData() {
 
 			return data;
@@ -259,7 +261,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 
 
 		@Id
-		@Output(name = "id")
+		@Column(name = "id")
 		public Object getEntityId() {
 
 			// TODO Auto-generated method stub
@@ -267,7 +269,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		}
 
 
-		@Output
+		@Column
 		public Date getDate() {
 
 			return date;

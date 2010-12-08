@@ -3,14 +3,16 @@ package com.trifork.sdm.models.yderregisteret;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.sdm.models.AbstractEntity;
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
 import com.trifork.sdm.util.DateUtils;
 
-@Output
-public class Yderregister extends AbstractEntity
-{
+
+@Entity
+public class Yderregister extends AbstractEntity {
 	private String nummer;
 	private String telefon;
 	private String navn;
@@ -28,196 +30,196 @@ public class Yderregister extends AbstractEntity
 
 
 	@Id
-	@Output
-	public String getNummer()
-	{
+	@Column
+	public String getNummer() {
+
 		return nummer;
 	}
 
 
-	public void setNummer(String nummer)
-	{
+	public void setNummer(String nummer) {
+
 		this.nummer = nummer;
 	}
 
 
-	@Output
-	public String getTelefon()
-	{
+	@Column
+	public String getTelefon() {
+
 		return telefon;
 	}
 
 
-	public void setTelefon(String telefon)
-	{
+	public void setTelefon(String telefon) {
+
 		this.telefon = telefon;
 	}
 
 
-	@Output
-	public String getNavn()
-	{
+	@Column
+	public String getNavn() {
+
 		return navn;
 	}
 
 
-	public void setNavn(String navn)
-	{
+	public void setNavn(String navn) {
+
 		this.navn = navn;
 	}
 
 
-	@Output
-	public String getVejnavn()
-	{
+	@Column
+	public String getVejnavn() {
+
 		return vejnavn;
 	}
 
 
-	public void setVejnavn(String vejnavn)
-	{
+	public void setVejnavn(String vejnavn) {
+
 		this.vejnavn = vejnavn;
 	}
 
 
-	@Output
-	public String getPostnummer()
-	{
+	@Column
+	public String getPostnummer() {
+
 		return postnummer;
 	}
 
 
-	public void setPostnummer(String postnummer)
-	{
+	public void setPostnummer(String postnummer) {
+
 		this.postnummer = postnummer;
 	}
 
 
-	@Output
-	public String getBynavn()
-	{
+	@Column
+	public String getBynavn() {
+
 		return bynavn;
 	}
 
 
-	public void setBynavn(String bynavn)
-	{
+	public void setBynavn(String bynavn) {
+
 		this.bynavn = bynavn;
 	}
 
 
-	@Output
-	public int getAmtNummer()
-	{
+	@Column
+	public int getAmtNummer() {
+
 		return amtNummer;
 	}
 
 
-	public void setAmtNummer(int amtNummer)
-	{
+	public void setAmtNummer(int amtNummer) {
+
 		this.amtNummer = amtNummer;
 	}
 
 
-	@Output
-	public String getEmail()
-	{
+	@Column
+	public String getEmail() {
+
 		return email;
 	}
 
 
-	public void setEmail(String email)
-	{
+	public void setEmail(String email) {
+
 		this.email = email;
 	}
 
 
-	@Output
-	public String getWww()
-	{
+	@Column
+	public String getWww() {
+
 		return www;
 	}
 
 
-	public void setWww(String www)
-	{
+	public void setWww(String www) {
+
 		this.www = www;
 	}
 
 
-	@Output
-	public String getHovedSpecialeKode()
-	{
+	@Column
+	public String getHovedSpecialeKode() {
+
 		return hovedSpecialeKode;
 	}
 
 
-	public void setHovedSpecialeKode(String hovedSpecialeKode)
-	{
+	public void setHovedSpecialeKode(String hovedSpecialeKode) {
+
 		this.hovedSpecialeKode = hovedSpecialeKode;
 	}
 
 
-	@Output
-	public String getHovedSpecialeTekst()
-	{
+	@Column
+	public String getHovedSpecialeTekst() {
+
 		return hovedSpecialeTekst;
 	}
 
 
-	public void setHovedSpecialeTekst(String hovedSpecialeTekst)
-	{
+	public void setHovedSpecialeTekst(String hovedSpecialeTekst) {
+
 		this.hovedSpecialeTekst = hovedSpecialeTekst;
 	}
 
 
-	@Output
-	public String getHistID()
-	{
+	@Column
+	public String getHistID() {
+
 		return histID;
 	}
 
 
-	public void setHistID(String histID)
-	{
+	public void setHistID(String histID) {
+
 		this.histID = histID;
 	}
 
 
-	public Date getTilgangDato()
-	{
+	public Date getTilgangDato() {
+
 		return tilgangDato;
 	}
 
 
-	public void setTilgangDato(Date tilgangDato)
-	{
+	public void setTilgangDato(Date tilgangDato) {
+
 		this.tilgangDato = tilgangDato;
 	}
 
 
-	public Date getAfgangDato()
-	{
+	public Date getAfgangDato() {
+
 		return afgangDato;
 	}
 
 
-	public void setAfgangDato(Date afgangDato)
-	{
+	public void setAfgangDato(Date afgangDato) {
+
 		this.afgangDato = afgangDato;
 	}
 
 
 	@Override
-	public Calendar getValidFrom()
-	{
+	public Calendar getValidFrom() {
+
 		return DateUtils.toCalendar(tilgangDato);
 	}
 
 
 	@Override
-	public Calendar getValidTo()
-	{
+	public Calendar getValidTo() {
+
 		if (afgangDato != null) return DateUtils.toCalendar(afgangDato);
 
 		return FUTURE;

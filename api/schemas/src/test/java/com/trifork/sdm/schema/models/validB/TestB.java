@@ -2,55 +2,67 @@ package com.trifork.sdm.schema.models.validB;
 
 import java.util.Date;
 
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
-@Output
-(
-	supportedVersions = {1, 3}
-)
-public class TestB
-{
-	@Output(supportedVersions = {1})
-	public boolean getA()
-	{
+import com.trifork.sdm.Versioned;
+
+
+@Entity
+@Versioned({ 1, 3 })
+public class TestB {
+	@Column
+	@Versioned({ 1 })
+	public boolean getA() {
+
 		return true;
 	}
-	
-	@Output(supportedVersions = {1, 2})
-	public long getB()
-	{
+
+
+	@Column
+	@Versioned({ 1, 2 })
+	public long getB() {
+
 		return 12345;
 	}
-	
-	@Output(supportedVersions = {3})
-	public String getC()
-	{
+
+
+	@Column
+	@Versioned({ 3 })
+	public String getC() {
+
 		return "Test";
 	}
-	
-	@Output(supportedVersions={2})
-	public Date getD()
-	{
+
+
+	@Column
+	@Versioned({ 2 })
+	public Date getD() {
+
 		return new Date();
 	}
-	
-	public Date getValidTo()
-	{
+
+
+	public Date getValidTo() {
+
 		return null;
 	}
-	
-	public Date getValidFrom()
-	{
+
+
+	public Date getValidFrom() {
+
 		return null;
 	}
-	
-	public Date getCreatedDate()
-	{
+
+
+	public Date getCreatedDate() {
+
 		return null;
 	}
-	
-	public Date getModifiedDate()
-	{
-		return null;	
+
+
+	public Date getModifiedDate() {
+
+		return null;
 	}
 }

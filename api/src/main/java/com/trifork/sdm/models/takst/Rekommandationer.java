@@ -1,7 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class Rekommandationer extends TakstEntity
-{
+public class Rekommandationer extends TakstEntity {
 
 	private Long rekommandationsgruppe;
 	private Long drugID; // Ref. t. LMS01
@@ -10,56 +9,56 @@ public class Rekommandationer extends TakstEntity
 											// forbehold / …ikke
 
 
-	public Long getRekommandationsgruppe()
-	{
+	public Long getRekommandationsgruppe() {
+
 		return this.rekommandationsgruppe;
 	}
 
 
-	public void setRekommandationsgruppe(Long rekommandationsgruppe)
-	{
+	public void setRekommandationsgruppe(Long rekommandationsgruppe) {
+
 		this.rekommandationsgruppe = rekommandationsgruppe;
 	}
 
 
-	public Long getDrugID()
-	{
+	public Long getDrugID() {
+
 		return this.drugID;
 	}
 
 
-	public void setDrugID(Long drugID)
-	{
+	public void setDrugID(Long drugID) {
+
 		this.drugID = drugID;
 	}
 
 
-	public Long getVarenummer()
-	{
+	public Long getVarenummer() {
+
 		return this.varenummer;
 	}
 
 
-	public void setVarenummer(Long varenummer)
-	{
+	public void setVarenummer(Long varenummer) {
+
 		this.varenummer = varenummer;
 	}
 
 
-	public String getRekommandationsniveau()
-	{
+	public String getRekommandationsniveau() {
+
 		return this.rekommandationsniveau;
 	}
 
 
-	public void setRekommandationsniveau(String rekommandationsniveau)
-	{
+	public void setRekommandationsniveau(String rekommandationsniveau) {
+
 		this.rekommandationsniveau = rekommandationsniveau;
 	}
 
 
-	public Long getEntityId()
-	{
+	public Long getEntityId() {
+
 		return varenummer;
 	}
 

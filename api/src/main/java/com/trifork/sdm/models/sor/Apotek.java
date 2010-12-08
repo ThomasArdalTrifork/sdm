@@ -3,12 +3,14 @@ package com.trifork.sdm.models.sor;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.sdm.models.AbstractEntity;
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
 
 
-@Output
+@Entity
 public class Apotek extends AbstractEntity {
 
 	private Long sorNummer;
@@ -34,7 +36,7 @@ public class Apotek extends AbstractEntity {
 
 
 	@Id
-	@Output
+	@Column
 	public Long getSorNummer() {
 
 		return sorNummer;
@@ -47,7 +49,7 @@ public class Apotek extends AbstractEntity {
 	}
 
 
-	@Output
+	@Column
 	public Long getApotekNummer() {
 
 		return apotekNummer;
@@ -60,7 +62,7 @@ public class Apotek extends AbstractEntity {
 	}
 
 
-	@Output
+	@Column
 	public Long getFilialNummer() {
 
 		return filialNummer;
@@ -73,7 +75,7 @@ public class Apotek extends AbstractEntity {
 	}
 
 
-	@Output
+	@Column
 	public Long getEanLokationsnummer() {
 
 		return eanLokationsnummer;
@@ -86,7 +88,7 @@ public class Apotek extends AbstractEntity {
 	}
 
 
-	@Output
+	@Column
 	public Long getCvr() {
 
 		return cvr;
@@ -99,7 +101,7 @@ public class Apotek extends AbstractEntity {
 	}
 
 
-	@Output
+	@Column
 	public Long getPcvr() {
 
 		return pcvr;
@@ -112,7 +114,7 @@ public class Apotek extends AbstractEntity {
 	}
 
 
-	@Output
+	@Column
 	public String getNavn() {
 
 		return navn;
@@ -125,7 +127,7 @@ public class Apotek extends AbstractEntity {
 	}
 
 
-	@Output
+	@Column
 	public String getTelefon() {
 
 		return telefon;
@@ -138,7 +140,7 @@ public class Apotek extends AbstractEntity {
 	}
 
 
-	@Output
+	@Column
 	public String getVejnavn() {
 
 		return vejnavn;
@@ -151,7 +153,7 @@ public class Apotek extends AbstractEntity {
 	}
 
 
-	@Output
+	@Column
 	public String getPostnummer() {
 
 		return postnummer;
@@ -164,7 +166,7 @@ public class Apotek extends AbstractEntity {
 	}
 
 
-	@Output
+	@Column
 	public String getBynavn() {
 
 		return bynavn;
@@ -177,7 +179,7 @@ public class Apotek extends AbstractEntity {
 	}
 
 
-	@Output
+	@Column
 	public String getEmail() {
 
 		return email;
@@ -190,7 +192,7 @@ public class Apotek extends AbstractEntity {
 	}
 
 
-	@Output
+	@Column
 	public String getWww() {
 
 		return www;
@@ -225,9 +227,10 @@ public class Apotek extends AbstractEntity {
 
 		this.validTo = validTo;
 	}
-	
+
+
 	public Calendar getCreatedDate() {
-		
+
 		return new GregorianCalendar();
 	}
 }

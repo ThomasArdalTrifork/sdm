@@ -1,9 +1,9 @@
 package com.trifork.sdm.models.takst;
 
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Column;
 
-public class Firma extends TakstEntity
-{
+
+public class Firma extends TakstEntity {
 
 	private Long firmanummer; // Ref. t. LMS01, felt 13 - 14
 	private String firmamaerkeKort; // TODO: P.t. tomt
@@ -12,60 +12,60 @@ public class Firma extends TakstEntity
 	private String parallelimportoerKode;
 
 
-	@Output
-	public Long getFirmanummer()
-	{
+	@Column
+	public Long getFirmanummer() {
+
 		return this.firmanummer;
 	}
 
 
-	public void setFirmanummer(Long firmanummer)
-	{
+	public void setFirmanummer(Long firmanummer) {
+
 		this.firmanummer = firmanummer;
 	}
 
 
-	@Output
-	public String getFirmamaerkeKort()
-	{
+	@Column
+	public String getFirmamaerkeKort() {
+
 		return this.firmamaerkeKort;
 	}
 
 
-	public void setFirmamaerkeKort(String firmamaerkeKort)
-	{
+	public void setFirmamaerkeKort(String firmamaerkeKort) {
+
 		this.firmamaerkeKort = firmamaerkeKort;
 	}
 
 
-	@Output
-	public String getFirmamaerkeLangtNavn()
-	{
+	@Column
+	public String getFirmamaerkeLangtNavn() {
+
 		return this.firmamaerkeLangtNavn;
 	}
 
 
-	public void setFirmamaerkeLangtNavn(String firmamaerkeLangtNavn)
-	{
+	public void setFirmamaerkeLangtNavn(String firmamaerkeLangtNavn) {
+
 		this.firmamaerkeLangtNavn = firmamaerkeLangtNavn;
 	}
 
 
-	@Output
-	public String getParallelimportoerKode()
-	{
+	@Column
+	public String getParallelimportoerKode() {
+
 		return this.parallelimportoerKode;
 	}
 
 
-	public void setParallelimportoerKode(String parallelimportoerKode)
-	{
+	public void setParallelimportoerKode(String parallelimportoerKode) {
+
 		this.parallelimportoerKode = parallelimportoerKode;
 	}
 
 
-	public Long getEntityId()
-	{
+	public Long getEntityId() {
+
 		return this.firmanummer;
 	}
 

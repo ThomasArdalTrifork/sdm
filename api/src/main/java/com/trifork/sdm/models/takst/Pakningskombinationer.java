@@ -1,7 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class Pakningskombinationer extends TakstEntity
-{
+public class Pakningskombinationer extends TakstEntity {
 
 	private Long varenummerOrdineret; // Vnr. på pakningen anført på recepten
 	private Long varenummerSubstitueret; // Vnr. på en pakning der evt. kan
@@ -14,82 +13,82 @@ public class Pakningskombinationer extends TakstEntity
 												// informationspligt
 
 
-	public Long getVarenummerOrdineret()
-	{
+	public Long getVarenummerOrdineret() {
+
 		return this.varenummerOrdineret;
 	}
 
 
-	public void setVarenummerOrdineret(Long varenummerOrdineret)
-	{
+	public void setVarenummerOrdineret(Long varenummerOrdineret) {
+
 		this.varenummerOrdineret = varenummerOrdineret;
 	}
 
 
-	public Long getVarenummerSubstitueret()
-	{
+	public Long getVarenummerSubstitueret() {
+
 		return this.varenummerSubstitueret;
 	}
 
 
-	public void setVarenummerSubstitueret(Long varenummerSubstitueret)
-	{
+	public void setVarenummerSubstitueret(Long varenummerSubstitueret) {
+
 		this.varenummerSubstitueret = varenummerSubstitueret;
 	}
 
 
-	public Long getVarenummerAlternativt()
-	{
+	public Long getVarenummerAlternativt() {
+
 		return this.varenummerAlternativt;
 	}
 
 
-	public void setVarenummerAlternativt(Long varenummerAlternativt)
-	{
+	public void setVarenummerAlternativt(Long varenummerAlternativt) {
+
 		this.varenummerAlternativt = varenummerAlternativt;
 	}
 
 
-	public Long getAntalPakninger()
-	{
+	public Long getAntalPakninger() {
+
 		return this.antalPakninger;
 	}
 
 
-	public void setAntalPakninger(Long antalPakninger)
-	{
+	public void setAntalPakninger(Long antalPakninger) {
+
 		this.antalPakninger = antalPakninger;
 	}
 
 
-	public Long getEkspeditionensSamledePris()
-	{
+	public Long getEkspeditionensSamledePris() {
+
 		return this.ekspeditionensSamledePris;
 	}
 
 
-	public void setEkspeditionensSamledePris(Long ekspeditionensSamledePris)
-	{
+	public void setEkspeditionensSamledePris(Long ekspeditionensSamledePris) {
+
 		this.ekspeditionensSamledePris = ekspeditionensSamledePris;
 	}
 
 
-	public String getInformationspligtMarkering()
-	{
+	public String getInformationspligtMarkering() {
+
 		return this.informationspligtMarkering;
 	}
 
 
-	public void setInformationspligtMarkering(String informationspligtMarkering)
-	{
+	public void setInformationspligtMarkering(String informationspligtMarkering) {
+
 		this.informationspligtMarkering = informationspligtMarkering;
 	}
 
 
-	public String getEntityId()
-	{
-		return "" + varenummerOrdineret + '-' + varenummerSubstitueret + '-'
-				+ varenummerAlternativt + '-' + antalPakninger;
+	public String getEntityId() {
+
+		return "" + varenummerOrdineret + '-' + varenummerSubstitueret + '-' + varenummerAlternativt + '-'
+				+ antalPakninger;
 	}
 
 }

@@ -2,10 +2,13 @@ package com.trifork.sdm.schema.models.validA;
 
 import java.util.Date;
 
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+import com.trifork.sdm.Versioned;
 
 
-@Output
+@Entity
 public class TestA
 {
 	/**
@@ -14,35 +17,35 @@ public class TestA
 	 * 
 	 * DO NOT MOVE.
 	 */
-	@Output
+	@Column
 	public boolean getB()
 	{
 		return true;
 	}
 	
 	
-	@Output
+	@Column
 	public String getA()
 	{
 		return "FAKE";
 	}
 	
 
-	@Output
+	@Column
 	public Date getC()
 	{
 		return new Date();
 	}
 
 
-	@Output
+	@Column
 	public int getD()
 	{
 		return 1234;
 	}
 
 
-	@Output
+	@Column
 	public long getE()
 	{
 		return 1234l;
@@ -53,7 +56,8 @@ public class TestA
 	 * This element should not be output, because supported versions is by
 	 * default {1}.
 	 */
-	@Output(supportedVersions = { 2 })
+	@Column
+	@Versioned({2})
 	public int getF()
 	{
 		return 1234;
@@ -62,7 +66,7 @@ public class TestA
 
 	/**
 	 * This element should not be output because it is not annotated with
-	 * @Output.
+	 * @Column.
 	 */
 	public int getG()
 	{

@@ -1,9 +1,13 @@
 package com.trifork.sdm.models.cpr;
 
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Output(name = "Person")
+
+@Entity
+@Table(name = "Person")
 public class Klarskriftadresse extends CPREntity {
 	String cpr;
 	String adresseringsNavn;
@@ -21,134 +25,192 @@ public class Klarskriftadresse extends CPREntity {
 	String bygningsNummer;
 	String vejNavn;
 
+
 	@Id
-	@Output
+	@Column
 	@Override
 	public String getCpr() {
+
 		return super.getCpr();
 	}
 
+
 	public String getAdresseringsNavn() {
+
 		return adresseringsNavn;
 	}
 
+
 	public void setAdresseringsNavn(String adresseringsNavn) {
+
 		this.adresseringsNavn = adresseringsNavn;
 	}
 
-	@Output
+
+	@Column
 	public String getCoNavn() {
+
 		return coNavn;
 	}
 
+
 	public void setCoNavn(String coNavn) {
+
 		this.coNavn = coNavn;
 	}
 
-	@Output
+
+	@Column
 	public String getLokalitet() {
+
 		return Lokalitet;
 	}
 
+
 	public void setLokalitet(String lokalitet) {
+
 		Lokalitet = lokalitet;
 	}
 
+
 	public String getStandardAdresse() {
+
 		return standardAdresse;
 	}
 
+
 	public void setStandardAdresse(String standardAdresse) {
+
 		this.standardAdresse = standardAdresse;
 	}
 
-	@Output
+
+	@Column
 	public String getByNavn() {
+
 		return byNavn;
 	}
 
+
 	public void setByNavn(String byNavn) {
+
 		this.byNavn = byNavn;
 	}
 
-	@Output
+
+	@Column
 	public Long getPostNummer() {
+
 		return postNummer;
 	}
 
+
 	public void setPostNummer(Long postNummer) {
+
 		this.postNummer = postNummer;
 	}
 
-	@Output
+
+	@Column
 	public String getPostDistrikt() {
+
 		return postDistrikt;
 	}
 
+
 	public void setPostDistrikt(String postDistrikt) {
+
 		this.postDistrikt = postDistrikt;
 	}
 
-	@Output
+
+	@Column
 	public Long getKommuneKode() {
+
 		return kommuneKode;
 	}
 
+
 	public void setKommuneKode(Long kommuneKode) {
+
 		this.kommuneKode = kommuneKode;
 	}
 
-	@Output
+
+	@Column
 	public Long getVejKode() {
+
 		return vejKode;
 	}
 
+
 	public void setVejKode(Long vejKode) {
+
 		this.vejKode = vejKode;
 	}
 
-	@Output
+
+	@Column
 	public String getHusNummer() {
+
 		return husNummer;
 	}
 
+
 	public void setHusNummer(String husNummer) {
+
 		this.husNummer = husNummer;
 	}
 
-	@Output
+
+	@Column
 	public String getEtage() {
+
 		return etage;
 	}
 
+
 	public void setEtage(String etage) {
+
 		this.etage = etage;
 	}
 
-	@Output
+
+	@Column
 	public String getSideDoerNummer() {
+
 		return sideDoerNummer;
 	}
 
+
 	public void setSideDoerNummer(String sideDoerNummer) {
+
 		this.sideDoerNummer = sideDoerNummer;
 	}
 
-	@Output
+
+	@Column
 	public String getBygningsNummer() {
+
 		return bygningsNummer;
 	}
 
+
 	public void setBygningsNummer(String bygningsNummer) {
+
 		this.bygningsNummer = bygningsNummer;
 	}
 
-	@Output
+
+	@Column
 	public String getVejNavn() {
+
 		return vejNavn;
 	}
 
+
 	public void setVejNavn(String vejNavn) {
+
 		this.vejNavn = vejNavn;
 	}
 }

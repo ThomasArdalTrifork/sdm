@@ -7,13 +7,13 @@ import com.trifork.sdm.util.DateUtils;
 
 
 public abstract class CPREntity extends AbstractEntity {
-	
+
 	private String cpr;
 	private Calendar validFrom;
 
 
 	public String getCpr() {
-
+		
 		return cpr;
 	}
 

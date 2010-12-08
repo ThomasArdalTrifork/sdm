@@ -2,10 +2,10 @@ package com.trifork.sdm.importer.persistence;
 
 import java.util.Calendar;
 
-import com.trifork.sdm.models.Entity;
+import com.trifork.sdm.models.Record;
 
 
-public interface TemporalStamdataEntityStorage<T extends Entity>
+public interface TemporalStamdataEntityStorage<T extends Record>
 {
 
 	boolean fetchEntityVersions(Object entityId, Calendar validFrom, Calendar validTo);

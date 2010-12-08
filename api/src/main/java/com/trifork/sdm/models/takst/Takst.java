@@ -4,33 +4,32 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import com.trifork.sdm.models.Entity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import com.trifork.sdm.models.Record;
 import com.trifork.sdm.persistence.CompleteDataset;
 import com.trifork.sdm.persistence.Dataset;
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
 
 
-/**
- * A version of the Takst.
- * TODO: More descriptive please.
- */
-@Output(name = "TakstVersion")
-public class Takst extends TakstEntity
-{
-	private final List<CompleteDataset<? extends Entity>> datasets = new ArrayList<CompleteDataset<? extends Entity>>();
+@Entity
+@Table(name = "TakstVersion")
+public class Takst extends TakstEntity {
+	private final List<CompleteDataset<? extends Record>> datasets = new ArrayList<CompleteDataset<? extends Record>>();
 
 	// The week-number for which LMS guarantees some sort of stability/validity
 	// for a subset of this rate. (The stable subset excludes pricing and
 	// substitutions and possibly more)
 	private int validityYear, validityWeekNumber;
-	
+
 	private Calendar validFrom;
 	private Calendar validTo;
 
 
-	public Takst(Calendar validFrom, Calendar validTo)
-	{
+	public Takst(Calendar validFrom, Calendar validTo) {
+
 		this.validFrom = validFrom;
 		this.validTo = validTo;
 	}
@@ -43,12 +42,10 @@ public class Takst extends TakstEntity
 	 * @return All entities of the given type in this takst.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends TakstEntity> TakstDataset<T> getDatasetOfType(Class<T> type)
-	{
-		for (CompleteDataset<? extends Entity> dataset : datasets)
-		{
-			if (type.equals(dataset.getType()))
-			{
+	public <T extends TakstEntity> TakstDataset<T> getDatasetOfType(Class<T> type) {
+
+		for (CompleteDataset<? extends Record> dataset : datasets) {
+			if (type.equals(dataset.getType())) {
 				return (TakstDataset<T>) dataset;
 			}
 		}
@@ -57,18 +54,17 @@ public class Takst extends TakstEntity
 	}
 
 
-	public List<CompleteDataset<? extends Entity>> getDatasets()
-	{
+	public List<CompleteDataset<? extends Record>> getDatasets() {
+
 		return datasets;
 	}
 
 
-	public List<Entity> getEntities()
-	{
-		List<Entity> result = new ArrayList<Entity>();
+	public List<Record> getEntities() {
 
-		for (CompleteDataset<? extends Entity> dataset : datasets)
-		{
+		List<Record> result = new ArrayList<Record>();
+
+		for (CompleteDataset<? extends Record> dataset : datasets) {
 			result.addAll(dataset.getEntities());
 		}
 
@@ -77,8 +73,8 @@ public class Takst extends TakstEntity
 
 
 	// TODO: What should the type argument be here?
-	public void addDataset(TakstDataset<?> dataset)
-	{
+	public void addDataset(TakstDataset<?> dataset) {
+
 		datasets.add(dataset);
 	}
 
@@ -90,8 +86,8 @@ public class Takst extends TakstEntity
 	 *            the id of the requested entity
 	 * @return the requested entity
 	 */
-	public <T extends TakstEntity> T getEntity(Class<T> type, Object entityId)
-	{
+	public <T extends TakstEntity> T getEntity(Class<T> type, Object entityId) {
+
 		if (entityId == null) return null;
 
 		Dataset<T> avds = getDatasetOfType(type);
@@ -102,34 +98,34 @@ public class Takst extends TakstEntity
 	}
 
 
-	@Output(name = "TakstUge")
-	public String getStableWeek()
-	{
+	@Column(name = "TakstUge")
+	public String getStableWeek() {
+
 		return "" + validityYear + validityWeekNumber;
 	}
 
 
-	public void setValidityYear(int validityYear)
-	{
+	public void setValidityYear(int validityYear) {
+
 		this.validityYear = validityYear;
 	}
 
 
-	public void setValidityWeekNumber(int validityWeekNumber)
-	{
+	public void setValidityWeekNumber(int validityWeekNumber) {
+
 		this.validityWeekNumber = validityWeekNumber;
 	}
 
-	
+
 	@Id
-	public Calendar getValidFrom()
-	{
+	public Calendar getValidFrom() {
+
 		return validFrom;
 	}
 
 
-	public Calendar getValidTo()
-	{
+	public Calendar getValidTo() {
+
 		return validTo;
 	}
 }

@@ -1,11 +1,12 @@
 package com.trifork.sdm.models.takst;
 
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-@Output
-public class Klausulering extends TakstEntity
-{
+
+@Entity
+public class Klausulering extends TakstEntity {
 
 	private String kode; // Ref. t. LMS02, felt 13
 	private String kortTekst; // Klausultekst, forkortet
@@ -13,47 +14,47 @@ public class Klausulering extends TakstEntity
 
 
 	@Id
-	@Output
-	public String getKode()
-	{
+	@Column
+	public String getKode() {
+
 		return this.kode;
 	}
 
 
-	public void setKode(String kode)
-	{
+	public void setKode(String kode) {
+
 		this.kode = kode;
 	}
 
 
-	@Output
-	public String getKortTekst()
-	{
+	@Column
+	public String getKortTekst() {
+
 		return this.kortTekst;
 	}
 
 
-	public void setKortTekst(String kortTekst)
-	{
+	public void setKortTekst(String kortTekst) {
+
 		this.kortTekst = kortTekst;
 	}
 
 
-	@Output
-	public String getTekst()
-	{
+	@Column
+	public String getTekst() {
+
 		return this.tekst;
 	}
 
 
-	public void setTekst(String tekst)
-	{
+	public void setTekst(String tekst) {
+
 		this.tekst = tekst;
 	}
 
 
-	public String getEntityId()
-	{
+	public String getEntityId() {
+
 		return "" + this.kode;
 	}
 }

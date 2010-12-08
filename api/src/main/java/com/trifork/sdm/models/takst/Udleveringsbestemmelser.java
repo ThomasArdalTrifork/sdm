@@ -1,7 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class Udleveringsbestemmelser extends TakstEntity
-{
+public class Udleveringsbestemmelser extends TakstEntity {
 
 	private String kode; // Ref. t. LMS02, felt 10
 	private String udleveringsgruppe; // Recept: A eller B, håndkøb: H
@@ -9,56 +8,56 @@ public class Udleveringsbestemmelser extends TakstEntity
 	private String tekst;
 
 
-	public String getKode()
-	{
+	public String getKode() {
+
 		return this.kode;
 	}
 
 
-	public void setKode(String kode)
-	{
+	public void setKode(String kode) {
+
 		this.kode = kode;
 	}
 
 
-	public String getUdleveringsgruppe()
-	{
+	public String getUdleveringsgruppe() {
+
 		return this.udleveringsgruppe;
 	}
 
 
-	public void setUdleveringsgruppe(String udleveringsgruppe)
-	{
+	public void setUdleveringsgruppe(String udleveringsgruppe) {
+
 		this.udleveringsgruppe = udleveringsgruppe;
 	}
 
 
-	public String getKortTekst()
-	{
+	public String getKortTekst() {
+
 		return this.kortTekst;
 	}
 
 
-	public void setKortTekst(String kortTekst)
-	{
+	public void setKortTekst(String kortTekst) {
+
 		this.kortTekst = kortTekst;
 	}
 
 
-	public String getTekst()
-	{
+	public String getTekst() {
+
 		return this.tekst;
 	}
 
 
-	public void setTekst(String tekst)
-	{
+	public void setTekst(String tekst) {
+
 		this.tekst = tekst;
 	}
 
 
-	public String getEntityId()
-	{
+	public String getEntityId() {
+
 		return "" + this.kode;
 	}
 }

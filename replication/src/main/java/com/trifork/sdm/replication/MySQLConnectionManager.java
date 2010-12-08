@@ -19,8 +19,10 @@ public class MySQLConnectionManager implements ConnectionManager {
 	private final String password;
 	private final String url;
 
+
 	@Inject
-	MySQLConnectionManager(@DbSchema String schema, @DbUsername String username, @DbPassword String password, @DbURL String url) {
+	MySQLConnectionManager(@DbSchema String schema, @DbUsername String username, @DbPassword String password,
+			@DbURL String url) {
 
 		this.schema = schema;
 		this.username = username;

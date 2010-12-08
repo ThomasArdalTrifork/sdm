@@ -5,7 +5,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -17,9 +16,6 @@ import org.junit.runner.RunWith;
 
 import com.google.inject.Provides;
 import com.google.inject.servlet.ServletModule;
-import com.trifork.sdm.models.sor.Apotek;
-import com.trifork.sdm.persistence.annotations.Output;
-import com.trifork.sdm.replication.Server;
 import com.trifork.sdm.replication.configuration.Bucket;
 import com.trifork.sdm.replication.configuration.properties.Host;
 import com.trifork.sdm.replication.configuration.properties.Port;
@@ -50,12 +46,7 @@ public abstract class ReplicationTest extends ServletModule {
 
 	protected void insert(Object fixture) {
 
-		Output typeAnnotation = fixture.getClass().getAnnotation(Output.class);
-		assert typeAnnotation != null : "Inserted fixtures must be annotated with @Output.";
-		
-		String tableName = !typeAnnotation.name().isEmpty() ? typeAnnotation.name() : fixture.getClass().getSimpleName();
-		
-		fixtures.add(fixture);
+
 	}
 
 

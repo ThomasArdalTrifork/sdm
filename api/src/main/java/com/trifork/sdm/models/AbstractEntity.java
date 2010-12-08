@@ -7,19 +7,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+
 import org.apache.log4j.Logger;
 
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
 import com.trifork.sdm.util.DateUtils;
 
 
-public abstract class AbstractEntity implements Entity {
+public abstract class AbstractEntity implements Record {
+
 	public static final Calendar FUTURE = DateUtils.FUTURE;
 
 	private static final Logger logger = Logger.getLogger(AbstractEntity.class);
 
-	private static final Map<Class<? extends Entity>, Method> idMethodCache = new HashMap<Class<? extends Entity>, Method>();
+	private static final Map<Class<? extends Record>, Method> idMethodCache = new HashMap<Class<? extends Record>, Method>();
 	private static final Map<Method, String> outputFieldNames = new HashMap<Method, String>();
 
 
@@ -62,7 +64,7 @@ public abstract class AbstractEntity implements Entity {
 	 * @return the getter method that contains the unique id for the given
 	 *         Entity type
 	 */
-	public static Method getIdMethod(Class<? extends Entity> class1) {
+	public static Method getIdMethod(Class<? extends Record> class1) {
 
 		Method m = idMethodCache.get(class1);
 
@@ -93,28 +95,34 @@ public abstract class AbstractEntity implements Entity {
 	public static String getOutputFieldName(Method method) {
 
 		// TODO: Use the entity helper class.
-		
+
 		String name = outputFieldNames.get(method);
-		
+
 		if (name == null) {
-			Output output = method.getAnnotation(Output.class);
-			name = method.getName().substring(3); // Strip "get"
+
+			Column output = method.getAnnotation(Column.class);
+
+			// Strip "get"
+
+			name = method.getName().substring(3);
 			if (output != null && output.name().length() > 0) {
 				name = output.name();
 			}
+
 			outputFieldNames.put(method, name);
 		}
-		
+
 		return name;
 	}
 
 
-	public static List<Method> getOutputMethods(Class<? extends Entity> type) {
+	public static List<Method> getOutputMethods(Class<? extends Record> type) {
 
 		List<Method> outputMethods = new ArrayList<Method>();
 
 		for (Method method : type.getMethods()) {
-			if (!method.isAnnotationPresent(Output.class)) continue;
+
+			if (!method.isAnnotationPresent(Column.class)) continue;
 			outputMethods.add(method);
 		}
 

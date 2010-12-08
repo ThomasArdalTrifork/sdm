@@ -9,20 +9,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.trifork.sdm.persistence.annotations.Output;
 import com.trifork.sdm.replication.UpdateQueryBuilder.UpdateQuery;
 import com.trifork.sdm.replication.persistence.EntityRepository;
 
 
 /**
- * Serve an entity using it's {@link Output} annotations.
+ * Serve an entity using it's {@link Entity} annotations.
  * 
  * Given an entity class it defines a number of default queries using
  * reflection. Output templates are cached to improve performance. You can
  * specialize the handled queries for a particular entity by extending this
  * class.
  * 
- * Only versions marked as supported in the {@link Output} annotations will be
+ * Only versions marked as supported in the {@link Versioned} annotations will be
  * served.
  */
 @Singleton

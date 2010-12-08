@@ -1,23 +1,24 @@
 package com.trifork.sdm.models.cpr;
 
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 
-@Output
+@Entity
 public class BarnRelation extends CPREntity {
 	String barnCpr;
 
 
 	@Id
-	@Output
+	@Column
 	public String getId() {
 
 		return getCpr() + "-" + barnCpr;
 	}
 
 
-	@Output
+	@Column
 	@Override
 	public String getCpr() {
 
@@ -25,7 +26,7 @@ public class BarnRelation extends CPREntity {
 	}
 
 
-	@Output
+	@Column
 	public String getBarnCpr() {
 
 		return barnCpr;

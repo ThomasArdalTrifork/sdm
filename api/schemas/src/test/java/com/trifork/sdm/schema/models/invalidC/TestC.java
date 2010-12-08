@@ -2,7 +2,10 @@ package com.trifork.sdm.schema.models.invalidC;
 
 import java.util.Date;
 
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+import com.trifork.sdm.schema.models.invalidD.TestD;
 
 
 /**
@@ -12,16 +15,16 @@ import com.trifork.sdm.persistence.annotations.Output;
  * 
  * @see TestD
  */
-@Output
+@Entity
 public class TestC
 {
-	@Output
+	@Column
 	public String getSomeString()
 	{
 		return "FAKE";
 	}
 
-	@Output
+	@Column
 	public String someString()
 	{
 		return "FAKE";

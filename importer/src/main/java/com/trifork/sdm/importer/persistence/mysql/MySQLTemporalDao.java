@@ -4,15 +4,16 @@ import java.sql.Connection;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.persistence.Entity;
+
 import org.apache.log4j.Logger;
 
 import com.trifork.sdm.importer.persistence.FilePersistException;
 import com.trifork.sdm.importer.persistence.StamdataVersionedDao;
 import com.trifork.sdm.importer.persistence.mysql.MySQLTemporalTable.StamdataEntityVersion;
-import com.trifork.sdm.models.Entity;
+import com.trifork.sdm.models.Record;
 import com.trifork.sdm.persistence.CompleteDataset;
 import com.trifork.sdm.persistence.Dataset;
-import com.trifork.sdm.persistence.annotations.Output;
 
 
 public class MySQLTemporalDao implements StamdataVersionedDao
@@ -27,11 +28,11 @@ public class MySQLTemporalDao implements StamdataVersionedDao
 	}
 
 
-	public void persistCompleteDatasets(List<CompleteDataset<? extends Entity>> datasets) throws FilePersistException
+	public void persistCompleteDatasets(List<CompleteDataset<? extends Record>> datasets) throws FilePersistException
 	{
 		logger.debug("Starting to put entities from datasetgroup.");
 
-		for (CompleteDataset<? extends Entity> dataset : datasets)
+		for (CompleteDataset<? extends Record> dataset : datasets)
 		{
 			persistCompleteDataset(dataset);
 		}
@@ -42,7 +43,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao
 
 	public void persistCompleteDataset(CompleteDataset dataset) throws FilePersistException
 	{
-		Output output = (Output) dataset.getType().getAnnotation(Output.class);
+		Entity output = (Entity)dataset.getType().getAnnotation(Entity.class);
 
 		if (output == null) return;
 
@@ -62,7 +63,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao
 	 * will be "closed" in mysql by assigning validto.
 	 */
 
-	public void persistDeltaDataset(Dataset<? extends Entity> dataset) throws FilePersistException
+	public void persistDeltaDataset(Dataset<? extends Record> dataset) throws FilePersistException
 	{
 		Calendar now = Calendar.getInstance();
 
@@ -75,7 +76,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao
 
 		int processedEntities = 0;
 
-		for (Entity sde : dataset.getEntities())
+		for (Record sde : dataset.getEntities())
 		{
 			processedEntities++;
 
@@ -261,7 +262,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao
 	}
 
 
-	public MySQLTemporalTable getTable(Class<? extends Entity> type) throws FilePersistException
+	public MySQLTemporalTable getTable(Class<? extends Record> type) throws FilePersistException
 	{
 		return new MySQLTemporalTable(connection, type);
 	}

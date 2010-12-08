@@ -1,6 +1,7 @@
 package com.trifork.sdm.importer.persistence.mysql;
 
-import static com.trifork.sdm.util.DateUtils.*;
+import static com.trifork.sdm.util.DateUtils.toCalendar;
+import static com.trifork.sdm.util.DateUtils.toMySQLdate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,12 +21,12 @@ import org.apache.log4j.Logger;
 import com.trifork.sdm.importer.persistence.FilePersistException;
 import com.trifork.sdm.importer.persistence.TemporalStamdataEntityStorage;
 import com.trifork.sdm.models.AbstractEntity;
-import com.trifork.sdm.models.Entity;
+import com.trifork.sdm.models.Record;
 import com.trifork.sdm.persistence.Dataset;
 import com.trifork.sdm.util.DateUtils;
 
 
-public class MySQLTemporalTable<T extends Entity> implements TemporalStamdataEntityStorage<T>
+public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEntityStorage<T>
 {
 	public static class StamdataEntityVersion
 	{
@@ -96,7 +97,7 @@ public class MySQLTemporalTable<T extends Entity> implements TemporalStamdataEnt
 	}
 
 
-	private boolean fieldEqualsCurrentRow(Method method, Entity sde) throws Exception
+	private boolean fieldEqualsCurrentRow(Method method, Record sde) throws Exception
 	{
 		long t0 = System.nanoTime();
 
@@ -361,7 +362,7 @@ public class MySQLTemporalTable<T extends Entity> implements TemporalStamdataEnt
 	}
 
 
-	public int applyParamsToInsertAndUpdateStatement(PreparedStatement pstmt, Entity sde,
+	public int applyParamsToInsertAndUpdateStatement(PreparedStatement pstmt, Record sde,
 			Calendar transactionTime, Calendar createdTime)
 	{
 		int idx = applyParamsToInsertStatement(pstmt, sde, transactionTime, createdTime);
@@ -408,7 +409,7 @@ public class MySQLTemporalTable<T extends Entity> implements TemporalStamdataEnt
 	}
 
 
-	public int applyParamsToInsertStatement(PreparedStatement pstmt, Entity sde,
+	public int applyParamsToInsertStatement(PreparedStatement pstmt, Record sde,
 			Calendar transactionTime, Calendar createdTime)
 	{
 
@@ -476,7 +477,7 @@ public class MySQLTemporalTable<T extends Entity> implements TemporalStamdataEnt
 	}
 
 
-	public void applyParamsToUpdateStatement(PreparedStatement pstmt, Entity sde,
+	public void applyParamsToUpdateStatement(PreparedStatement pstmt, Record sde,
 			Calendar transactionTime, Calendar createdTime, Calendar existingValidFrom,
 			Calendar existingValidTo)
 	{
@@ -786,7 +787,7 @@ public class MySQLTemporalTable<T extends Entity> implements TemporalStamdataEnt
 	}
 
 
-	public boolean getIdOfCurrentRow(Entity sde)
+	public boolean getIdOfCurrentRow(Record sde)
 	{
 		long t0 = System.nanoTime();
 		try

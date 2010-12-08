@@ -3,12 +3,16 @@ package com.trifork.sdm.models.doseringsforslag;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+import com.trifork.sdm.Documented;
 import com.trifork.sdm.models.AbstractEntity;
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
 
 
-@Output(documentation = "Indeholder versioneringsinformation.")
+@Entity
+@Documented("Indeholder versioneringsinformation.")
 public class DosageVersion extends AbstractEntity {
 
 	// daDate: Dato for Apotekerforeningens mærkevaretakst, som datasættet er
@@ -27,28 +31,31 @@ public class DosageVersion extends AbstractEntity {
 
 	private Calendar validFrom;
 
-	@Output
+
+	@Column
 	public Date getDaDate() {
-	
+
 		return daDate;
 	}
 
 
-	@Output
+	@Column
 	public Date getLmsDate() {
-	
+
 		return lmsDate;
 	}
 
+
 	@Id
-	@Output
+	@Column
 	public Date getReleaseDate() {
-	
+
 		return releaseDate;
 	}
 
+
 	// Don't output this.
-	// @Output(length=15)
+	// @Column(length=15)
 	public long getReleaseNumber() {
 
 		return releaseNumber;
@@ -56,18 +63,19 @@ public class DosageVersion extends AbstractEntity {
 
 
 	public void setDaDate(Date daDate) {
-	
+
 		this.daDate = daDate;
 	}
 
 
 	public void setLmsDate(Date lmsDate) {
-	
+
 		this.lmsDate = lmsDate;
 	}
 
+
 	public void setReleaseDate(Date releaseDate) {
-	
+
 		this.releaseDate = releaseDate;
 	}
 
@@ -76,7 +84,6 @@ public class DosageVersion extends AbstractEntity {
 
 		this.releaseNumber = releaseNumber;
 	}
-	
 
 
 	public void setValidFrom(Calendar validfrom) {

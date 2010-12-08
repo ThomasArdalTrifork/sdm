@@ -33,12 +33,17 @@ subprojects {
 		// be published to a public repo or (yuck!) included
 		// with the source as a jar.
 		mavenRepo urls: 'http://nexus.ci81.trifork.com/content/groups/public'
+		
+		// Entities
+		
+		mavenRepo urls: 'http://repository.jboss.com/maven2'
 	}
 
 	dependencies {
+		compile 'org.hibernate.java-persistence:jpa-api:2.0-cr-1'
+		
 		testCompile group: 'junit', name: 'junit', version: '4.8.2'
 
-		// FIXME: Log4J should not be needed in the API project.
 		compile group: 'log4j', name: 'log4j', version: '1.2.16'
 	}
 }

@@ -3,12 +3,14 @@ package com.trifork.sdm.models.cpr;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.sdm.util.DateUtils;
 
 
-@Output
+@Entity
 public class UmyndiggoerelseVaergeRelation extends CPREntity {
 
 	public enum VaergeRelationType {
@@ -38,14 +40,14 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity {
 
 
 	@Id
-	@Output
+	@Column
 	public String getId() {
 
 		return getCpr() + "-" + typeKode;
 	}
 
 
-	@Output
+	@Column
 	@Override
 	public String getCpr() {
 
@@ -89,7 +91,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity {
 	}
 
 
-	@Output
+	@Column
 	public String getTypeTekst() {
 
 		if (type == null)
@@ -103,7 +105,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity {
 	}
 
 
-	@Output
+	@Column
 	public String getTypeKode() {
 
 		return typeKode;
@@ -125,7 +127,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity {
 	}
 
 
-	@Output
+	@Column
 	public String getRelationCpr() {
 
 		return relationCpr;
@@ -138,7 +140,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity {
 	}
 
 
-	@Output
+	@Column
 	public Date getRelationCprStartDato() {
 
 		return relationCprStartDato;
@@ -151,7 +153,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity {
 	}
 
 
-	@Output
+	@Column
 	public String getVaergesNavn() {
 
 		return vaergesNavn;
@@ -164,7 +166,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity {
 	}
 
 
-	@Output
+	@Column
 	public Date getVaergesNavnStartDato() {
 
 		return vaergesNavnStartDato;
@@ -177,7 +179,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity {
 	}
 
 
-	@Output
+	@Column
 	public String getRelationsTekst1() {
 
 		return relationsTekst1;
@@ -190,7 +192,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity {
 	}
 
 
-	@Output
+	@Column
 	public String getRelationsTekst2() {
 
 		return relationsTekst2;
@@ -203,7 +205,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity {
 	}
 
 
-	@Output
+	@Column
 	public String getRelationsTekst3() {
 
 		return relationsTekst3;
@@ -216,7 +218,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity {
 	}
 
 
-	@Output
+	@Column
 	public String getRelationsTekst4() {
 
 		return relationsTekst4;
@@ -229,7 +231,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity {
 	}
 
 
-	@Output
+	@Column
 	public String getRelationsTekst5() {
 
 		return relationsTekst5;
@@ -249,15 +251,13 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity {
 		// produktionsdatoen for udtrækket brug det ellers brug
 		// produktionsdatoen
 		return (umyndigStartDato == null) ? super.getValidFrom() : (umyndigStartDato.after(super
-				.getValidFrom().getTime())) ? DateUtils.toCalendar(umyndigStartDato) : super
-				.getValidFrom();
+				.getValidFrom().getTime())) ? DateUtils.toCalendar(umyndigStartDato) : super.getValidFrom();
 	}
 
 
 	@Override
 	public Calendar getValidTo() {
 
-		return (umyndigSletteDato == null) ? super.getValidTo() : DateUtils
-				.toCalendar(umyndigSletteDato);
+		return (umyndigSletteDato == null) ? super.getValidTo() : DateUtils.toCalendar(umyndigSletteDato);
 	}
 }

@@ -2,12 +2,16 @@ package com.trifork.sdm.models.doseringsforslag;
 
 import java.util.Calendar;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+import com.trifork.sdm.Documented;
 import com.trifork.sdm.models.AbstractEntity;
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
 
 
-@Output(documentation="Indeholder information om lægemidlers drug-id og doseringsenhed.")
+@Entity
+@Documented("Indeholder information om lægemidlers drug-id og doseringsenhed.")
 public class Drug extends AbstractEntity {
 
 	private Calendar validFrom;
@@ -17,7 +21,7 @@ public class Drug extends AbstractEntity {
 
 
 	// Don't output this.
-	// @Output(length=15)
+	// @Column(length=15)
 	public int getReleaseNumber() {
 
 		return releaseNumber;
@@ -31,7 +35,7 @@ public class Drug extends AbstractEntity {
 
 
 	@Id
-	@Output(length=11)
+	@Column(length = 11)
 	public long getDrugId() {
 
 		return drugId;
@@ -44,7 +48,7 @@ public class Drug extends AbstractEntity {
 	}
 
 
-	@Output(length=4)
+	@Column(length = 4)
 	public int getDosageUnitCode() {
 
 		return dosageUnitCode;

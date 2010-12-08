@@ -3,12 +3,15 @@ package com.trifork.sdm.models.takst;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Output(name = "Indikation")
-public class Indikation extends TakstEntity
-{
+
+@Entity
+@Table(name = "Indikation")
+public class Indikation extends TakstEntity {
 
 	private Long indikationskode; // Ref. t. LMS25
 	private String indikationstekstTotal; // Felt 03 + 04 + 05
@@ -19,13 +22,11 @@ public class Indikation extends TakstEntity
 									// (bliver pt. ikke anvendes)
 
 
-	public List<ATCKoderOgTekst> getATC()
-	{
-		TakstDataset<Indikationskode> indikationskoder = takst
-				.getDatasetOfType(Indikationskode.class);
+	public List<ATCKoderOgTekst> getATC() {
+
+		TakstDataset<Indikationskode> indikationskoder = takst.getDatasetOfType(Indikationskode.class);
 		List<ATCKoderOgTekst> atcKoder = new ArrayList<ATCKoderOgTekst>();
-		for (Indikationskode ik : indikationskoder.getEntities())
-		{
+		for (Indikationskode ik : indikationskoder.getEntities()) {
 			if (ik.getIndikationskode().equals(this.getIndikationskode()))
 				atcKoder.add(takst.getEntity(ATCKoderOgTekst.class, ik.getATC()));
 		}
@@ -34,86 +35,86 @@ public class Indikation extends TakstEntity
 
 
 	@Id
-	@Output(name = "IndikationKode")
-	public Long getIndikationskode()
-	{
+	@Column(name = "IndikationKode")
+	public Long getIndikationskode() {
+
 		return this.indikationskode;
 	}
 
 
-	public void setIndikationskode(Long indikationskode)
-	{
+	public void setIndikationskode(Long indikationskode) {
+
 		this.indikationskode = indikationskode;
 	}
 
 
-	@Output(name = "IndikationTekst")
-	public String getIndikationstekstTotal()
-	{
+	@Column(name = "IndikationTekst")
+	public String getIndikationstekstTotal() {
+
 		return this.indikationstekstTotal;
 	}
 
 
-	public void setIndikationstekstTotal(String indikationstekstTotal)
-	{
+	public void setIndikationstekstTotal(String indikationstekstTotal) {
+
 		this.indikationstekstTotal = indikationstekstTotal;
 	}
 
 
-	// @Output
-	public String getIndikationstekstLinie1()
-	{
+	// @Column
+	public String getIndikationstekstLinie1() {
+
 		return this.indikationstekstLinie1;
 	}
 
 
-	public void setIndikationstekstLinie1(String indikationstekstLinie1)
-	{
+	public void setIndikationstekstLinie1(String indikationstekstLinie1) {
+
 		this.indikationstekstLinie1 = indikationstekstLinie1;
 	}
 
 
-	// @Output
-	public String getIndikationstekstLinie2()
-	{
+	// @Column
+	public String getIndikationstekstLinie2() {
+
 		return this.indikationstekstLinie2;
 	}
 
 
-	public void setIndikationstekstLinie2(String indikationstekstLinie2)
-	{
+	public void setIndikationstekstLinie2(String indikationstekstLinie2) {
+
 		this.indikationstekstLinie2 = indikationstekstLinie2;
 	}
 
 
-	// @Output
-	public String getIndikationstekstLinie3()
-	{
+	// @Column
+	public String getIndikationstekstLinie3() {
+
 		return this.indikationstekstLinie3;
 	}
 
 
-	public void setIndikationstekstLinie3(String indikationstekstLinie3)
-	{
+	public void setIndikationstekstLinie3(String indikationstekstLinie3) {
+
 		this.indikationstekstLinie3 = indikationstekstLinie3;
 	}
 
 
-	// @Output(name="aktiv")
-	public Boolean getAktivInaktiv()
-	{
+	// @Column(name="aktiv")
+	public Boolean getAktivInaktiv() {
+
 		return "A".equalsIgnoreCase(this.aktivInaktiv);
 	}
 
 
-	public void setAktivInaktiv(String aktivInaktiv)
-	{
+	public void setAktivInaktiv(String aktivInaktiv) {
+
 		this.aktivInaktiv = aktivInaktiv;
 	}
 
 
-	public Long getEntityId()
-	{
+	public Long getEntityId() {
+
 		return this.indikationskode;
 	}
 

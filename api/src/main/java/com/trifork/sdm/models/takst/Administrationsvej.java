@@ -1,10 +1,11 @@
 package com.trifork.sdm.models.takst;
 
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 
-@Output
+@Entity
 public class Administrationsvej extends TakstEntity {
 
 	private String kode; // Ref. t. LMS01, felt 16
@@ -13,7 +14,7 @@ public class Administrationsvej extends TakstEntity {
 
 
 	@Id
-	@Output(name = "AdministrationsvejKode")
+	@Column(name = "AdministrationsvejKode")
 	public String getKode() {
 
 		return this.kode;
@@ -38,7 +39,7 @@ public class Administrationsvej extends TakstEntity {
 	}
 
 
-	@Output(name = "AdministrationsvejTekst")
+	@Column(name = "AdministrationsvejTekst")
 	public String getTekst() {
 
 		return this.tekst;

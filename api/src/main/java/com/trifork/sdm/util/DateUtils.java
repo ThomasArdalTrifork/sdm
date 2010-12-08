@@ -12,8 +12,7 @@ import org.apache.log4j.Logger;
 // TODO: thb. Why not use a library for these conversions such as org.apache.log4j.helpers.ISO8601DateFormat,
 // which is a dependency for this project anyway. 
 
-public class DateUtils
-{
+public class DateUtils {
 	private static Logger logger = Logger.getLogger(DateUtils.class);
 
 	public static final Calendar FUTURE = toCalendar(2999, 12, 31);
@@ -25,8 +24,8 @@ public class DateUtils
 	/**
 	 * @return a String representing the ISO 8601 date without time zone.
 	 */
-	public static String toISO8601date(Calendar cal)
-	{
+	public static String toISO8601date(Calendar cal) {
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		return sdf.format(cal.getTime());
 	}
@@ -37,28 +36,27 @@ public class DateUtils
 	 *            representing a date sing the format: yyyyMMdd.
 	 * @return a String representing the ISO 8601 date without time zone.
 	 */
-	public static String toISO8601date(Long long1)
-	{
+	public static String toISO8601date(Long long1) {
+
 		if (long1 == null || long1 == 0) return null;
 
 		SimpleDateFormat informat = new SimpleDateFormat("yyyyMMdd");
 		SimpleDateFormat outformat = new SimpleDateFormat("yyyy-MM-dd");
 
-		try
-		{
+		try {
 			return "" + outformat.format(informat.parse("" + long1));
 		}
-		catch (ParseException e)
-		{
-			logger.error("Error converting date to iso 8601 date format. Returning unformated string: '" + long1 + "'");
+		catch (ParseException e) {
+			logger.error("Error converting date to iso 8601 date format. Returning unformated string: '"
+					+ long1 + "'");
 			return "" + long1;
 		}
 
 	}
 
 
-	public static String toFilenameDatetime(Calendar cal)
-	{
+	public static String toFilenameDatetime(Calendar cal) {
+
 		SimpleDateFormat outformat = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ss");
 		return outformat.format(cal.getTime());
 	}
@@ -75,8 +73,8 @@ public class DateUtils
 	 * @param date
 	 *            (1-31)
 	 */
-	public static Calendar toCalendar(int year, int month, int date)
-	{
+	public static Calendar toCalendar(int year, int month, int date) {
+
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
 		cal.set(year, month - 1, date);
@@ -85,8 +83,8 @@ public class DateUtils
 	}
 
 
-	public static Calendar toCalendar(int year, int month, int date, int hours, int minutes, int secs)
-	{
+	public static Calendar toCalendar(int year, int month, int date, int hours, int minutes, int secs) {
+
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
 		cal.set(year, month - 1, date, hours, minutes, secs);
@@ -94,8 +92,7 @@ public class DateUtils
 	}
 
 
-	public static Calendar toCalendar(java.sql.Date date)
-	{
+	public static Calendar toCalendar(java.sql.Date date) {
 
 		if (date == null) return null;
 		Calendar cal = Calendar.getInstance();
@@ -105,8 +102,8 @@ public class DateUtils
 	}
 
 
-	public static Calendar toCalendar(java.util.Date date)
-	{
+	public static Calendar toCalendar(java.util.Date date) {
+
 		if (date == null) return null;
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
@@ -115,16 +112,15 @@ public class DateUtils
 	}
 
 
-	public static String toMySQLdate(Calendar date)
-	{
-		if (date == null)
-		{
+	public static String toMySQLdate(Calendar date) {
+
+		if (date == null) {
 			logger.warn("Cannot convert null to mysqldate");
 			return null;
 		}
-		
+
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
+
 		return dateFormatter.format(date.getTime());
 	}
 }

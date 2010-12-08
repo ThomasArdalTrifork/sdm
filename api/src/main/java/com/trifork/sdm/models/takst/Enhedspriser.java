@@ -1,7 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class Enhedspriser extends TakstEntity
-{
+public class Enhedspriser extends TakstEntity {
 
 	private Long drugID; // Ref. t. LMS01
 	private Long varenummer; // Ref. t. LMS02
@@ -11,68 +10,68 @@ public class Enhedspriser extends TakstEntity
 										// for DrugID
 
 
-	public Long getDrugID()
-	{
+	public Long getDrugID() {
+
 		return this.drugID;
 	}
 
 
-	public void setDrugID(Long drugID)
-	{
+	public void setDrugID(Long drugID) {
+
 		this.drugID = drugID;
 	}
 
 
-	public Long getVarenummer()
-	{
+	public Long getVarenummer() {
+
 		return this.varenummer;
 	}
 
 
-	public void setVarenummer(Long varenummer)
-	{
+	public void setVarenummer(Long varenummer) {
+
 		this.varenummer = varenummer;
 	}
 
 
-	public Long getPrisPrEnhed()
-	{
+	public Long getPrisPrEnhed() {
+
 		return this.prisPrEnhed;
 	}
 
 
-	public void setPrisPrEnhed(Long prisPrEnhed)
-	{
+	public void setPrisPrEnhed(Long prisPrEnhed) {
+
 		this.prisPrEnhed = prisPrEnhed;
 	}
 
 
-	public Long getPrisPrDDD()
-	{
+	public Long getPrisPrDDD() {
+
 		return this.prisPrDDD;
 	}
 
 
-	public void setPrisPrDDD(Long prisPrDDD)
-	{
+	public void setPrisPrDDD(Long prisPrDDD) {
+
 		this.prisPrDDD = prisPrDDD;
 	}
 
 
-	public String getBilligstePakning()
-	{
+	public String getBilligstePakning() {
+
 		return this.billigstePakning;
 	}
 
 
-	public void setBilligstePakning(String billigstePakning)
-	{
+	public void setBilligstePakning(String billigstePakning) {
+
 		this.billigstePakning = billigstePakning;
 	}
 
 
-	public String getEntityId()
-	{
+	public String getEntityId() {
+
 		return "" + varenummer;
 	}
 

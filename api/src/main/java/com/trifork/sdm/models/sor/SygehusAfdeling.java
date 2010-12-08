@@ -2,13 +2,15 @@ package com.trifork.sdm.models.sor;
 
 import java.util.Calendar;
 
-import com.trifork.sdm.models.AbstractEntity;
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-@Output
-public class SygehusAfdeling extends AbstractEntity
-{
+import com.trifork.sdm.models.AbstractEntity;
+
+
+@Entity
+public class SygehusAfdeling extends AbstractEntity {
 	private String navn;
 	private Long eanLokationsnummer;
 	private String nummer;
@@ -30,250 +32,250 @@ public class SygehusAfdeling extends AbstractEntity
 	private Calendar validTo;
 
 
-	@Output
-	public String getNavn()
-	{
+	@Column
+	public String getNavn() {
+
 		return navn;
 	}
 
 
-	public void setNavn(String navn)
-	{
+	public void setNavn(String navn) {
+
 		this.navn = navn;
 	}
 
 
-	@Output
-	public Long getEanLokationsnummer()
-	{
+	@Column
+	public Long getEanLokationsnummer() {
+
 		return eanLokationsnummer;
 	}
 
 
-	public void setEanLokationsnummer(Long eanLokationsnummer)
-	{
+	public void setEanLokationsnummer(Long eanLokationsnummer) {
+
 		this.eanLokationsnummer = eanLokationsnummer;
 	}
 
 
-	@Output
-	public String getNummer()
-	{
+	@Column
+	public String getNummer() {
+
 		return nummer;
 	}
 
 
-	public void setNummer(String nummer)
-	{
+	public void setNummer(String nummer) {
+
 		this.nummer = nummer;
 	}
 
 
-	@Output
-	public String getTelefon()
-	{
+	@Column
+	public String getTelefon() {
+
 		return telefon;
 	}
 
 
-	public void setTelefon(String telefon)
-	{
+	public void setTelefon(String telefon) {
+
 		this.telefon = telefon;
 	}
 
 
-	@Output
-	public String getVejnavn()
-	{
+	@Column
+	public String getVejnavn() {
+
 		return vejnavn;
 	}
 
 
-	public void setVejnavn(String vejnavn)
-	{
+	public void setVejnavn(String vejnavn) {
+
 		this.vejnavn = vejnavn;
 	}
 
 
-	@Output
-	public String getPostnummer()
-	{
+	@Column
+	public String getPostnummer() {
+
 		return postnummer;
 	}
 
 
-	public void setPostnummer(String postnummer)
-	{
+	public void setPostnummer(String postnummer) {
+
 		this.postnummer = postnummer;
 	}
 
 
-	@Output
-	public String getBynavn()
-	{
+	@Column
+	public String getBynavn() {
+
 		return bynavn;
 	}
 
 
-	public void setBynavn(String bynavn)
-	{
+	public void setBynavn(String bynavn) {
+
 		this.bynavn = bynavn;
 	}
 
 
-	@Output
-	public String getEmail()
-	{
+	@Column
+	public String getEmail() {
+
 		return email;
 	}
 
 
-	public void setEmail(String email)
-	{
+	public void setEmail(String email) {
+
 		this.email = email;
 	}
 
 
-	@Output
-	public String getWww()
-	{
+	@Column
+	public String getWww() {
+
 		return www;
 	}
 
 
-	public void setWww(String www)
-	{
+	public void setWww(String www) {
+
 		this.www = www;
 	}
 
 
-	@Output
-	public Long getAfdelingTypeKode()
-	{
+	@Column
+	public Long getAfdelingTypeKode() {
+
 		return afdelingTypeKode;
 	}
 
 
-	public void setAfdelingTypeKode(Long afdelingTypeKode)
-	{
+	public void setAfdelingTypeKode(Long afdelingTypeKode) {
+
 		this.afdelingTypeKode = afdelingTypeKode;
 	}
 
 
-	@Output
-	public Long getHovedSpecialeKode()
-	{
+	@Column
+	public Long getHovedSpecialeKode() {
+
 		return hovedSpecialeKode;
 	}
 
 
-	public void setHovedSpecialeKode(Long hovedSpecialeKode)
-	{
+	public void setHovedSpecialeKode(Long hovedSpecialeKode) {
+
 		this.hovedSpecialeKode = hovedSpecialeKode;
 	}
 
 
-	@Output
-	public String getHovedSpecialeTekst()
-	{
+	@Column
+	public String getHovedSpecialeTekst() {
+
 		return hovedSpecialeTekst;
 	}
 
 
-	public void setHovedSpecialeTekst(String hovedSpecialeTekst)
-	{
+	public void setHovedSpecialeTekst(String hovedSpecialeTekst) {
+
 		this.hovedSpecialeTekst = hovedSpecialeTekst;
 	}
 
 
-	@Output
-	public String getAfdelingTypeTekst()
-	{
+	@Column
+	public String getAfdelingTypeTekst() {
+
 		return afdelingTypeTekst;
 	}
 
 
-	public void setAfdelingTypeTekst(String afdelingTypeTekst)
-	{
+	public void setAfdelingTypeTekst(String afdelingTypeTekst) {
+
 		this.afdelingTypeTekst = afdelingTypeTekst;
 	}
 
 
 	@Id
-	@Output
-	public Long getSorNummer()
-	{
+	@Column
+	public Long getSorNummer() {
+
 		return sorNummer;
 	}
 
 
-	public void setSorNummer(Long sorNummer)
-	{
+	public void setSorNummer(Long sorNummer) {
+
 		this.sorNummer = sorNummer;
 	}
 
 
-	@Output
-	public Long getSygehusSorNummer()
-	{
+	@Column
+	public Long getSygehusSorNummer() {
+
 		return sygehusSorNummer;
 	}
 
 
-	public void setSygehusSorNummer(Long sygehusSorNummer)
-	{
+	public void setSygehusSorNummer(Long sygehusSorNummer) {
+
 		this.sygehusSorNummer = sygehusSorNummer;
 	}
 
 
-	@Output
-	public Long getOverAfdelingSorNummer()
-	{
+	@Column
+	public Long getOverAfdelingSorNummer() {
+
 		return overAfdelingSorNummer;
 	}
 
 
-	public void setOverAfdelingSorNummer(Long overAfdelingSorNummer)
-	{
+	public void setOverAfdelingSorNummer(Long overAfdelingSorNummer) {
+
 		this.overAfdelingSorNummer = overAfdelingSorNummer;
 	}
 
 
-	@Output
-	public Long getUnderlagtSygehusSorNummer()
-	{
+	@Column
+	public Long getUnderlagtSygehusSorNummer() {
+
 		return underlagtSygehusSorNummer;
 	}
 
 
-	public void setUnderlagtSygehusSorNummer(Long underlagtSygehusSorNummer)
-	{
+	public void setUnderlagtSygehusSorNummer(Long underlagtSygehusSorNummer) {
+
 		this.underlagtSygehusSorNummer = underlagtSygehusSorNummer;
 	}
 
 
-	public void setValidFrom(Calendar validFrom)
-	{
+	public void setValidFrom(Calendar validFrom) {
+
 		this.validFrom = validFrom;
 	}
 
 
 	@Override
-	public Calendar getValidFrom()
-	{
+	public Calendar getValidFrom() {
+
 		return validFrom;
 	}
 
 
 	@Override
-	public Calendar getValidTo()
-	{
+	public Calendar getValidTo() {
+
 		return (validTo != null) ? validTo : FUTURE;
 	}
 
 
-	public void setValidTo(Calendar validTo)
-	{
+	public void setValidTo(Calendar validTo) {
+
 		this.validTo = validTo;
 	}
 

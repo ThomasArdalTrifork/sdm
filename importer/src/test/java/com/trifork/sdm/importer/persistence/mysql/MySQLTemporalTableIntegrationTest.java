@@ -8,11 +8,14 @@ import java.sql.Connection;
 import java.util.Calendar;
 import java.util.Map;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import org.junit.Test;
 
-import com.trifork.sdm.models.Entity;
-import com.trifork.sdm.persistence.annotations.Id;
-import com.trifork.sdm.persistence.annotations.Output;
+import com.trifork.sdm.models.Record;
 
 
 public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTest {
@@ -238,7 +241,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		SDE b = new SDE(t2, t3) {
 
 			@Id
-			@Output
+			@Column
 			public String getTakstuge() {
 
 				return "1997-11";
@@ -268,8 +271,9 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	}
 
 
-	@Output(name = "TakstVersion")
-	public static class SDE implements Entity {
+	@Entity
+	@Table(name = "TakstVersion")
+	public static class SDE implements Record {
 
 		Calendar validfrom, validto;
 
@@ -310,7 +314,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 
 
 		@Id
-		@Output
+		@Column
 		public String getTakstuge() {
 
 			return "1999-11";

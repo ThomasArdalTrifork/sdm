@@ -3,6 +3,7 @@ package com.trifork.sdm.replication.configuration;
 import java.io.IOException;
 import java.util.Set;
 
+import javax.persistence.Entity;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +16,6 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
 import com.google.inject.servlet.ServletModule;
-import com.trifork.sdm.persistence.annotations.Output;
 import com.trifork.sdm.replication.security.GatewayServlet;
 import com.trifork.sdm.replication.security.SecurityFilter;
 
@@ -41,7 +41,7 @@ public class ResourceModule extends ServletModule {
 		// Serve all entities by deferring their URLs and using their
 		// annotations.
 
-		Set<Class<?>> entities = reflector.getTypesAnnotatedWith(Output.class);
+		Set<Class<?>> entities = reflector.getTypesAnnotatedWith(Entity.class);
 
 		bind(Set.class).toInstance(entities);
 
