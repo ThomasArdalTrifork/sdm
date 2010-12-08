@@ -21,10 +21,12 @@ public class URLBuilder {
 
 	public URLBuilder(URL bucketURL, String username, String secret, Date expires) {
 
+		/*
 		assert username != null;
 		assert expires != null;
 		assert bucketURL != null;
 		assert secret != null;
+		*/
 
 		this.username = username;
 		this.expires = expires;

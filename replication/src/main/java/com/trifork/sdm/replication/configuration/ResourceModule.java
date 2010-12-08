@@ -16,7 +16,6 @@ import org.reflections.util.FilterBuilder;
 
 import com.google.inject.servlet.ServletModule;
 import com.trifork.sdm.persistence.annotations.Output;
-import com.trifork.sdm.replication.ResourceServlet;
 import com.trifork.sdm.replication.security.GatewayServlet;
 import com.trifork.sdm.replication.security.SecurityFilter;
 
@@ -50,7 +49,7 @@ public class ResourceModule extends ServletModule {
 
 			final String resourcePath = "/" + entity.getSimpleName().toLowerCase();
 
-			serve(resourcePath).with(new ResourceServlet(entity));
+			//serve(resourcePath).with(new ResourceServlet(entity, ));
 			filter(resourcePath).through(SecurityFilter.class);
 		}
 

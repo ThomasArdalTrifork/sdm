@@ -31,24 +31,23 @@ public class GatewayServlet extends HttpServlet {
 	private final String username = "gateway";
 	private final String key;
 
-	private final DateFormat dateFormat;
 	private final URL baseURL;
 
 
 	@Inject
 	GatewayServlet(@Secret String key, @AuthorizationTTL int ttl, @PageSize int defaultPageSize,
-			DateFormat dateFormat, @Host String host, @Port int port) throws MalformedURLException {
+			@Host String host, @Port int port) throws MalformedURLException {
 
-		
+		/* TODO: Use preconditions from JSR-305 instead
 		assert key != null && !key.isEmpty();
 		assert ttl > 0;
 		assert defaultPageSize > 0;
 		assert dateFormat != null;
 		assert host != null;
-
+		 */
+		
 		this.key = key;
 		this.timeToLive = ttl;
-		this.dateFormat = dateFormat;
 		this.baseURL = new URL("http", host, port, "");
 	}
 

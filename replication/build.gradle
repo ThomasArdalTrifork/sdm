@@ -25,6 +25,11 @@ dependencies {
 	compile "com.google.code.inject:guice-servlet:$GUICE_VERSION"
 	
 	
+	// MySQL
+	
+	compile "mysql:mysql-connector-java:5.1.13"
+	
+	
 	// Encryption
 	
 	compile 'bouncycastle:bcprov-jdk16:140'
@@ -33,6 +38,7 @@ dependencies {
 	// Token Encoding
 	
 	compile "commons-codec:commons-codec:1.4"
+	
 	
 	// Testing
 	

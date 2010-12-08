@@ -1,4 +1,4 @@
-package com.trifork.sdm.replication;
+package com.trifork.sdm.replication.junit;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +18,7 @@ import org.junit.runners.model.Statement;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.trifork.sdm.replication.configuration.DatabaseModule;
 import com.trifork.sdm.replication.configuration.DateFormatModule;
 import com.trifork.sdm.replication.configuration.TestServerModule;
 
@@ -36,7 +37,8 @@ public class TestRunner extends BlockJUnit4ClassRunner {
 
 		Module testModule = (Module) type.getConstructor().newInstance();
 
-		injector = Guice.createInjector(new TestServerModule(), new DateFormatModule(), testModule);
+		injector = Guice.createInjector(new TestServerModule(), new DateFormatModule(), new DatabaseModule(),
+				testModule);
 	}
 
 

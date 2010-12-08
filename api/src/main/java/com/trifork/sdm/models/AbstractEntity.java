@@ -14,8 +14,7 @@ import com.trifork.sdm.persistence.annotations.Output;
 import com.trifork.sdm.util.DateUtils;
 
 
-public abstract class AbstractEntity implements Entity
-{
+public abstract class AbstractEntity implements Entity {
 	public static final Calendar FUTURE = DateUtils.FUTURE;
 
 	private static final Logger logger = Logger.getLogger(AbstractEntity.class);
@@ -24,35 +23,30 @@ public abstract class AbstractEntity implements Entity
 	private static final Map<Method, String> outputFieldNames = new HashMap<Method, String>();
 
 
-	public Object getEntityId()
-	{
+	public Object getEntityId() {
+
 		Method idMethod = getIdMethod(getClass());
 
-		try
-		{
+		try {
 			return idMethod.invoke(this);
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			logger.error("Error getting id for object of class: " + getClass());
 			return null;
 		}
 	}
 
 
-	public Map<String, Object> serialize()
-	{
+	public Map<String, Object> serialize() {
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		try
-		{
+		try {
 			List<Method> outputMethods = getOutputMethods(getClass());
-			for (Method method : outputMethods)
-			{
+			for (Method method : outputMethods) {
 				map.put(getOutputFieldName(method), method.invoke(this));
 			}
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			logger.error("Error serializing object of class: " + getClass() + " id: " + getEntityId());
 		}
 		return map;
@@ -68,18 +62,16 @@ public abstract class AbstractEntity implements Entity
 	 * @return the getter method that contains the unique id for the given
 	 *         Entity type
 	 */
-	public static Method getIdMethod(Class<? extends Entity> class1)
-	{
+	public static Method getIdMethod(Class<? extends Entity> class1) {
+
 		Method m = idMethodCache.get(class1);
 
 		if (m != null) return m;
 
 		Method[] allMethods = class1.getMethods();
 
-		for (Method method : allMethods)
-		{
-			if (method.isAnnotationPresent(Id.class))
-			{
+		for (Method method : allMethods) {
+			if (method.isAnnotationPresent(Id.class)) {
 				idMethodCache.put(class1, method);
 				return method;
 			}
@@ -92,44 +84,46 @@ public abstract class AbstractEntity implements Entity
 
 
 	/**
-	 * TODO
+	 * TODO Document this method.
 	 * 
 	 * @param method
 	 *            A getter method, that is used for serialization.
 	 * @return The name used to designate this field when serializing
 	 */
-	public static String getOutputFieldName(Method method)
-	{
+	public static String getOutputFieldName(Method method) {
+
+		// TODO: Use the entity helper class.
+		
 		String name = outputFieldNames.get(method);
-		if (name == null)
-		{
+		
+		if (name == null) {
 			Output output = method.getAnnotation(Output.class);
 			name = method.getName().substring(3); // Strip "get"
-			if (output != null && output.name().length() > 0)
-			{
+			if (output != null && output.name().length() > 0) {
 				name = output.name();
 			}
 			outputFieldNames.put(method, name);
 		}
+		
 		return name;
 	}
 
 
-	public static List<Method> getOutputMethods(Class<? extends Entity> type)
-	{
-		Method[] methods = type.getMethods();
+	public static List<Method> getOutputMethods(Class<? extends Entity> type) {
+
 		List<Method> outputMethods = new ArrayList<Method>();
 
-		for (Method method : methods)
-		{
-			if (method.isAnnotationPresent(Output.class)) outputMethods.add(method);
+		for (Method method : type.getMethods()) {
+			if (!method.isAnnotationPresent(Output.class)) continue;
+			outputMethods.add(method);
 		}
+
 		return outputMethods;
 	}
 
 
-	public Calendar getValidTo()
-	{
+	public Calendar getValidTo() {
+
 		return DateUtils.FUTURE;
 	}
 

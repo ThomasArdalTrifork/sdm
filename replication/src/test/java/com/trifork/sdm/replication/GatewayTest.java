@@ -1,13 +1,12 @@
 package com.trifork.sdm.replication;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.number.OrderingComparison.greaterThan;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.number.OrderingComparison.*;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import static java.net.HttpURLConnection.*;
 import java.net.URL;
 import java.security.SignatureException;
 import java.util.Date;
@@ -45,6 +44,17 @@ public class GatewayTest extends ReplicationTest {
 		serve("/gateway").with(GatewayServlet.class);
 
 		bindConstant().annotatedWith(Secret.class).to(secret);
+	}
+	
+	
+	@Test
+	public void should_require_a_bucket_header(HttpURLConnection connection) throws IOException {
+
+		connection.connect();
+
+		// TODO: The expected body should be a SOAP envelope.
+
+		assertThat(connection.getResponseCode(), is(HTTP_BAD_REQUEST));
 	}
 
 

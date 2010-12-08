@@ -145,17 +145,17 @@ public class SchemaTest {
 				XPathConstants.NODE);
 		assertNotNull(typeElement);
 
-		Node sequenceElement = (Node) xpath.evaluate("/schema/element/complexType/sequence",
+		Node sequenceElement = (Node) xpath.evaluate("/schema/element/complexType/all",
 				document, XPathConstants.NODE);
 		assertNotNull(sequenceElement);
 
 		int i = 1;
 
-		checkElementNameAndType(document, i++, "a", "sd:secureString");
-		checkElementNameAndType(document, i++, "b", "sd:secureBoolean");
-		checkElementNameAndType(document, i++, "c", "sd:secureDate");
-		checkElementNameAndType(document, i++, "d", "sd:secureInteger");
-		checkElementNameAndType(document, i++, "e", "sd:secureInteger");
+		checkElementNameAndType(document, i++, "a", "sd:censoredString");
+		checkElementNameAndType(document, i++, "b", "sd:censoredBoolean");
+		checkElementNameAndType(document, i++, "c", "sd:censoredDate");
+		checkElementNameAndType(document, i++, "d", "sd:censoredInteger");
+		checkElementNameAndType(document, i++, "e", "sd:censoredInteger");
 
 		// Make sure that getF() and getG() are not included.
 		// and that the validTo validFrom etc. are.
@@ -172,7 +172,7 @@ public class SchemaTest {
 	private void checkElementNameAndType(Document document, int i, String expectedName,
 			String expectedType) throws XPathExpressionException {
 
-		String query = "/schema/element/complexType/sequence/element[%d]/@%s";
+		String query = "/schema/element/complexType/all/element[%d]/@%s";
 
 		XPath xpath = XPathFactory.newInstance().newXPath();
 

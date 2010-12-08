@@ -47,10 +47,12 @@ public class SignatureBuilder {
 	
 	public SignatureBuilder(HTTPMethod method, String username, String password, String bucket, long expires) {
 		
+		/*
 		assert method != null;
 		assert username != null;
 		assert password != null;
 		assert bucket != null;
+		*/
 
 		this.method = method;
 		this.username = username;

@@ -101,7 +101,7 @@ public class SecurityFilter implements Filter {
 	private boolean verifySignature(HttpServletRequest request,
 			String bucket, String signature, String username, long expires) throws IOException, ServletException {
 
-		HTTPMethod method = getMethod(request);
+		HTTPMethod method = HTTPMethod.valueOf(request.getMethod());
 
 		SignatureBuilder builder = new SignatureBuilder(method, username, secret, bucket, expires);
 
@@ -143,30 +143,5 @@ public class SecurityFilter implements Filter {
 	@Override
 	public void destroy() {
 
-	}
-
-
-	private HTTPMethod getMethod(HttpServletRequest request) {
-
-		// TODO: This is an ugly and combersome way of getting the method. We
-		// should change it.
-
-		String method = request.getMethod();
-
-		if (method.equals("GET")) {
-			return HTTPMethod.GET;
-		}
-		else if (method.equals("PUT")) {
-			return HTTPMethod.PUT;
-		}
-		else if (method.equals("POST")) {
-			return HTTPMethod.POST;
-		}
-		else if (method.equals("DELETE")) {
-			return HTTPMethod.DELETE;
-		}
-		else {
-			return HTTPMethod.HEAD;
-		}
 	}
 }

@@ -1,4 +1,4 @@
-package com.trifork.sdm.replication;
+package com.trifork.sdm.replication.junit;
 
 import java.util.ArrayList;
 import java.util.List;

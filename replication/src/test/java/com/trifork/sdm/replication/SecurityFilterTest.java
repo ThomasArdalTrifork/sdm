@@ -1,11 +1,8 @@
 package com.trifork.sdm.replication;
 
-import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
-import static java.net.HttpURLConnection.HTTP_GONE;
-import static java.net.HttpURLConnection.HTTP_OK;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static java.net.HttpURLConnection.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -67,6 +64,18 @@ public class SecurityFilterTest extends ReplicationTest {
 		final String correctURL = new URLBuilder(bucketURL, username, secret, getTomorrow()).build();
 		assertStatus(correctURL, HTTP_OK);
 	}
+	
+	@Test
+	public void should_have_a_valid_expires_date(URL bucketURL) {
+		
+		Date expires = getTomorrow();
+		String tomorrow = Long.toString(expires.getTime());
+		String invalidDateFormat = "78S66(2i8";
+		
+		String correctURL = new URLBuilder(bucketURL, username, secret, expires).build();
+		
+		assertURLNotAuthorized(correctURL, tomorrow, invalidDateFormat, HTTP_BAD_REQUEST);
+	}
 
 
 	@Test
@@ -91,20 +100,20 @@ public class SecurityFilterTest extends ReplicationTest {
 		String correctURL = new URLBuilder(bucketURL, username, secret, expires)
 			.setQueryParameter("since", yesterday).build();
 
-		assertURLNotAuthorized(correctURL, bucket, "/otherResource");
+		assertURLNotAuthorized(correctURL, bucket, "/otherResource", HTTP_FORBIDDEN);
 		
-		assertURLNotAuthorized(correctURL, username, "otherUser");
+		assertURLNotAuthorized(correctURL, username, "otherUser", HTTP_FORBIDDEN);
 
-		assertURLNotAuthorized(correctURL, yesterday, twoDaysAgo);
+		assertURLNotAuthorized(correctURL, yesterday, twoDaysAgo, HTTP_FORBIDDEN);
 		
-		assertURLNotAuthorized(correctURL, tomorrow, inTwoDays);
+		assertURLNotAuthorized(correctURL, tomorrow, inTwoDays, HTTP_FORBIDDEN);
 	}
 
 
-	protected void assertURLNotAuthorized(String correctURL, String replacedString, String replacement) {
+	protected void assertURLNotAuthorized(String correctURL, String replacedString, String replacement, int expectedStatus) {
 
 		String invalidURL = correctURL.replace(replacedString, replacement);
-		assertStatus(invalidURL, HTTP_FORBIDDEN);
+		assertStatus(invalidURL, expectedStatus);
 	}
 
 

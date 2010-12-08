@@ -12,8 +12,10 @@ import java.lang.annotation.RetentionPolicy;
  * @author Thomas Børlum (thb@trifork.com)
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Output
-{
+public @interface Output {
+
+	final int UNDEFINED = -1;
+	
 	/**
 	 * The name the annotated class or method that should be called in the
 	 * output.
@@ -26,10 +28,14 @@ public @interface Output
 	 * be generated and are supported. If specified on a method it denotes which
 	 * versions of the schema this element should be output in.
 	 */
-	public int[] supportedVersions() default {1};
-	
+	public int[] supportedVersions() default { 1 };
+
+
 	/**
 	 * The documentation string that will be written to the XML Schemas.
 	 */
 	public String documentation() default "";
+
+
+	public int length() default UNDEFINED;
 }

@@ -1,14 +1,17 @@
 package com.trifork.sdm.replication;
 
 import java.io.IOException;
+import java.util.Date;
 
+import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.trifork.sdm.models.sor.Apotek;
 import com.trifork.sdm.persistence.annotations.Output;
+import com.trifork.sdm.replication.UpdateQueryBuilder.UpdateQuery;
+import com.trifork.sdm.replication.persistence.EntityRepository;
 
 
 /**
@@ -19,34 +22,35 @@ import com.trifork.sdm.persistence.annotations.Output;
  * specialize the handled queries for a particular entity by extending this
  * class.
  * 
- * Only versions marked as supported in the {@link Output} annotations will 
- * be served.
+ * Only versions marked as supported in the {@link Output} annotations will be
+ * served.
  */
+@Singleton
 public class ResourceServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private EntityWriter writer;
-	//private Class<?> entity;
+	private final EntityWriter writer;
+	private final EntityRepository repository;
 
-	
-	public ResourceServlet(Class<?> entity) {
-		
-		//this.entity = entity;
+
+	public ResourceServlet(Class<?> entity, ConnectionManager connectionManager) {
+
 		this.writer = new XMLEntityWriter(entity);
+		this.repository = new EntityRepository(entity, connectionManager);
 	}
 
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+			IOException {
+
+		String token = request.getParameter("since");
 		
-		request.getAttribute("entity");
+		UpdateQueryBuilder builder = new UpdateQueryBuilder(token);
 		
-		Apotek a = new Apotek();
-		a.setApotekNummer(100l);
-		a.setEmail("thomas@borlum.dk");
+		UpdateQuery query = builder.build();
 		
-		writer.write(a, response.getOutputStream());
-		response.setContentType(writer.getContentType());
+		repository.writeAll(query, 5, writer, response.getOutputStream());
 	}
 }
