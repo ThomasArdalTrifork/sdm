@@ -15,17 +15,17 @@ import org.apache.log4j.Logger;
 import com.trifork.sdm.util.DateUtils;
 
 
-public abstract class AbstractEntity implements Record {
+public abstract class AbstractRecord implements Record {
 
 	public static final Calendar FUTURE = DateUtils.FUTURE;
 
-	private static final Logger logger = Logger.getLogger(AbstractEntity.class);
+	private static final Logger logger = Logger.getLogger(AbstractRecord.class);
 
 	private static final Map<Class<? extends Record>, Method> idMethodCache = new HashMap<Class<? extends Record>, Method>();
 	private static final Map<Method, String> outputFieldNames = new HashMap<Method, String>();
 
 
-	public Object getEntityId() {
+	public Object getRecordId() {
 
 		Method idMethod = getIdMethod(getClass());
 
@@ -49,7 +49,7 @@ public abstract class AbstractEntity implements Record {
 			}
 		}
 		catch (Exception e) {
-			logger.error("Error serializing object of class: " + getClass() + " id: " + getEntityId());
+			logger.error("Error serializing object of class: " + getClass() + " id: " + getRecordId());
 		}
 		return map;
 	}

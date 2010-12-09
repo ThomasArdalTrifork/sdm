@@ -85,7 +85,7 @@ public class Pakningskombinationer extends TakstEntity {
 	}
 
 
-	public String getEntityId() {
+	public String getRecordId() {
 
 		return "" + varenummerOrdineret + '-' + varenummerSubstitueret + '-' + varenummerAlternativt + '-'
 				+ antalPakninger;

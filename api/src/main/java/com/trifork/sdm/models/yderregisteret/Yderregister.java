@@ -7,12 +7,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.trifork.sdm.models.AbstractEntity;
+import com.trifork.sdm.models.AbstractRecord;
 import com.trifork.sdm.util.DateUtils;
 
 
 @Entity
-public class Yderregister extends AbstractEntity {
+public class Yderregister extends AbstractRecord {
 	private String nummer;
 	private String telefon;
 	private String navn;

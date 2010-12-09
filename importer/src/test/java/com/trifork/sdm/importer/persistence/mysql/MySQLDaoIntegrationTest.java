@@ -262,7 +262,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 
 		@Id
 		@Column(name = "id")
-		public Object getEntityId() {
+		public Object getRecordId() {
 
 			// TODO Auto-generated method stub
 			return id;

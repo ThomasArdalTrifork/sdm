@@ -7,11 +7,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.trifork.sdm.models.AbstractEntity;
+import com.trifork.sdm.models.AbstractRecord;
 
 
 @Entity
-public class Apotek extends AbstractEntity {
+public class Apotek extends AbstractRecord {
 
 	private Long sorNummer;
 	private Long apotekNummer;

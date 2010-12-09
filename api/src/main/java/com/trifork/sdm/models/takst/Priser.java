@@ -120,7 +120,7 @@ public class Priser extends TakstEntity {
 	}
 
 
-	public Long getEntityId() {
+	public Long getRecordId() {
 
 		return this.varenummer;
 	}

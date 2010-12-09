@@ -7,13 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.trifork.sdm.models.AbstractEntity;
+import com.trifork.sdm.models.AbstractRecord;
 import com.trifork.sdm.models.Record;
 
 
 @Entity
 @Table(name = "Yder")
-public class Yder extends AbstractEntity implements Record {
+public class Yder extends AbstractRecord implements Record {
 	private String nummer;
 	private Long eanLokationsnummer;
 	private String telefon;

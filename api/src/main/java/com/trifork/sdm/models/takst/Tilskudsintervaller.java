@@ -69,7 +69,7 @@ public class Tilskudsintervaller extends TakstEntity {
 	}
 
 
-	public String getEntityId() {
+	public String getRecordId() {
 
 		return type + "-" + niveau;
 	}

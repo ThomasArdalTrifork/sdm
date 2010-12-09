@@ -64,7 +64,7 @@ public class Firma extends TakstEntity {
 	}
 
 
-	public Long getEntityId() {
+	public Long getRecordId() {
 
 		return this.firmanummer;
 	}

@@ -31,7 +31,7 @@ public class SecurityFilterTest extends ReplicationTest {
 
 
 	@Override
-	public void initialize() {
+	public void initialize(ConnectionManager manager) {
 
 		// The filter is what we are under testing.
 

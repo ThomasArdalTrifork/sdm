@@ -58,7 +58,7 @@ public class LaegemiddelformBetegnelser extends TakstEntity {
 	}
 
 
-	public String getEntityId() {
+	public String getRecordId() {
 
 		return "" + this.kode;
 	}

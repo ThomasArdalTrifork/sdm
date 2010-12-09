@@ -84,7 +84,7 @@ public class Substitution extends TakstEntity {
 	}
 
 
-	public Long getEntityId() {
+	public Long getRecordId() {
 
 		return receptensVarenummer;
 	}

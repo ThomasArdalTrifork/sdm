@@ -71,7 +71,7 @@ public class PakningskombinationerUdenPriser extends TakstEntity {
 	}
 
 
-	public Long getEntityId() {
+	public Long getRecordId() {
 
 		return this.varenummerOrdineret;
 	}

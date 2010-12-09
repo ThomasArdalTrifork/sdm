@@ -7,12 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.sdm.Documented;
-import com.trifork.sdm.models.AbstractEntity;
+import com.trifork.sdm.models.AbstractRecord;
 
 
 @Entity
 @Documented("Referencetabel der knytter doseringsstrukturer i dosageStructures til lægemidler.")
-public class DrugDosageStructure extends AbstractEntity {
+public class DrugDosageStructure extends AbstractRecord {
 
 	// Reference til releaseNumber i Version. Obligatorisk. Heltal, 15 cifre.
 	private long releaseNumber;

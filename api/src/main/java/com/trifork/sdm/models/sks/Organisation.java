@@ -6,11 +6,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.trifork.sdm.models.AbstractEntity;
+import com.trifork.sdm.models.AbstractRecord;
 
 
 @Entity
-public class Organisation extends AbstractEntity {
+public class Organisation extends AbstractRecord {
 	private String navn;
 	private String nummer;
 

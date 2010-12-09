@@ -6,11 +6,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.trifork.sdm.models.AbstractEntity;
+import com.trifork.sdm.models.AbstractRecord;
 
 
 @Entity
-public class Autorisation extends AbstractEntity {
+public class Autorisation extends AbstractRecord {
 	private String nummer;
 	private String cpr;
 

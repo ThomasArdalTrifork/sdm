@@ -30,7 +30,7 @@ public class SubstitutionAfLaegemidlerUdenFastPris extends TakstEntity {
 	}
 
 
-	public Long getEntityId() {
+	public Long getRecordId() {
 
 		return varenummer;
 	}

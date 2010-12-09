@@ -89,7 +89,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao
 
 			Calendar validFrom = sde.getValidFrom();
 
-			boolean exists = table.fetchEntityVersions(sde.getEntityId(), validFrom, sde.getValidTo());
+			boolean exists = table.fetchEntityVersions(sde.getRecordId(), validFrom, sde.getValidTo());
 			if (!exists)
 			{
 				// Entity was not found, so create it

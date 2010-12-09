@@ -8,12 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.sdm.Documented;
-import com.trifork.sdm.models.AbstractEntity;
+import com.trifork.sdm.models.AbstractRecord;
 
 
 @Entity
 @Documented("Indeholder versioneringsinformation.")
-public class DosageVersion extends AbstractEntity {
+public class DosageVersion extends AbstractRecord {
 
 	// daDate: Dato for Apotekerforeningens mærkevaretakst, som datasættet er
 	// udarbejdet på baggrund af. Obligatorisk. Dato, yyyy-MM-dd.

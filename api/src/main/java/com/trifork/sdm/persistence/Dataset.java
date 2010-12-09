@@ -1,7 +1,7 @@
 package com.trifork.sdm.persistence;
 
-import static com.trifork.sdm.models.AbstractEntity.getIdMethod;
-import static com.trifork.sdm.models.AbstractEntity.getOutputFieldName;
+import static com.trifork.sdm.models.AbstractRecord.getIdMethod;
+import static com.trifork.sdm.models.AbstractRecord.getOutputFieldName;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +26,7 @@ public class Dataset<T extends Record> {
 		for (T entity : entities) {
 			List<T> ents = new ArrayList<T>();
 			ents.add(entity);
-			this.entities.put(entity.getEntityId(), ents);
+			this.entities.put(entity.getRecordId(), ents);
 		}
 	}
 
@@ -103,14 +103,14 @@ public class Dataset<T extends Record> {
 	public void removeEntities(List<T> entities) {
 
 		for (T entity : entities) {
-			this.entities.remove(entity.getEntityId());
+			this.entities.remove(entity.getRecordId());
 		}
 	}
 
 
 	public void addEntity(T entity) {
 
-		Object id = entity.getEntityId();
+		Object id = entity.getRecordId();
 		List<T> ents = entities.get(id);
 		if (ents == null) {
 			ents = new ArrayList<T>();

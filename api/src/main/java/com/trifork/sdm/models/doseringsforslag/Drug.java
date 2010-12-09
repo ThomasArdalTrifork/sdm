@@ -7,12 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.sdm.Documented;
-import com.trifork.sdm.models.AbstractEntity;
+import com.trifork.sdm.models.AbstractRecord;
 
 
 @Entity
 @Documented("Indeholder information om lægemidlers drug-id og doseringsenhed.")
-public class Drug extends AbstractEntity {
+public class Drug extends AbstractRecord {
 
 	private Calendar validFrom;
 	private int releaseNumber;

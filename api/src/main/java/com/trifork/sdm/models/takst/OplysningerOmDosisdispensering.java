@@ -111,7 +111,7 @@ public class OplysningerOmDosisdispensering extends TakstEntity {
 	}
 
 
-	public Long getEntityId() {
+	public Long getRecordId() {
 
 		return varenummer;
 	}

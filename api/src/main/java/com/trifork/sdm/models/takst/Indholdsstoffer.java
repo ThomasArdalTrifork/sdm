@@ -77,7 +77,7 @@ public class Indholdsstoffer extends TakstEntity {
 	}
 
 
-	public String getEntityId() {
+	public String getRecordId() {
 
 		return substans + "-" + substansgruppe + "-" + stofklasse + "-" + drugID;
 	}
@@ -87,7 +87,7 @@ public class Indholdsstoffer extends TakstEntity {
 
 		if (o.getClass() != Indholdsstoffer.class) return false;
 		Indholdsstoffer stof = (Indholdsstoffer) o;
-		return getEntityId().equals(stof.getEntityId());
+		return getRecordId().equals(stof.getRecordId());
 
 	}
 

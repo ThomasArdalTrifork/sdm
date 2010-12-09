@@ -113,7 +113,7 @@ public class Indikation extends TakstEntity {
 	}
 
 
-	public Long getEntityId() {
+	public Long getRecordId() {
 
 		return this.indikationskode;
 	}

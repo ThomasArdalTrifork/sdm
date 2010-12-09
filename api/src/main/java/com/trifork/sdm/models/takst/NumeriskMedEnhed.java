@@ -20,7 +20,7 @@ public class NumeriskMedEnhed extends TakstEntity implements Record {
 	}
 
 
-	public String getEntityId() {
+	public String getRecordId() {
 
 		return null;
 	}

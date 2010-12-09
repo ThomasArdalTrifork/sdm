@@ -2,7 +2,7 @@ package com.trifork.sdm.importer.importers.yderregisteret;
 
 import java.util.Calendar;
 
-import com.trifork.sdm.models.AbstractEntity;
+import com.trifork.sdm.models.AbstractRecord;
 import com.trifork.sdm.models.yderregisteret.Yderregister;
 import com.trifork.sdm.models.yderregisteret.YderregisterPerson;
 import com.trifork.sdm.persistence.CompleteDataset;
@@ -16,9 +16,9 @@ public class YderregisterDatasets
 	public YderregisterDatasets(Calendar validFrom)
 	{
 		yderregisterDS = new CompleteDataset<Yderregister>(Yderregister.class, validFrom,
-				AbstractEntity.FUTURE);
+				AbstractRecord.FUTURE);
 		yderregisterPersonDS = new CompleteDataset<YderregisterPerson>(YderregisterPerson.class,
-				validFrom, AbstractEntity.FUTURE);
+				validFrom, AbstractRecord.FUTURE);
 	}
 
 

@@ -30,7 +30,7 @@ public class TilskudsprisgrupperPakningsniveau extends TakstEntity {
 	}
 
 
-	public Long getEntityId() {
+	public Long getRecordId() {
 
 		return varenummer;
 	}

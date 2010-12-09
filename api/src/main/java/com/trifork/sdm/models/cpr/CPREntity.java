@@ -2,11 +2,11 @@ package com.trifork.sdm.models.cpr;
 
 import java.util.Calendar;
 
-import com.trifork.sdm.models.AbstractEntity;
+import com.trifork.sdm.models.AbstractRecord;
 import com.trifork.sdm.util.DateUtils;
 
 
-public abstract class CPREntity extends AbstractEntity {
+public abstract class CPREntity extends AbstractRecord {
 
 	private String cpr;
 	private Calendar validFrom;

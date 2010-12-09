@@ -96,7 +96,7 @@ public class ATCKoderOgTekst extends TakstEntity {
 
 	@Id
 	@Column(name = "ATC")
-	public String getEntityId() {
+	public String getRecordId() {
 
 		return aTCNiveau1 + nulltoEmpty(aTCNiveau2) + nulltoEmpty(aTCNiveau3) + nulltoEmpty(aTCNiveau4)
 				+ nulltoEmpty(aTCNiveau5);
@@ -121,7 +121,7 @@ public class ATCKoderOgTekst extends TakstEntity {
 		TakstDataset<Indikationskode> indikationskoder = takst.getDatasetOfType(Indikationskode.class);
 		List<Indikation> indikationer = new ArrayList<Indikation>();
 		for (Indikationskode ik : indikationskoder.getEntities()) {
-			if (ik.getATC().equals(this.getEntityId()))
+			if (ik.getATC().equals(this.getRecordId()))
 				indikationer.add(takst.getEntity(Indikation.class, ik.getIndikationskode()));
 		}
 		return indikationer;

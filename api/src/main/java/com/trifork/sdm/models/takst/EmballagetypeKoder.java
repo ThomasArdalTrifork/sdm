@@ -43,7 +43,7 @@ public class EmballagetypeKoder extends TakstEntity {
 	}
 
 
-	public String getEntityId() {
+	public String getRecordId() {
 
 		return "" + this.kode;
 	}

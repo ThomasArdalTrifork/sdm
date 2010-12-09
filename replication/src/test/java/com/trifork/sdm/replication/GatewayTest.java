@@ -38,7 +38,7 @@ public class GatewayTest extends ReplicationTest {
 
 
 	@Override
-	public void initialize() {
+	public void initialize(ConnectionManager manager) {
 
 		bindConstant().annotatedWith(Bucket.class).to("/gateway");
 		serve("/gateway").with(GatewayServlet.class);

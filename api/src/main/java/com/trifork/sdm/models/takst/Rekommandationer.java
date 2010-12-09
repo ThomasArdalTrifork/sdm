@@ -57,7 +57,7 @@ public class Rekommandationer extends TakstEntity {
 	}
 
 
-	public Long getEntityId() {
+	public Long getRecordId() {
 
 		return varenummer;
 	}

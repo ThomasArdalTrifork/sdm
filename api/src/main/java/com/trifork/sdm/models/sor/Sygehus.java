@@ -6,11 +6,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.trifork.sdm.models.AbstractEntity;
+import com.trifork.sdm.models.AbstractRecord;
 
 
 @Entity
-public class Sygehus extends AbstractEntity {
+public class Sygehus extends AbstractRecord {
 	private String navn;
 	private Long eanLokationsnummer;
 	private String nummer;

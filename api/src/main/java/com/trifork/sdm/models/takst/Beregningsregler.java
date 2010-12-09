@@ -34,7 +34,7 @@ public class Beregningsregler extends TakstEntity {
 	}
 
 
-	public String getEntityId() {
+	public String getRecordId() {
 
 		return "" + this.kode;
 	}

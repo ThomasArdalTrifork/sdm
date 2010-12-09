@@ -75,7 +75,7 @@ public class DivEnheder extends TakstEntity {
 	}
 
 
-	public String getEntityId() {
+	public String getRecordId() {
 
 		/*
 		 * This is a pseudo table that is not referenced or persisted The 'kode'

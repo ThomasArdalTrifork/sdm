@@ -1,14 +1,15 @@
 package com.trifork.sdm.replication;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javax.inject.Singleton;
+import javax.persistence.Entity;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.trifork.sdm.Versioned;
 import com.trifork.sdm.replication.UpdateQueryBuilder.UpdateQuery;
 import com.trifork.sdm.replication.persistence.EntityRepository;
 
@@ -21,8 +22,8 @@ import com.trifork.sdm.replication.persistence.EntityRepository;
  * specialize the handled queries for a particular entity by extending this
  * class.
  * 
- * Only versions marked as supported in the {@link Versioned} annotations will be
- * served.
+ * Only versions marked as supported in the {@link Versioned} annotations will
+ * be served.
  */
 @Singleton
 public class ResourceServlet extends HttpServlet {
@@ -35,6 +36,8 @@ public class ResourceServlet extends HttpServlet {
 
 	public ResourceServlet(Class<?> entity, ConnectionManager connectionManager) {
 
+		assert entity.isAnnotationPresent(Entity.class);
+
 		this.writer = new XMLEntityWriter(entity);
 		this.repository = new EntityRepository(entity, connectionManager);
 	}
@@ -45,11 +48,11 @@ public class ResourceServlet extends HttpServlet {
 			IOException {
 
 		String token = request.getParameter("since");
-		
+
 		UpdateQueryBuilder builder = new UpdateQueryBuilder(token);
-		
+
 		UpdateQuery query = builder.build();
-		
+
 		repository.writeAll(query, 5, writer, response.getOutputStream());
 	}
 }

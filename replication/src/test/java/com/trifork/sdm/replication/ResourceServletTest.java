@@ -1,54 +1,53 @@
 package com.trifork.sdm.replication;
 
-import static java.net.HttpURLConnection.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static com.trifork.sdm.replication.ReplicationTest.Day.YESTERDAY;
+import static java.net.HttpURLConnection.HTTP_OK;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
 import org.junit.Test;
 
-import com.trifork.sdm.models.sor.Apotek;
-import com.trifork.sdm.replication.configuration.Bucket;
-
+import com.trifork.sdm.models.AbstractRecord;
 
 public class ResourceServletTest extends ReplicationTest {
 	
-	@Override
-	public void initialize() {
+	@Entity
+	protected class Resource extends AbstractRecord {
+		
+		@Column
+		public String getFoo() { return "foo"; }
 
-		bindConstant().annotatedWith(Bucket.class).to("/apotek");
-		
-		ConnectionManager manager = new MySQLConnectionManager("sdm_test", "root", "", "jdbc:mysql://localhost/");
-		serve("/apotek").with(new ResourceServlet(Apotek.class, manager));
-		
-		Apotek instance = new Apotek();
-		instance.setBynavn("Horsens");
-		
-		insert(instance);
+		@Override
+		public Calendar getValidFrom() {
+
+			return null;
+		}
 	}
 	
 	
+	@Override
+	public void initialize(ConnectionManager manager) {
+		
+		serve("/resource").with(servlet(Resource.class));
+	}
+
+
 	@Test
 	public void should_reject_unaccepted_mime_type(URL resource) throws IOException {
 		
-		Calendar yesterday = Calendar.getInstance();
-		yesterday.add(Calendar.DATE, -1);
+		setParam("since", date(YESTERDAY));
 		
-		String yesterdayString = Long.toString(yesterday.getTimeInMillis() / 1000);
-		String pid = "0000000000";
+		get("/resource");
 		
-		String updateToken = yesterdayString + pid;
+		assertStatus(HTTP_OK);
 		
-		URL query = new URL(resource, "/apotek?since=" + updateToken);
-		
-		HttpURLConnection connection = (HttpURLConnection) query.openConnection();
-		
-		connection.connect();
-		
-		assertThat(connection.getResponseCode(), is(HTTP_OK));
+		assertXML("/resourceCollection/resource", is(not(null)));
 	}
 }

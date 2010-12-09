@@ -7,14 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.sdm.Documented;
-import com.trifork.sdm.models.AbstractEntity;
+import com.trifork.sdm.models.AbstractRecord;
 
 
 @Entity
 @Documented("Indeholder anvendte doseringsenheder.\n"
 		+ "Doseringsenhederne stammer dels fra Lægemiddelstyrelsens takst (her er code <= 1000),\n"
 		+ "dels er der tale om nye data (code > 1000).")
-public class DosageUnit extends AbstractEntity {
+public class DosageUnit extends AbstractRecord {
 
 	// Reference til releaseNumber i Version. Obligatorisk. Heltal, 15 cifre.
 	private long releaseNumber;

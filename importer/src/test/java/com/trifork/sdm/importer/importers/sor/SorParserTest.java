@@ -12,7 +12,7 @@ import org.junit.Test;
 import com.trifork.sdm.importer.TestHelper;
 import com.trifork.sdm.importer.importers.sor.xml.SpecialityMapper;
 import com.trifork.sdm.importer.importers.sor.xml.UnitTypeMapper;
-import com.trifork.sdm.models.AbstractEntity;
+import com.trifork.sdm.models.AbstractRecord;
 import com.trifork.sdm.models.sor.Apotek;
 import com.trifork.sdm.models.sor.Praksis;
 import com.trifork.sdm.models.sor.Sygehus;
@@ -46,7 +46,7 @@ public class SorParserTest {
 		assertEquals(new Long(8331000016009L), p.getSorNummer());
 		assertEquals(new Long(1084L), p.getRegionCode());
 		assertEquals(SOREventHandler.toCalendar("1999-03-25"), p.getValidFrom());
-		assertEquals(AbstractEntity.FUTURE, p.getValidTo());
+		assertEquals(AbstractRecord.FUTURE, p.getValidTo());
 		assertEquals(new Long(5790000141227L), p.getEanLokationsnummer());
 
 		Yder y = yder.iterator().next();
@@ -66,7 +66,7 @@ public class SorParserTest {
 		assertEquals(SpecialityMapper.kodeToString(408443003L), y.getHovedSpecialeTekst());
 
 		assertEquals(SOREventHandler.toCalendar("1999-03-25"), y.getValidFrom());
-		assertEquals(AbstractEntity.FUTURE, y.getValidTo());
+		assertEquals(AbstractRecord.FUTURE, y.getValidTo());
 	}
 
 
@@ -95,7 +95,7 @@ public class SorParserTest {
 		assertEquals("J.Thulesen@dadlnet.dk", s.getEmail());
 
 		assertEquals(SOREventHandler.toCalendar("2009-10-08"), s.getValidFrom());
-		assertEquals(AbstractEntity.FUTURE, s.getValidTo());
+		assertEquals(AbstractRecord.FUTURE, s.getValidTo());
 
 		assertEquals(2, afdeling.size());
 
@@ -120,7 +120,7 @@ public class SorParserTest {
 		assertEquals(UnitTypeMapper.kodeToString(new Long(550811000005108L)),
 				sa.getAfdelingTypeTekst());
 		assertEquals(SOREventHandler.toCalendar("2009-10-07"), sa.getValidFrom());
-		assertEquals(AbstractEntity.FUTURE, sa.getValidTo());
+		assertEquals(AbstractRecord.FUTURE, sa.getValidTo());
 
 		sa = dataSets.getSygehusAfdelingDS().getEntityById(347831000016005L);
 		assertNotNull(sa);
@@ -146,7 +146,7 @@ public class SorParserTest {
 		assertEquals(SpecialityMapper.kodeToString(394594003L), sa.getHovedSpecialeTekst());
 
 		assertEquals(SOREventHandler.toCalendar("2009-10-08"), sa.getValidFrom());
-		assertEquals(AbstractEntity.FUTURE, sa.getValidTo());
+		assertEquals(AbstractRecord.FUTURE, sa.getValidTo());
 	}
 
 
@@ -174,7 +174,7 @@ public class SorParserTest {
 		assertNull(a.getEmail());
 
 		assertEquals(SOREventHandler.toCalendar("1995-02-20"), a.getValidFrom());
-		assertEquals(AbstractEntity.FUTURE, a.getValidTo());
+		assertEquals(AbstractRecord.FUTURE, a.getValidTo());
 	}
 
 

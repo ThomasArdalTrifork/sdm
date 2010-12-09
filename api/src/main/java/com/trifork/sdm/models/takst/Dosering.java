@@ -120,7 +120,7 @@ public class Dosering extends TakstEntity {
 	}
 
 
-	public Long getEntityId() {
+	public Long getRecordId() {
 
 		return this.doseringKode;
 	}
