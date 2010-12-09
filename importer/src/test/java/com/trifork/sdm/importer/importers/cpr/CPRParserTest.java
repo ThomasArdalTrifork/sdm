@@ -1,6 +1,5 @@
 package com.trifork.sdm.importer.importers.cpr;
 
-
 import static org.junit.Assert.assertEquals;
 
 import java.util.Date;
@@ -14,7 +13,6 @@ import com.trifork.sdm.models.cpr.NavneBeskyttelse;
 import com.trifork.sdm.models.cpr.Navneoplysninger;
 import com.trifork.sdm.models.cpr.Personoplysninger;
 import com.trifork.sdm.models.cpr.UmyndiggoerelseVaergeRelation;
-import com.trifork.sdm.util.DateUtils;
 
 
 public class CPRParserTest {
@@ -86,10 +84,8 @@ public class CPRParserTest {
 
 		// Assert
 		assertEquals("2802363039", record.getCpr());
-		assertEquals(CPRParser.yyyy_MM_dd.parse("1997-09-09"),
-				record.getNavneBeskyttelseStartDato());
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-02-20"),
-				record.getNavneBeskyttelseSletteDato());
+		assertEquals(CPRParser.yyyy_MM_dd.parse("1997-09-09"), record.getNavneBeskyttelseStartDato());
+		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-02-20"), record.getNavneBeskyttelseSletteDato());
 	}
 
 
@@ -144,17 +140,13 @@ public class CPRParserTest {
 		assertEquals("3112970028", record.getCpr());
 		assertEquals("0003", record.getTypeKode());
 		assertEquals("Mor", record.getTypeTekst());
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2008-01-01"),
-				record.getForaeldreMyndighedStartDato());
+		assertEquals(CPRParser.yyyy_MM_dd.parse("2008-01-01"), record.getForaeldreMyndighedStartDato());
 		assertEquals("*", record.getForaeldreMyndighedMarkering());
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2009-01-01"),
-				record.getForaeldreMyndighedSlettedato());
+		assertEquals(CPRParser.yyyy_MM_dd.parse("2009-01-01"), record.getForaeldreMyndighedSlettedato());
 		assertEquals("0601641276", record.getRelationCpr());
 		assertEquals(CPRParser.yyyy_MM_dd.parse("2008-06-01"), record.getRelationCprStartDato());
-		assertEquals(DateUtils.toCalendar(CPRParser.yyyy_MM_dd.parse("2008-01-01")),
-				record.getValidFrom());
-		assertEquals(DateUtils.toCalendar(CPRParser.yyyy_MM_dd.parse("2009-01-01")),
-				record.getValidTo());
+		assertEquals(CPRParser.yyyy_MM_dd.parse("2008-01-01"), record.getValidFrom());
+		assertEquals(CPRParser.yyyy_MM_dd.parse("2009-01-01"), record.getValidTo());
 	}
 
 
@@ -166,7 +158,7 @@ public class CPRParserTest {
 
 		// Act
 		UmyndiggoerelseVaergeRelation record = CPRParser.umyndiggoerelseVaergeRelation(LINE);
-		record.setValidFrom(DateUtils.toCalendar(new Date()));
+		record.setValidFrom(new Date());
 
 		// Assert
 		assertEquals("0709614126", record.getCpr());
@@ -184,23 +176,21 @@ public class CPRParserTest {
 		assertEquals("", record.getRelationsTekst3());
 		assertEquals("", record.getRelationsTekst4());
 		assertEquals("", record.getRelationsTekst5());
+		
 		// Insert a date before 'UmyndigStartDato' and test that we get the date
 		// from the record
-		record.setValidFrom(DateUtils.toCalendar(CPRParser.yyyy_MM_dd.parse("2000-02-27")));
-		assertEquals(DateUtils.toCalendar(CPRParser.yyyy_MM_dd.parse("2000-02-28")),
-				record.getValidFrom());
+		record.setValidFrom(CPRParser.yyyy_MM_dd.parse("2000-02-27"));
+		assertEquals(CPRParser.yyyy_MM_dd.parse("2000-02-28"), record.getValidFrom());
+		
 		// Insert a date after 'UmyndigStartDato' and test that we get the date
-		// from the dataset
-		record.setValidFrom(DateUtils.toCalendar(CPRParser.yyyy_MM_dd.parse("2000-03-01")));
-		assertEquals(DateUtils.toCalendar(CPRParser.yyyy_MM_dd.parse("2000-03-01")),
-				record.getValidFrom());
+		// from the dataset.
+		record.setValidFrom(CPRParser.yyyy_MM_dd.parse("2000-03-01"));
+		assertEquals(CPRParser.yyyy_MM_dd.parse("2000-03-01"), record.getValidFrom());
+		
 		// Clear 'UmyndigStartDato' and check that we get the one from the
 		// dataset
 		record.setUmyndigStartDato(null);
-		assertEquals(DateUtils.toCalendar(CPRParser.yyyy_MM_dd.parse("2000-03-01")),
-				record.getValidFrom());
-
-		assertEquals(DateUtils.toCalendar(CPRParser.yyyy_MM_dd.parse("2008-02-28")),
-				record.getValidTo());
+		assertEquals(CPRParser.yyyy_MM_dd.parse("2000-03-01"), record.getValidFrom());
+		assertEquals(CPRParser.yyyy_MM_dd.parse("2008-02-28"), record.getValidTo());
 	}
 }

@@ -3,7 +3,7 @@ package com.trifork.sdm.models.takst;
 // the entities of this type are output by these classes:
 // Tidsenhed, Styrkeenhed, Pakningsstoerrelsesenhed
 
-public class DivEnheder extends TakstEntity {
+public class DivEnheder extends TakstRecord {
 
 	private static final long ENHEDSTYPE_TID = 1;
 	private static final long ENHEDSTYPE_STYRKE = 3;

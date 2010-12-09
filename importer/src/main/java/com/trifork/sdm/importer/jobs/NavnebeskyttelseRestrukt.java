@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Calendar;
-import java.util.Date;
 
 import org.apache.log4j.Logger;
 
@@ -15,17 +14,15 @@ import com.trifork.sdm.models.cpr.Klarskriftadresse;
 import com.trifork.sdm.models.cpr.Navneoplysninger;
 
 
-public class NavnebeskyttelseRestrukt implements Job
-{
+public class NavnebeskyttelseRestrukt implements Job {
 	private Logger logger = Logger.getLogger(getClass());
 
 
-	public void run() throws JobException
-	{
+	public void run() throws JobException {
+
 		// Check that elements in table 'AdresseBeskyttelse' haven't expired
 		Connection connection = null;
-		try
-		{
+		try {
 			logger.debug("Starting checking for expired name and address protection");
 			connection = MySQLConnectionManager.getConnection();
 
@@ -33,16 +30,19 @@ public class NavnebeskyttelseRestrukt implements Job
 			ResultSet rs = stm.executeQuery(createSelectExpiredNameProtectionSQL());
 
 			CPRDataset cprDS = new CPRDataset();
+
+			// We need to set the milliseconds to 0.
+			// TODO (thb): Why is this?
 			Calendar now = Calendar.getInstance();
-			now.setTime(new Date());
+			;
 			now.set(Calendar.MILLISECOND, 0);
-			cprDS.setValidFrom(now);
+
+			cprDS.setValidFrom(now.getTime());
 
 			int nbExpired = 0;
 			String sqlIN = "";
 
-			while (rs.next())
-			{
+			while (rs.next()) {
 				++nbExpired;
 				Navneoplysninger no = new Navneoplysninger();
 				Klarskriftadresse ka = new Klarskriftadresse();
@@ -86,10 +86,8 @@ public class NavnebeskyttelseRestrukt implements Job
 				cprDS.addEntity(ka);
 			}
 
-			if (nbExpired > 0)
-			{
-				logger.debug("Persisting " + nbExpired
-						+ " expired name and address protection records");
+			if (nbExpired > 0) {
+				logger.debug("Persisting " + nbExpired + " expired name and address protection records");
 				MySQLTemporalDao dao = new MySQLTemporalDao(connection);
 				dao.persistDeltaDataset(cprDS.getNavneoplysninger());
 				dao.persistDeltaDataset(cprDS.getKlarskriftadresse());
@@ -100,21 +98,18 @@ public class NavnebeskyttelseRestrukt implements Job
 			}
 
 		}
-		catch (Exception e)
-		{
-			throw new JobException(
-					"Caught an exception during restoring expired nameprotection. Message = "
-							+ e.getMessage());
+		catch (Exception e) {
+			throw new JobException("Caught an exception during restoring expired nameprotection. Message = "
+					+ e.getMessage());
 		}
-		finally
-		{
+		finally {
 			MySQLConnectionManager.close(connection);
 		}
 	}
 
 
-	static private String createSelectExpiredNameProtectionSQL()
-	{
+	static private String createSelectExpiredNameProtectionSQL() {
+
 		String SQL = "SELECT * FROM " + MySQLConnectionManager.getHousekeepingDBName()
 				+ ".AdresseBeskyttelse " + "WHERE NavneBeskyttelseSletteDato < now()";
 
@@ -122,10 +117,10 @@ public class NavnebeskyttelseRestrukt implements Job
 	}
 
 
-	static private String createDeleteExpiredNameProtectionSQL(String inList)
-	{
-		String SQL = "DELETE FROM " + MySQLConnectionManager.getHousekeepingDBName()
-				+ ".AdresseBeskyttelse " + "WHERE CPR IN (" + inList + ")";
+	static private String createDeleteExpiredNameProtectionSQL(String inList) {
+
+		String SQL = "DELETE FROM " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse "
+				+ "WHERE CPR IN (" + inList + ")";
 
 		return SQL;
 	}

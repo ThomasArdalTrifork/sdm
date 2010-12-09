@@ -3,7 +3,7 @@ package com.trifork.sdm.models.takst;
 import javax.persistence.Column;
 
 
-public class Indholdsstoffer extends TakstEntity {
+public class Indholdsstoffer extends TakstRecord {
 
 	private Long drugID; // Ref. t. LMS01
 	private Long varenummer; // Ref. t. LMS02

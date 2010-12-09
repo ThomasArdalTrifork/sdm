@@ -292,7 +292,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		}
 
 
-		public Calendar getValidFrom() {
+		public Date getValidFrom() {
 
 			// TODO Auto-generated method stub
 			return validfrom;

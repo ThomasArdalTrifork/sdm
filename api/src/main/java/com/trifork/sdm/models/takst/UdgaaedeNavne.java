@@ -3,7 +3,7 @@ package com.trifork.sdm.models.takst;
 import com.trifork.sdm.util.DateUtils;
 
 
-public class UdgaaedeNavne extends TakstEntity {
+public class UdgaaedeNavne extends TakstRecord {
 	private Long drugid; // Ref. t. LMS01
 	private Long datoForAendringen;
 	private String tidligereNavn;

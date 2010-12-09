@@ -1,7 +1,7 @@
 package com.trifork.sdm.models.takst;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -16,7 +16,8 @@ import com.trifork.sdm.persistence.Dataset;
 
 @Entity
 @Table(name = "TakstVersion")
-public class Takst extends TakstEntity {
+public class Takst extends TakstRecord {
+	
 	private final List<CompleteDataset<? extends Record>> datasets = new ArrayList<CompleteDataset<? extends Record>>();
 
 	// The week-number for which LMS guarantees some sort of stability/validity
@@ -24,11 +25,11 @@ public class Takst extends TakstEntity {
 	// substitutions and possibly more)
 	private int validityYear, validityWeekNumber;
 
-	private Calendar validFrom;
-	private Calendar validTo;
+	private final Date validFrom;
+	private final Date validTo;
 
 
-	public Takst(Calendar validFrom, Calendar validTo) {
+	public Takst(Date validFrom, Date validTo) {
 
 		this.validFrom = validFrom;
 		this.validTo = validTo;
@@ -42,7 +43,7 @@ public class Takst extends TakstEntity {
 	 * @return All entities of the given type in this takst.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends TakstEntity> TakstDataset<T> getDatasetOfType(Class<T> type) {
+	public <T extends TakstRecord> TakstDataset<T> getDatasetOfType(Class<T> type) {
 
 		for (CompleteDataset<? extends Record> dataset : datasets) {
 			if (type.equals(dataset.getType())) {
@@ -86,7 +87,7 @@ public class Takst extends TakstEntity {
 	 *            the id of the requested entity
 	 * @return the requested entity
 	 */
-	public <T extends TakstEntity> T getEntity(Class<T> type, Object entityId) {
+	public <T extends TakstRecord> T getEntity(Class<T> type, Object entityId) {
 
 		if (entityId == null) return null;
 
@@ -118,13 +119,13 @@ public class Takst extends TakstEntity {
 
 
 	@Id
-	public Calendar getValidFrom() {
+	public Date getValidFrom() {
 
 		return validFrom;
 	}
 
 
-	public Calendar getValidTo() {
+	public Date getValidTo() {
 
 		return validTo;
 	}

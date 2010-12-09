@@ -1,6 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class OplysningerOmDosisdispensering extends TakstEntity {
+public class OplysningerOmDosisdispensering extends TakstRecord {
 
 	private Long drugid; // Ref. t. LMS01, felt 01
 	private Long varenummer; // Ref. t. LMS02, felt 02

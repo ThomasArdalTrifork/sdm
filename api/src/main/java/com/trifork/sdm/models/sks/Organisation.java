@@ -1,6 +1,6 @@
 package com.trifork.sdm.models.sks;
 
-import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,8 +14,8 @@ public class Organisation extends AbstractRecord {
 	private String navn;
 	private String nummer;
 
-	private Calendar validFrom;
-	private Calendar validTo;
+	private Date validFrom;
+	private Date validTo;
 
 	private final OrgatizationType orgatizationType;
 
@@ -73,20 +73,20 @@ public class Organisation extends AbstractRecord {
 	}
 
 
-	public Calendar getValidTo() {
+	public Date getValidTo() {
 
 		return validTo;
 	}
 
 
-	public void setValidTo(Calendar validTo) {
+	public void setValidTo(Date validTo) {
 
 		this.validTo = validTo;
 	}
 
 
 	@Override
-	public Calendar getValidFrom() {
+	public Date getValidFrom() {
 
 		return validFrom;
 	}
@@ -99,7 +99,7 @@ public class Organisation extends AbstractRecord {
 	}
 
 
-	public void setValidFrom(Calendar validFrom) {
+	public void setValidFrom(Date validFrom) {
 
 		this.validFrom = validFrom;
 	}

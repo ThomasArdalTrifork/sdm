@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -15,43 +16,39 @@ import com.trifork.sdm.importer.persistence.mysql.MySQLConnectionManager;
 import com.trifork.sdm.importer.persistence.mysql.MySQLTemporalDao;
 
 
-public class AutImporter implements FileImporterControlledIntervals
-{
+public class AutImporter implements FileImporterControlledIntervals {
+	
 	private Logger logger = Logger.getLogger(getClass());
 
 
-	public boolean areRequiredInputFilesPresent(List<File> files)
-	{
+	public boolean areRequiredInputFilesPresent(List<File> files) {
+
 		if (files.size() == 0) return false;
-		for (File file : files)
-		{
+		for (File file : files) {
 			if (getDateFromInputFileName(file.getName()) == null) return false;
 		}
 		return true;
 	}
 
 
-	public void importFiles(List<File> files) throws FileImporterException
-	{
+	public void importFiles(List<File> files) throws FileImporterException {
+
 		Connection connection = null;
-		try
-		{
+		try {
 			connection = MySQLConnectionManager.getConnection();
 			MySQLTemporalDao dao = new MySQLTemporalDao(connection);
-			
+
 			doImport(files, dao);
-			
+
 			connection.commit();
 		}
-		catch (SQLException e)
-		{
+		catch (SQLException e) {
 			String message = "Error using database during import of autorisationsregister";
 			logger.error(message, e);
-			
+
 			throw new FileImporterException(message, e);
 		}
-		finally
-		{
+		finally {
 			MySQLConnectionManager.close(connection);
 		}
 	}
@@ -69,30 +66,31 @@ public class AutImporter implements FileImporterControlledIntervals
 	 * @throws FileImporterException
 	 *             If importing fails
 	 */
-	public void doImport(List<File> files, MySQLTemporalDao dao) throws FileImporterException
-	{
-		for (File file : files)
-		{
-			Calendar date = getDateFromInputFileName(file.getName());
-			if (date == null)
-				throw new FileImporterException(
-						"Filename format is invalid! Date could not be extracted");
-			try
-			{
+	public void doImport(List<File> files, MySQLTemporalDao dao) throws FileImporterException {
+
+		for (File file : files) {
+
+			Date date = getDateFromInputFileName(file.getName());
+
+			if (date == null) {
+				
+				throw new FileImporterException("Filename format is invalid! Date could not be extracted");
+			}
+				
+			try {
+
 				AutorisationsregisterParser parser = new AutorisationsregisterParser();
 				Autorisationsregisterudtraek dataset = parser.parse(file, date);
 				dao.persistCompleteDataset(dataset);
 
 			}
-			catch (Exception e)
-			{
+			catch (Exception e) {
+				
 				String mess = "Error reader autorisationsfil: " + file;
 				logger.error(mess, e);
 				throw new FileImporterException(mess, e);
 			}
-
 		}
-
 	}
 
 
@@ -102,17 +100,17 @@ public class AutImporter implements FileImporterControlledIntervals
 	 * @param fileName
 	 * @return
 	 */
-	public Calendar getDateFromInputFileName(String fileName)
-	{
-		try
-		{
+	public Date getDateFromInputFileName(String fileName) {
+
+		try {
 			int year = new Integer(fileName.substring(0, 4));
 			int month = new Integer(fileName.substring(4, 6));
 			int date = new Integer(fileName.substring(6, 8));
-			return new GregorianCalendar(year, month - 1, date);
+
+			return new GregorianCalendar(year, month - 1, date).getTime();
 		}
-		catch (NumberFormatException e)
-		{
+		catch (NumberFormatException e) {
+
 			return null;
 		}
 	}
@@ -121,15 +119,20 @@ public class AutImporter implements FileImporterControlledIntervals
 	/**
 	 * Largest gap observed was 15 days from 2008-10-18 to 2008-11-01
 	 */
-	public Calendar getNextImportExpectedBefore(Calendar lastImport)
-	{
-		Calendar cal;
+	public Date getNextImportExpectedBefore(Date lastImport) {
+
+		Calendar calendar;
+
 		if (lastImport == null)
-			cal = Calendar.getInstance();
-		else
-			cal = ((Calendar) lastImport.clone());
-		cal.add(Calendar.MONTH, 1);
-		return cal;
+			calendar = Calendar.getInstance();
+		else {
+			calendar = new GregorianCalendar();
+			calendar.setTime(lastImport);
+		}
+
+		calendar.add(Calendar.MONTH, 1);
+
+		return calendar.getTime();
 	}
 
 }

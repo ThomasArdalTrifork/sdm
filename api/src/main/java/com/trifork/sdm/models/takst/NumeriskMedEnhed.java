@@ -2,10 +2,9 @@ package com.trifork.sdm.models.takst;
 
 import javax.persistence.Column;
 
-import com.trifork.sdm.models.Record;
 
-
-public class NumeriskMedEnhed extends TakstEntity implements Record {
+public class NumeriskMedEnhed extends TakstRecord {
+	
 	private String klartekst;
 	private double numerisk;
 	private Object enhed;

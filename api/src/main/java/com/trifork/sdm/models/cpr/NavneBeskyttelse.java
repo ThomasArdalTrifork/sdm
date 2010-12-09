@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Person")
-public class NavneBeskyttelse extends CPREntity {
+public class NavneBeskyttelse extends CPRRecord {
 
 	Date navneBeskyttelseStartDato;
 	Date navneBeskyttelseSletteDato;

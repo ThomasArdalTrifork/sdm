@@ -1,6 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class Opbevaringsbetingelser extends TakstEntity {
+public class Opbevaringsbetingelser extends TakstRecord {
 
 	private String kode; // Ref. t. LMS02, felt 17
 	private String kortTekst;

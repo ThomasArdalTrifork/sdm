@@ -6,7 +6,7 @@ import javax.persistence.Id;
 
 
 @Entity
-public class BarnRelation extends CPREntity {
+public class BarnRelation extends CPRRecord {
 	String barnCpr;
 
 

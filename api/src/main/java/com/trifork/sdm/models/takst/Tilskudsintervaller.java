@@ -1,6 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class Tilskudsintervaller extends TakstEntity {
+public class Tilskudsintervaller extends TakstRecord {
 
 	private Long type; // Patienttype: almen, barn, kroniker, terminal
 	private Long niveau; // fx 1-4 for alment tilskud, 1-3 for barn

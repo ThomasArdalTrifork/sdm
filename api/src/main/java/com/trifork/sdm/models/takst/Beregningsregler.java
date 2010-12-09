@@ -3,7 +3,7 @@ package com.trifork.sdm.models.takst;
 import javax.persistence.Column;
 
 
-public class Beregningsregler extends TakstEntity {
+public class Beregningsregler extends TakstRecord {
 	private String kode; // Ref. t. LMS02, felt 21
 	private String tekst;
 

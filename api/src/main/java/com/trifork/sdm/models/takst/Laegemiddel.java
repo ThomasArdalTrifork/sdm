@@ -15,7 +15,7 @@ import com.trifork.sdm.persistence.Dataset;
 
 
 @Entity
-public class Laegemiddel extends TakstEntity {
+public class Laegemiddel extends TakstRecord {
 
 	private Long drugid;
 	private String varetype; // Udfyldt med SP (Specialiteter)

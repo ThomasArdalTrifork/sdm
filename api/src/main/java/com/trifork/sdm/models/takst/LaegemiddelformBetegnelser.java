@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Formbetegnelse")
-public class LaegemiddelformBetegnelser extends TakstEntity {
+public class LaegemiddelformBetegnelser extends TakstRecord {
 
 	// Ref. t. LMS01, felt 08
 	private String kode;

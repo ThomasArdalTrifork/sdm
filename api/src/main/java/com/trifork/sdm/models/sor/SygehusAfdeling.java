@@ -1,16 +1,18 @@
 package com.trifork.sdm.models.sor;
 
-import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.sdm.models.AbstractRecord;
+import com.trifork.sdm.util.DateUtils;
 
 
 @Entity
 public class SygehusAfdeling extends AbstractRecord {
+	
 	private String navn;
 	private Long eanLokationsnummer;
 	private String nummer;
@@ -28,8 +30,8 @@ public class SygehusAfdeling extends AbstractRecord {
 	private Long sygehusSorNummer;
 	private Long overAfdelingSorNummer;
 	private Long underlagtSygehusSorNummer;
-	private Calendar validFrom;
-	private Calendar validTo;
+	private Date validFrom;
+	private Date validTo;
 
 
 	@Column
@@ -254,27 +256,27 @@ public class SygehusAfdeling extends AbstractRecord {
 	}
 
 
-	public void setValidFrom(Calendar validFrom) {
+	public void setValidFrom(Date validFrom) {
 
 		this.validFrom = validFrom;
 	}
 
 
 	@Override
-	public Calendar getValidFrom() {
+	public Date getValidFrom() {
 
 		return validFrom;
 	}
 
 
 	@Override
-	public Calendar getValidTo() {
+	public Date getValidTo() {
 
-		return (validTo != null) ? validTo : FUTURE;
+		return (validTo != null) ? validTo : DateUtils.FUTURE;
 	}
 
 
-	public void setValidTo(Calendar validTo) {
+	public void setValidTo(Date validTo) {
 
 		this.validTo = validTo;
 	}

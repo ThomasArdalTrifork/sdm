@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Indikation")
-public class Indikation extends TakstEntity {
+public class Indikation extends TakstRecord {
 
 	private Long indikationskode; // Ref. t. LMS25
 	private String indikationstekstTotal; // Felt 03 + 04 + 05

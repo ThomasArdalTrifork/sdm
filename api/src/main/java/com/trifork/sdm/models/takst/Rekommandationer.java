@@ -1,6 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class Rekommandationer extends TakstEntity {
+public class Rekommandationer extends TakstRecord {
 
 	private Long rekommandationsgruppe;
 	private Long drugID; // Ref. t. LMS01

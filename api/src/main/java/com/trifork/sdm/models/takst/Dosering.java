@@ -6,7 +6,7 @@ import javax.persistence.Id;
 
 
 @Entity
-public class Dosering extends TakstEntity {
+public class Dosering extends TakstRecord {
 
 	private Long doseringKode; // Ref. t. LMS27
 	private String doseringKortTekst;

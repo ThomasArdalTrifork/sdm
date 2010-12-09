@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "LaegemiddelDoseringRef")
-public class Doseringskode extends TakstEntity {
+public class Doseringskode extends TakstRecord {
 
 	private Long drugid; // Ref. t. LMS01
 	private Long doseringskode; // Ref. t. LMS28

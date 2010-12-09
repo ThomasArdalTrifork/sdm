@@ -4,7 +4,6 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -22,38 +21,31 @@ import com.trifork.sdm.models.yderregisteret.Yderregister;
 import com.trifork.sdm.models.yderregisteret.YderregisterPerson;
 
 
-public class YderregisterParser
-{
+public class YderregisterParser {
+	
 	private static final Logger logger = Logger.getLogger(YderregisterParser.class);
 
 
-	public YderregisterDatasets parseYderregister(List<File> files) throws FileParseException
-	{
+	public YderregisterDatasets parseYderregister(List<File> files) throws FileParseException {
 
 		YderRegisterEventHandler handler = new YderRegisterEventHandler();
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		File currentFile = null;
-		
-		try
-		{
+
+		try {
 			SAXParser parser = factory.newSAXParser();
 
-			for (File f : files)
-			{
+			for (File f : files) {
 				currentFile = f;
-				if (f.getName().toUpperCase().endsWith("XML"))
-				{
+				if (f.getName().toUpperCase().endsWith("XML")) {
 					parser.parse(f, handler);
 				}
-				else
-				{
-					logger.warn("Can only parse files with extension 'XML'! Ignoring: "
-							+ f.getAbsolutePath());
+				else {
+					logger.warn("Can only parse files with extension 'XML'! Ignoring: " + f.getAbsolutePath());
 				}
 			}
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			String errorMessage = "Error parsing data from file ";
 			if (currentFile != null) errorMessage += currentFile.getAbsolutePath();
 			logger.error(errorMessage, e);
@@ -63,8 +55,7 @@ public class YderregisterParser
 	}
 
 
-	protected class YderRegisterEventHandler extends DefaultHandler
-	{
+	protected class YderRegisterEventHandler extends DefaultHandler {
 
 		protected static final String S1040013 = "S1040013";
 		protected static final String B084 = "B084";
@@ -82,29 +73,23 @@ public class YderregisterParser
 		private YderregisterDatasets dataset;
 
 
-		public YderRegisterEventHandler()
-		{
+		public YderRegisterEventHandler() {
 
 		}
 
 
 		public void startElement(String uri, String localName, String qName, Attributes atts)
-				throws SAXException
-		{
+				throws SAXException {
 
-			if (START_QNAME.equals(qName))
-			{
+			if (START_QNAME.equals(qName)) {
 
-				if (opgDato == null)
-				{
+				if (opgDato == null) {
 					opgDato = atts.getValue("OpgDato");
 					dataset = new YderregisterDatasets(getDateFromOpgDato(opgDato));
 
 				}
-				else
-				{
-					if (!opgDato.equals(atts.getValue("OpgDato")))
-					{
+				else {
+					if (!opgDato.equals(atts.getValue("OpgDato"))) {
 						throw new SAXException(
 								"Dates in the files differs. This is not allowed and the files are invalid");
 					}
@@ -113,20 +98,17 @@ public class YderregisterParser
 				String modtager = atts.getValue("Modt");
 				String snitfladeID = atts.getValue("SnitfladeId");
 
-				if (!modtager.trim().equals(B084))
-				{
-					throw new SAXException("Yder-register filen har forkert modtagerangivelse: "
-							+ modtager + " i stedet for" + B084 + ".");
+				if (!modtager.trim().equals(B084)) {
+					throw new SAXException("Yder-register filen har forkert modtagerangivelse: " + modtager
+							+ " i stedet for" + B084 + ".");
 				}
-				if (!snitfladeID.trim().equals(S1040013))
-				{
-					throw new SAXException("Yder-register filen har forkert snitfladeID: "
-							+ snitfladeID + " i stedet for " + S1040013 + ".");
+				if (!snitfladeID.trim().equals(S1040013)) {
+					throw new SAXException("Yder-register filen har forkert snitfladeID: " + snitfladeID
+							+ " i stedet for " + S1040013 + ".");
 				}
 
 			}
-			else if (YDER_QNAME.equals(qName))
-			{
+			else if (YDER_QNAME.equals(qName)) {
 				String histId = atts.getValue("HistIdYder");
 				String amtKode = atts.getValue("AmtKodeYder").trim();
 				// Long amtKodeLong = (amtKode != null) ? new
@@ -142,25 +124,21 @@ public class YderregisterParser
 				Date tilgDato = null;
 				String afgDatoString = "";
 				String tilgDatoString = "";
-				try
-				{
+				try {
 					afgDatoString = atts.getValue("AfgDatoYder").trim();
 					tilgDatoString = atts.getValue("TilgDatoYder").trim();
 
-					if (!afgDatoString.trim().isEmpty())
-					{
+					if (!afgDatoString.trim().isEmpty()) {
 						afgDato = datoFormatter.parse(afgDatoString);
 					}
-					if (!tilgDatoString.trim().isEmpty())
-					{
+					if (!tilgDatoString.trim().isEmpty()) {
 						tilgDato = datoFormatter.parse(tilgDatoString);
 					}
 
 				}
-				catch (ParseException pe)
-				{
-					throw new SAXException("Problems reading or parsing AfgDatoYder="
-							+ afgDatoString + " or TilDatoYder=" + tilgDatoString, pe);
+				catch (ParseException pe) {
+					throw new SAXException("Problems reading or parsing AfgDatoYder=" + afgDatoString
+							+ " or TilDatoYder=" + tilgDatoString, pe);
 				}
 
 				String hvdSpecKode = atts.getValue("HvdSpecKode").trim();
@@ -189,8 +167,7 @@ public class YderregisterParser
 				dataset.addYderregister(yder);
 
 			}
-			else if (PERSON_QNAME.equals(qName))
-			{
+			else if (PERSON_QNAME.equals(qName)) {
 				String histId = atts.getValue("HistIdPerson");
 				String ydernr = removeLeadingZeroes(atts.getValue("YdernrPerson")).trim();
 				String cpr = atts.getValue("CprNr");
@@ -199,33 +176,28 @@ public class YderregisterParser
 				Date tilgDato = null;
 				String afgDatoString = "";
 				String tilgDatoString = "";
-				try
-				{
+				try {
 					afgDatoString = atts.getValue("AfgDatoPerson").trim();
 					tilgDatoString = atts.getValue("TilgDatoPerson").trim();
 
-					if (!afgDatoString.trim().isEmpty())
-					{
+					if (!afgDatoString.trim().isEmpty()) {
 						afgDato = datoFormatter.parse(afgDatoString);
 					}
-					if (!tilgDatoString.trim().isEmpty())
-					{
+					if (!tilgDatoString.trim().isEmpty()) {
 						tilgDato = datoFormatter.parse(tilgDatoString);
 					}
 
 				}
-				catch (ParseException pe)
-				{
-					throw new SAXException("Problems reading or parsing AfgDatoPerson="
-							+ afgDatoString + " or TilDatoPerson=" + tilgDatoString, pe);
+				catch (ParseException pe) {
+					throw new SAXException("Problems reading or parsing AfgDatoPerson=" + afgDatoString
+							+ " or TilDatoPerson=" + tilgDatoString, pe);
 				}
 
 				Long rolleKode = Long.valueOf(atts.getValue("PersonrolleKode"));
 				String rolleTekst = atts.getValue("PersonrolleTxt").trim();
 
 				// Ignorer tomme CPR numre
-				if (cpr != null && cpr.length() == 10)
-				{
+				if (cpr != null && cpr.length() == 10) {
 					YderregisterPerson yderPerson = new YderregisterPerson();
 					yderPerson.setAfgangDato(afgDato);
 					yderPerson.setTilgangDato(tilgDato);
@@ -237,8 +209,7 @@ public class YderregisterParser
 					dataset.addYderregisterPerson(yderPerson);
 				}
 			}
-			else if (OVRIGESPECIALER_QNAME.equals(qName))
-			{
+			else if (OVRIGESPECIALER_QNAME.equals(qName)) {
 				// // HRA: Ignore
 				// String kode = atts.getValue("SpecKode");
 				// String text = atts.getValue("SpecTxt");
@@ -246,28 +217,25 @@ public class YderregisterParser
 		}
 
 
-		public void endElement(String uri, String localName, String qName) throws SAXException
-		{
-			if (YDER_QNAME.equals(qName))
-			{
+		public void endElement(String uri, String localName, String qName) throws SAXException {
+
+			if (YDER_QNAME.equals(qName)) {
 			}
 		}
 
 
-		public YderregisterDatasets getDataset()
-		{
+		public YderregisterDatasets getDataset() {
+
 			return dataset;
 		}
 
 
-		private String removeLeadingZeroes(String s)
-		{
-			if (s != null && s.length() > 0)
-			{
+		private String removeLeadingZeroes(String s) {
+
+			if (s != null && s.length() > 0) {
 				s = s.trim();
 				int i = 0;
-				while ((i + 1) <= s.length() && s.charAt(i) == '0')
-				{
+				while ((i + 1) <= s.length() && s.charAt(i) == '0') {
 					i++;
 				}
 				s = s.substring(i);
@@ -278,17 +246,18 @@ public class YderregisterParser
 	}
 
 
-	public Calendar getDateFromOpgDato(String opgDato)
-	{
-		try
-		{
+	public Date getDateFromOpgDato(String opgDato) {
+
+		try {
 			int year = new Integer(opgDato.substring(0, 4));
 			int month = new Integer(opgDato.substring(4, 6));
 			int date = new Integer(opgDato.substring(6, 8));
-			return new GregorianCalendar(year, month - 1, date);
+			
+			return new GregorianCalendar(year, month - 1, date).getTime();
 		}
-		catch (NumberFormatException e)
-		{
+		catch (NumberFormatException e) {
+			
+			// TODO: Should this not be handled.
 			return null;
 		}
 	}

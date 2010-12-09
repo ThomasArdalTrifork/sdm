@@ -1,16 +1,18 @@
 package com.trifork.sdm.models.autorisationsregisteret;
 
-import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.sdm.models.AbstractRecord;
+import com.trifork.sdm.util.DateUtils;
 
 
 @Entity
 public class Autorisation extends AbstractRecord {
+	
 	private String nummer;
 	private String cpr;
 
@@ -19,7 +21,7 @@ public class Autorisation extends AbstractRecord {
 
 	private String uddKode;
 
-	private Calendar validFrom;
+	private Date validFrom;
 
 
 	@Id
@@ -59,16 +61,16 @@ public class Autorisation extends AbstractRecord {
 
 
 	@Override
-	public Calendar getValidFrom() {
+	public Date getValidFrom() {
 
 		return validFrom;
 	}
 
 
 	@Override
-	public Calendar getValidTo() {
+	public Date getValidTo() {
 
-		return FUTURE;
+		return DateUtils.FUTURE;
 	}
 
 
@@ -102,7 +104,7 @@ public class Autorisation extends AbstractRecord {
 	}
 
 
-	public void setValidFrom(Calendar validFrom) {
+	public void setValidFrom(Date validFrom) {
 
 		this.validFrom = validFrom;
 	}

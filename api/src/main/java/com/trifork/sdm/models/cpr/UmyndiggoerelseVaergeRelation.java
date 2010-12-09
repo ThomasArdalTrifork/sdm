@@ -1,17 +1,14 @@
 package com.trifork.sdm.models.cpr;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.trifork.sdm.util.DateUtils;
-
 
 @Entity
-public class UmyndiggoerelseVaergeRelation extends CPREntity {
+public class UmyndiggoerelseVaergeRelation extends CPRRecord {
 
 	public enum VaergeRelationType {
 		ikkeICPR, CPRFindes, adresseFindes
@@ -245,19 +242,34 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity {
 
 
 	@Override
-	public Calendar getValidFrom() {
+	public Date getValidFrom() {
 
 		// Hvis umyndiggørelses start dato er sat til senere end
 		// produktionsdatoen for udtrækket brug det ellers brug
-		// produktionsdatoen
-		return (umyndigStartDato == null) ? super.getValidFrom() : (umyndigStartDato.after(super
-				.getValidFrom().getTime())) ? DateUtils.toCalendar(umyndigStartDato) : super.getValidFrom();
+		// produktionsdatoen.
+
+		Date validFrom;
+		
+		if (umyndigStartDato == null) {
+			
+			validFrom = super.getValidFrom();
+		}
+		else if(umyndigStartDato.getTime() > super.getValidFrom().getTime()) {
+			
+			validFrom = umyndigStartDato;
+		}
+		else
+		{
+			validFrom = super.getValidFrom();
+		}
+		
+		return validFrom;
 	}
 
 
 	@Override
-	public Calendar getValidTo() {
+	public Date getValidTo() {
 
-		return (umyndigSletteDato == null) ? super.getValidTo() : DateUtils.toCalendar(umyndigSletteDato);
+		return (umyndigSletteDato == null) ? super.getValidTo() : umyndigSletteDato;
 	}
 }

@@ -232,7 +232,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		}
 
 
-		public Calendar getValidFrom() {
+		public Date getValidFrom() {
 
 			// TODO Auto-generated method stub
 			return validfrom;

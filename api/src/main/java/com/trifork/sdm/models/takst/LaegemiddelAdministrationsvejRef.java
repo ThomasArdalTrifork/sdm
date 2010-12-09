@@ -6,7 +6,7 @@ import javax.persistence.Id;
 
 
 @Entity
-public class LaegemiddelAdministrationsvejRef extends TakstEntity {
+public class LaegemiddelAdministrationsvejRef extends TakstRecord {
 	private long drugId;
 	private String AdministrationsvejKode;
 

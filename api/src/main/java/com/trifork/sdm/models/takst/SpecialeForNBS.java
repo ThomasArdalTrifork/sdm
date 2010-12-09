@@ -1,6 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class SpecialeForNBS extends TakstEntity {
+public class SpecialeForNBS extends TakstRecord {
 
 	private String kode; // Ref. t. LMS02, felt 11
 	private String kortTekst; // Speciale, forkortet

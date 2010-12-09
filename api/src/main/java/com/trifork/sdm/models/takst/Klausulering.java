@@ -6,7 +6,7 @@ import javax.persistence.Id;
 
 
 @Entity
-public class Klausulering extends TakstEntity {
+public class Klausulering extends TakstRecord {
 
 	private String kode; // Ref. t. LMS02, felt 13
 	private String kortTekst; // Klausultekst, forkortet

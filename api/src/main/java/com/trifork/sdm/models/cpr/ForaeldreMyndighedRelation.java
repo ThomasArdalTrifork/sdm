@@ -1,20 +1,17 @@
 package com.trifork.sdm.models.cpr;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.trifork.sdm.util.DateUtils;
-
 
 @Entity
-public class ForaeldreMyndighedRelation extends CPREntity {
+public class ForaeldreMyndighedRelation extends CPRRecord {
 
 	public enum ForaeldreMyndighedRelationsType {
-		mor, far, andenIndehaver1, andenIndehaver2
+		MOTHER, FARTHER, OTHER_RELATIONSHIP_1, OTHER_RELATIONSHIP_2
 	}
 
 
@@ -23,7 +20,10 @@ public class ForaeldreMyndighedRelation extends CPREntity {
 	Date foraeldreMyndighedStartDato;
 	String foraeldreMyndighedMarkering;
 	Date foraeldreMyndighedSlettedato;
-	String relationCpr; // Hvis relationstypen ikke er mor eller far.
+	
+	// If the relation is neither Mother or Farther.
+	String relationCpr;
+	
 	Date relationCprStartDato;
 
 
@@ -31,10 +31,10 @@ public class ForaeldreMyndighedRelation extends CPREntity {
 	@Column
 	public String getId() {
 
-		if (type == ForaeldreMyndighedRelationsType.mor) {
+		if (type == ForaeldreMyndighedRelationsType.MOTHER) {
 			return getCpr() + "-mor";
 		}
-		else if (type == ForaeldreMyndighedRelationsType.far) {
+		else if (type == ForaeldreMyndighedRelationsType.FARTHER) {
 			return getCpr() + "-far";
 		}
 		return getCpr() + "-" + relationCpr;
@@ -54,13 +54,13 @@ public class ForaeldreMyndighedRelation extends CPREntity {
 
 		if (type == null)
 			return "Ukendt forældre myndigheds relation";
-		else if (type == ForaeldreMyndighedRelationsType.mor)
+		else if (type == ForaeldreMyndighedRelationsType.MOTHER)
 			return "Mor";
-		else if (type == ForaeldreMyndighedRelationsType.far)
+		else if (type == ForaeldreMyndighedRelationsType.FARTHER)
 			return "Far";
-		else if (type == ForaeldreMyndighedRelationsType.andenIndehaver1)
+		else if (type == ForaeldreMyndighedRelationsType.OTHER_RELATIONSHIP_1)
 			return "Anden indenhaver 1";
-		else if (type == ForaeldreMyndighedRelationsType.andenIndehaver2) return "Anden indenhaver 1";
+		else if (type == ForaeldreMyndighedRelationsType.OTHER_RELATIONSHIP_2) return "Anden indenhaver 1";
 		return null;
 	}
 
@@ -75,13 +75,13 @@ public class ForaeldreMyndighedRelation extends CPREntity {
 	public void setType(String type) {
 
 		if (type.equals("0003"))
-			this.type = ForaeldreMyndighedRelationsType.mor;
+			this.type = ForaeldreMyndighedRelationsType.MOTHER;
 		else if (type.equals("0004"))
-			this.type = ForaeldreMyndighedRelationsType.far;
+			this.type = ForaeldreMyndighedRelationsType.FARTHER;
 		else if (type.equals("0005"))
-			this.type = ForaeldreMyndighedRelationsType.andenIndehaver1;
+			this.type = ForaeldreMyndighedRelationsType.OTHER_RELATIONSHIP_1;
 		else if (type.equals("0006"))
-			this.type = ForaeldreMyndighedRelationsType.andenIndehaver2;
+			this.type = ForaeldreMyndighedRelationsType.OTHER_RELATIONSHIP_2;
 		else
 			this.type = null;
 
@@ -151,18 +151,16 @@ public class ForaeldreMyndighedRelation extends CPREntity {
 
 
 	@Override
-	public Calendar getValidFrom() {
+	public Date getValidFrom() {
 
-		return (foraeldreMyndighedStartDato == null) ? super.getValidFrom() : DateUtils
-				.toCalendar(foraeldreMyndighedStartDato);
+		return (foraeldreMyndighedStartDato == null) ? super.getValidFrom() : foraeldreMyndighedStartDato;
 	}
 
 
 	@Override
-	public Calendar getValidTo() {
+	public Date getValidTo() {
 
-		return (foraeldreMyndighedSlettedato == null) ? super.getValidTo() : DateUtils
-				.toCalendar(foraeldreMyndighedSlettedato);
+		return (foraeldreMyndighedSlettedato == null) ? super.getValidTo() : foraeldreMyndighedSlettedato;
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class PakningskombinationerUdenPriser extends TakstEntity {
+public class PakningskombinationerUdenPriser extends TakstRecord {
 
 	private Long varenummerOrdineret; // Vnr. på pakningen anført på recepten
 	private Long varenummerSubstitueret; // Vnr. på en pakning der evt. kan

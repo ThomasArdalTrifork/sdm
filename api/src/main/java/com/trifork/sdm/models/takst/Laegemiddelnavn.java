@@ -1,6 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class Laegemiddelnavn extends TakstEntity {
+public class Laegemiddelnavn extends TakstRecord {
 
 	private Long drugid; // Ref. t. LMS01, felt 01
 	private String laegemidletsUforkortedeNavn;

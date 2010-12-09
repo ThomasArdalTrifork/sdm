@@ -1,6 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class Udleveringsbestemmelser extends TakstEntity {
+public class Udleveringsbestemmelser extends TakstRecord {
 
 	private String kode; // Ref. t. LMS02, felt 10
 	private String udleveringsgruppe; // Recept: A eller B, håndkøb: H

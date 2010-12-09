@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "ATC")
-public class ATCKoderOgTekst extends TakstEntity {
+public class ATCKoderOgTekst extends TakstRecord {
 
 	private String aTCNiveau1; // Felt 01-05 ref. t. LMS01, felt 15
 	private String aTCNiveau2;

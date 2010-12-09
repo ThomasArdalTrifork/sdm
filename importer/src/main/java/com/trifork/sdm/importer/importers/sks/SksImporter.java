@@ -4,6 +4,8 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -25,11 +27,20 @@ public class SksImporter implements FileImporterControlledIntervals
 	/*
 	 * SKS files usually arrive monthly
 	 */
-	public Calendar getNextImportExpectedBefore(Calendar lastImport)
+	public Date getNextImportExpectedBefore(Date lastImport)
 	{
-		Calendar cal = (lastImport == null) ? Calendar.getInstance() : ((Calendar) lastImport.clone());
+		Calendar cal;
+
+		if (lastImport == null)
+			cal = Calendar.getInstance();
+		else {
+			cal = new GregorianCalendar();
+			cal.setTime(lastImport);
+		}
+		
 		cal.add(Calendar.DATE, 45);
-		return cal;
+		
+		return cal.getTime();
 	}
 
 

@@ -1,6 +1,6 @@
 package com.trifork.sdm.persistence;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.trifork.sdm.models.Record;
@@ -11,39 +11,40 @@ import com.trifork.sdm.models.Record;
  * interval. That is, no other records are allowed other than the ones in this
  * dataset.
  * 
- * @author rsl
- * 
  */
 public class CompleteDataset<T extends Record> extends Dataset<T> {
-	private final Calendar ValidFrom;
-	private final Calendar ValidTo;
+	
+	private final Date validFrom;
+	private final Date validTo;
 
 
-	protected CompleteDataset(Class<T> type, List<T> entities, Calendar validFrom, Calendar ValidTo) {
+	protected CompleteDataset(Class<T> type, List<T> entities, Date validFrom, Date ValidTo) {
 
 		super(entities, type);
-		this.ValidFrom = validFrom;
-		this.ValidTo = ValidTo;
+		
+		this.validFrom = validFrom;
+		this.validTo = ValidTo;
 	}
 
 
-	public CompleteDataset(Class<? extends T> type, Calendar validFrom, Calendar ValidTo) {
+	public CompleteDataset(Class<? extends T> type, Date validFrom, Date ValidTo) {
 
 		super(type);
-		this.ValidFrom = validFrom;
-		this.ValidTo = ValidTo;
+		
+		this.validFrom = validFrom;
+		this.validTo = ValidTo;
 	}
 
 
-	public Calendar getValidFrom() {
+	public Date getValidFrom() {
 
-		return ValidFrom;
+		return validFrom;
 	}
 
 
-	public Calendar getValidTo() {
+	public Date getValidTo() {
 
-		return ValidTo;
+		return validTo;
 	}
 
 }

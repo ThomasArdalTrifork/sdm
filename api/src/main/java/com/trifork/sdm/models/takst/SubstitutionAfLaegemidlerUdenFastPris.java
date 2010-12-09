@@ -1,6 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class SubstitutionAfLaegemidlerUdenFastPris extends TakstEntity {
+public class SubstitutionAfLaegemidlerUdenFastPris extends TakstRecord {
 
 	private Long substitutionsgruppenummer; // Substitutionsgruppe for pakningen
 	private Long varenummer;

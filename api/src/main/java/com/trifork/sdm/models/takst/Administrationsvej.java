@@ -6,7 +6,7 @@ import javax.persistence.Id;
 
 
 @Entity
-public class Administrationsvej extends TakstEntity {
+public class Administrationsvej extends TakstRecord {
 
 	private String kode; // Ref. t. LMS01, felt 16
 	private String kortTekst;

@@ -15,7 +15,7 @@ import com.trifork.sdm.util.DateUtils;
 
 @Entity
 @Table(name = "Pakning")
-public class Pakning extends TakstEntity {
+public class Pakning extends TakstRecord {
 
 	private Long drugid; // Ref. t. LMS01, felt 01
 	private Long varenummer;

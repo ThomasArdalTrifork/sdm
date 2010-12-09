@@ -1,6 +1,5 @@
 package com.trifork.sdm.models.doseringsforslag;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -29,7 +28,7 @@ public class DosageVersion extends AbstractRecord {
 	// Unikt release nummer. Obligatorisk. Heltal, 15 cifre.
 	private long releaseNumber;
 
-	private Calendar validFrom;
+	private Date validFrom;
 
 
 	@Column
@@ -86,14 +85,14 @@ public class DosageVersion extends AbstractRecord {
 	}
 
 
-	public void setValidFrom(Calendar validfrom) {
+	public void setValidFrom(Date validfrom) {
 
 		this.validFrom = validfrom;
 	}
 
 
 	@Override
-	public Calendar getValidFrom() {
+	public Date getValidFrom() {
 
 		return validFrom;
 	}

@@ -6,7 +6,7 @@ import javax.persistence.Id;
 
 
 @Entity
-public class Tidsenhed extends TakstEntity {
+public class Tidsenhed extends TakstRecord {
 
 	private final DivEnheder enheder;
 

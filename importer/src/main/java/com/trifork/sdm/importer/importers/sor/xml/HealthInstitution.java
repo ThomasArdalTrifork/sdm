@@ -1,6 +1,6 @@
 package com.trifork.sdm.importer.importers.sor.xml;
 
-import java.util.Calendar;
+import java.util.Date;
 
 
 public class HealthInstitution extends AddressInformation
@@ -10,8 +10,8 @@ public class HealthInstitution extends AddressInformation
 	private Long institutionType;
 	private String pharmacyIdentifier;
 	private String shakIdentifier;
-	private Calendar fromDate;
-	private Calendar toDate;
+	private Date fromDate;
+	private Date toDate;
 
 
 	public Long getSorIdentifier()
@@ -74,25 +74,25 @@ public class HealthInstitution extends AddressInformation
 	}
 
 
-	public Calendar getFromDate()
+	public Date getFromDate()
 	{
 		return fromDate;
 	}
 
 
-	public void setFromDate(Calendar validFrom)
+	public void setFromDate(Date validFrom)
 	{
 		this.fromDate = validFrom;
 	}
 
 
-	public Calendar getToDate()
+	public Date getToDate()
 	{
 		return toDate;
 	}
 
 
-	public void setToDate(Calendar toDate)
+	public void setToDate(Date toDate)
 	{
 		this.toDate = toDate;
 	}

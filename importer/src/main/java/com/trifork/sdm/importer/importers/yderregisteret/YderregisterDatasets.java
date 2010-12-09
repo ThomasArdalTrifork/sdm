@@ -1,47 +1,46 @@
 package com.trifork.sdm.importer.importers.yderregisteret;
 
-import java.util.Calendar;
+import java.util.Date;
 
-import com.trifork.sdm.models.AbstractRecord;
 import com.trifork.sdm.models.yderregisteret.Yderregister;
 import com.trifork.sdm.models.yderregisteret.YderregisterPerson;
 import com.trifork.sdm.persistence.CompleteDataset;
+import com.trifork.sdm.util.DateUtils;
 
-public class YderregisterDatasets
-{
+
+public class YderregisterDatasets {
 	private final CompleteDataset<Yderregister> yderregisterDS;
 	private final CompleteDataset<YderregisterPerson> yderregisterPersonDS;
 
 
-	public YderregisterDatasets(Calendar validFrom)
-	{
-		yderregisterDS = new CompleteDataset<Yderregister>(Yderregister.class, validFrom,
-				AbstractRecord.FUTURE);
-		yderregisterPersonDS = new CompleteDataset<YderregisterPerson>(YderregisterPerson.class,
-				validFrom, AbstractRecord.FUTURE);
+	public YderregisterDatasets(Date validFrom) {
+
+		yderregisterDS = new CompleteDataset<Yderregister>(Yderregister.class, validFrom, DateUtils.FUTURE);
+		yderregisterPersonDS = new CompleteDataset<YderregisterPerson>(YderregisterPerson.class, validFrom,
+				DateUtils.FUTURE);
 	}
 
 
-	public CompleteDataset<Yderregister> getYderregisterDS()
-	{
+	public CompleteDataset<Yderregister> getYderregisterDS() {
+
 		return yderregisterDS;
 	}
 
 
-	public CompleteDataset<YderregisterPerson> getYderregisterPersonDS()
-	{
+	public CompleteDataset<YderregisterPerson> getYderregisterPersonDS() {
+
 		return yderregisterPersonDS;
 	}
 
 
-	public void addYderregister(Yderregister entity)
-	{
+	public void addYderregister(Yderregister entity) {
+
 		yderregisterDS.addEntity(entity);
 	}
 
 
-	public void addYderregisterPerson(YderregisterPerson entity)
-	{
+	public void addYderregisterPerson(YderregisterPerson entity) {
+
 		yderregisterPersonDS.addEntity(entity);
 	}
 }

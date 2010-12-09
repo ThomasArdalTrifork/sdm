@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 
 import com.trifork.sdm.importer.importers.FileParseException;
 import com.trifork.sdm.models.sks.Organisation;
-import com.trifork.sdm.util.DateUtils;
 
 
 public class OrganisationParser
@@ -61,8 +60,8 @@ public class OrganisationParser
 					organization = new Organisation((type.equals("afd")) ? Organisation.OrgatizationType.Department : Organisation.OrgatizationType.Hospital);
 					
 					organization.setNummer(line.substring(3, 23).trim());
-					organization.setValidFrom(DateUtils.toCalendar(sdf.parse(line.substring(23, 31))));
-					organization.setValidTo(DateUtils.toCalendar(sdf.parse(line.substring(39, 47))));
+					organization.setValidFrom(sdf.parse(line.substring(23, 31)));
+					organization.setValidTo(sdf.parse(line.substring(39, 47)));
 					organization.setNavn(line.substring(47, 167).trim());
 				}
 				else

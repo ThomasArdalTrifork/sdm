@@ -87,8 +87,7 @@ public class AutImporterTest {
 	public void testGetDateFromFileName() {
 
 		AutImporter importer = new AutImporter();
-		Date date = importer.getDateFromInputFileName("19761110sgfdgfg").getTime();
+		Date date = importer.getDateFromInputFileName("19761110sgfdgfg");
 		assertEquals("19761110", new SimpleDateFormat("yyyyMMdd").format(date));
 	}
-
 }

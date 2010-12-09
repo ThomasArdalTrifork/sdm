@@ -15,8 +15,7 @@ public class TestImportTimeManager {
 		Calendar now = Calendar.getInstance();
 		now.set(Calendar.MILLISECOND, 0);
 
-		ImportTimeManager.setImportTime("testSpooler", now);
-		assertEquals(now.getTimeInMillis(), ImportTimeManager.getLastImportTime("testSpooler")
-				.getTimeInMillis());
+		ImportTimeManager.setImportTime("testSpooler", now.getTime());
+		assertEquals(now.getTimeInMillis(), ImportTimeManager.getLastImportTime("testSpooler").getTime());
 	}
 }

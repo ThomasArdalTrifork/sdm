@@ -1,5 +1,7 @@
 package com.trifork.sdm.importer.spoolers;
 
+import static java.lang.String.format;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -9,11 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.apache.log4j.Logger;
-
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import com.trifork.sdm.importer.importers.FileImporter;
 import com.trifork.sdm.importer.importers.FileImporterControlledIntervals;
@@ -25,34 +27,32 @@ import com.trifork.sdm.util.DateUtils;
 /**
  * FileSpooler. The implementation of the file spooler. Based on the
  * FileSpoolerSetup the spooler is started and a monitor thread is spanned. The
- * FileSpooler continue to monitor the spooler but all activations are made
- * in the newly created thread.
+ * FileSpooler continue to monitor the spooler but all activations are made in
+ * the newly created thread.
  * 
  * @author Jan Buchholdt
  */
-public class FileSpooler extends BasicSpooler
-{
+public class FileSpooler extends BasicSpooler {
 	private static final Logger logger = Logger.getLogger(FileSpooler.class);
-	
-	Calendar stabilizationPeriodEnd; // TODO: These fields should not be public. Not even for testing.
-	
+
+	Calendar stabilizationPeriodEnd; // TODO: These fields should not be public.
+										// Not even for testing.
+
 	long inputdirSignature;
-	
+
 	public Collection<String> activeFiles; // TODO: Public?
 
 
-	public FileSpooler(FileSpoolerSetup setup)
-	{
+	public FileSpooler(FileSpoolerSetup setup) {
+
 		this.setup = setup;
 		setStatus(Status.INITIATING);
-		
-		try
-		{
+
+		try {
 			importer = setup.getImporterClass().newInstance();
 		}
 
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			logger.error("Could not instantiate importer of class", e);
 			setMessage("Spooler cannot get an instance if importer class. Please change the setup");
 			setStatus(Status.ERROR);
@@ -63,18 +63,16 @@ public class FileSpooler extends BasicSpooler
 		inputDir = validateWorkDir(setup.getInputPath());
 		processingDir = validateWorkDir(setup.getProcessingPath());
 		rejectedDir = validateWorkDir(setup.getRejectPath());
-		
-		try
-		{
+
+		try {
 			moveProcessingFilesBackToInput();
 		}
-		catch (IOException e)
-		{
+		catch (IOException e) {
 			throw new RuntimeException("Could not move processing files back to input dir", e);
 		}
 
 		setStatus(Status.RUNNING);
-		setActivity(Activity.AWAITING);
+		setStatus(Activity.AWAITING);
 	}
 
 
@@ -82,12 +80,11 @@ public class FileSpooler extends BasicSpooler
 	 * Checks if new files are present, and handle them if true
 	 */
 	@Override
-	public void execute()
-	{
+	public void execute() {
+
 		// Check for rejected files
 		File[] rejFiles = rejectedDir.listFiles();
-		if (rejFiles != null && rejFiles.length > 0)
-		{
+		if (rejFiles != null && rejFiles.length > 0) {
 			// logger.debug("Rejected files exist for spooler " +
 			// setup.getName());
 			if (getMessage() == null)
@@ -95,84 +92,67 @@ public class FileSpooler extends BasicSpooler
 			setStatus(Status.ERROR);
 			return;
 		}
-		else
-		{
+		else {
 			setStatus(Status.RUNNING);
 		}
 
 		// Check for input files
 		File[] inputFiles = inputDir.listFiles();
-		if (inputFiles != null && inputFiles.length > 0)
-		{
+		if (inputFiles != null && inputFiles.length > 0) {
 			processInputFiles(inputFiles);
 		}
-		else
-		{
-			setActivity(Activity.AWAITING);
+		else {
+			setStatus(Activity.AWAITING);
 		}
 	}
 
 
-	private void processInputFiles(File[] inputFiles)
-	{
+	private void processInputFiles(File[] inputFiles) {
+
 		setActiveFiles(inputFiles);
-		logger.debug("spooler: " + setup.getName() + " - " + inputFiles.length
-				+ " input files detected");
-		if (inputdirSignature != getDirSignature(inputDir))
-		{
+		logger.debug("spooler: " + setup.getName() + " - " + inputFiles.length + " input files detected");
+		if (inputdirSignature != getDirSignature(inputDir)) {
 			logger.debug("spooler: " + setup.getName()
 					+ "files changed in input dir. Starting stabilization period");
 			startStabilizationPeriod();
 		}
-		if (Calendar.getInstance().after(stabilizationPeriodEnd))
-		{
+		if (Calendar.getInstance().after(stabilizationPeriodEnd)) {
 			// logger.debug("spooler: " + setup.getName() +
 			// " - Stabilizing wait complete");
 			boolean allRequiredPresent = false;
-			try
-			{
-				allRequiredPresent = importer.areRequiredInputFilesPresent(Arrays
-						.asList(inputFiles));
+			try {
+				allRequiredPresent = importer.areRequiredInputFilesPresent(Arrays.asList(inputFiles));
 			}
-			catch (Exception e)
-			{
+			catch (Exception e) {
 				logger.debug("importer.areRequiredInputFilesPresent threw exception. Moving files to rejected");
-				try
-				{
+				try {
 					moveToRejected(inputFiles);
 
 				}
-				catch (IOException e1)
-				{
+				catch (IOException e1) {
 					throw new RuntimeException(e1);
 				}
 				throw new RuntimeException(e);
 			}
-			if (!allRequiredPresent)
-			{
-				try
-				{
+			if (!allRequiredPresent) {
+				try {
 					moveToRejected(inputFiles);
 				}
-				catch (IOException e)
-				{
+				catch (IOException e) {
 					throw new RuntimeException(e);
 				}
 				String message = "Didn't get all required files";
 				setMessage(message);
 				throw new RuntimeException(message);
 			}
-			else
-			{
+			else {
 				File fileSet;
-				try
-				{
+				try {
 					fileSet = moveToProcessingFileset(inputFiles);
 					doImport(fileSet);
 					clearActiveFiles();
 				}
-				catch (IOException e)
-				{
+				catch (IOException e) {
 					String message = "could not move files to processing";
 					setMessage(message + " " + e.getMessage());
 					logger.error(message, e);
@@ -186,14 +166,14 @@ public class FileSpooler extends BasicSpooler
 					+ " - Waiting for inputFiles to stabilize in "
 					+ inputDir.getAbsolutePath()
 					+ " in "
-					+ (stabilizationPeriodEnd.getTime().getTime() - Calendar.getInstance()
-							.getTime().getTime()) / 1000.0 + " seconds");
+					+ (stabilizationPeriodEnd.getTime().getTime() - Calendar.getInstance().getTime()
+							.getTime()) / 1000.0 + " seconds");
 
 	}
 
 
-	private void moveToRejected(File[] inputFiles) throws IOException
-	{
+	private void moveToRejected(File[] inputFiles) throws IOException {
+
 		// Move the files to rejected
 		File p = moveToProcessingFileset(inputFiles);
 		moveFilesetToRejected(p);
@@ -206,11 +186,10 @@ public class FileSpooler extends BasicSpooler
 	 * 
 	 * @param files
 	 */
-	private void setActiveFiles(File[] files)
-	{
+	private void setActiveFiles(File[] files) {
+
 		clearActiveFiles();
-		for (File file : files)
-		{
+		for (File file : files) {
 			activeFiles.add(file.getAbsolutePath() + "\n");
 		}
 	}
@@ -222,8 +201,8 @@ public class FileSpooler extends BasicSpooler
 	 * @param inputDir
 	 * @return
 	 */
-	static long getDirSignature(File inputDir)
-	{
+	static long getDirSignature(File inputDir) {
+
 		long hash = 0;
 		for (File file : inputDir.listFiles())
 			hash += file.getName().hashCode() * (file.lastModified() + file.length());
@@ -231,9 +210,9 @@ public class FileSpooler extends BasicSpooler
 	}
 
 
-	private void startStabilizationPeriod()
-	{
-		setActivity(Activity.STABILIZING);
+	private void startStabilizationPeriod() {
+
+		setStatus(Activity.STABILIZING);
 		Calendar end = Calendar.getInstance();
 		end.add(Calendar.SECOND, setup.getStableSeconds());
 		stabilizationPeriodEnd = end;
@@ -241,14 +220,13 @@ public class FileSpooler extends BasicSpooler
 	}
 
 
-	private File moveToProcessingFileset(File[] files) throws IOException
-	{
+	private File moveToProcessingFileset(File[] files) throws IOException {
+
 		setActiveFiles(files);
 		File fileSet = new File(processingDir.getAbsolutePath() + "/"
 				+ DateUtils.toFilenameDatetime(Calendar.getInstance()) + "/");
 		fileSet.mkdir();
-		for (int i = 0; i < files.length; i++)
-		{
+		for (int i = 0; i < files.length; i++) {
 			File processingFile = new File(fileSet.getAbsolutePath() + "/" + files[i].getName());
 			FileUtils.moveFile(files[i], processingFile);
 			files[i] = processingFile;
@@ -258,38 +236,43 @@ public class FileSpooler extends BasicSpooler
 	}
 
 
-	private void doImport(File fileSet)
-	{
+	private void doImport(File fileSet) {
+
 		logger.debug("spooler: " + setup.getName() + " -  starting import...");
-		try
-		{
-			setActivity(Activity.IMPORTING);
+
+		try {
+			setStatus(Activity.IMPORTING);
+
 			importer.importFiles(Arrays.asList(fileSet.listFiles()));
+
 			logger.debug("spooler: " + setup.getName() + " - import complete");
-			setActivity(Activity.AWAITING);
-			lastRun = Calendar.getInstance();
+
+			setStatus(Activity.AWAITING);
+
+			lastRun = new Date();
 			ImportTimeManager.setImportTime(setup.getName(), lastRun);
 
-			for (File file : fileSet.listFiles())
+			for (File file : fileSet.listFiles()) {
 				file.delete();
+			}
+
 			boolean deleted = fileSet.delete();
-			if (!deleted)
-			{
-				logger.error("couldn't delete fileset with files: " + fileSet.getAbsolutePath());
+
+			if (!deleted) {
+				logger.error("Couldn't delete fileset with files: " + fileSet.getAbsolutePath());
 				setStatus(Status.ERROR);
 			}
 		}
-		catch (FileImporterException e)
-		{
-			logger.error("spooler: " + setup.getName() + " - Error during import of fileset "
-					+ fileSet.getAbsolutePath(), e);
+		catch (FileImporterException e) {
+
+			logger.error(
+					format("Spooler: %s - Error during import of fileset ", setup.getName(),
+							fileSet.getAbsolutePath()), e);
 			File rejectedFileSet = null;
-			try
-			{
+			try {
 				rejectedFileSet = moveFilesetToRejected(fileSet);
 			}
-			catch (IOException e1)
-			{
+			catch (IOException e1) {
 				throw new RuntimeException("could not move files to rejected", e);
 			}
 			printErrorMessageToRejectFile(e, rejectedFileSet);
@@ -299,19 +282,19 @@ public class FileSpooler extends BasicSpooler
 	}
 
 
-	private File moveFilesetToRejected(File fileSet) throws IOException
-	{
+	private File moveFilesetToRejected(File fileSet) throws IOException {
+
 		clearActiveFiles();
-		
+
 		File rejectedFileSet = new File(rejectedDir + "/" + fileSet.getName());
 		FileUtils.moveDirectory(fileSet, rejectedFileSet);
-		
+
 		return rejectedFileSet;
 	}
 
 
-	private void clearActiveFiles()
-	{
+	private void clearActiveFiles() {
+
 		activeFiles = new ArrayList<String>();
 	}
 
@@ -322,7 +305,7 @@ public class FileSpooler extends BasicSpooler
 	private File processingDir = null;
 	private File rejectedDir = null;
 
-	private Calendar lastRun;
+	private Date lastRun;
 
 	FileImporter importer;
 
@@ -331,22 +314,18 @@ public class FileSpooler extends BasicSpooler
 	 * Check if the processing directory is empty. If not move the files back to
 	 * inputdir
 	 */
-	void moveProcessingFilesBackToInput() throws IOException
-	{
-		if (processingDir.listFiles().length > 0)
-		{
+	void moveProcessingFilesBackToInput() throws IOException {
+
+		if (processingDir.listFiles().length > 0) {
 			// Recursive move all files back
-			for (File folder : processingDir.listFiles())
-			{
-				if (folder.isDirectory())
-				{
+			for (File folder : processingDir.listFiles()) {
+				if (folder.isDirectory()) {
 					// All children should be folders
-					for (File f : folder.listFiles())
-					{
+					for (File f : folder.listFiles()) {
 						File inputFile = new File(inputDir + "/" + f.getName());
 						FileUtils.moveFile(f, inputFile);
 					}
-					
+
 					folder.delete();
 				}
 			}
@@ -354,94 +333,98 @@ public class FileSpooler extends BasicSpooler
 	}
 
 
-	File validateWorkDir(String path)
-	{
+	File validateWorkDir(String path) {
+
 		File dir = new File(path);
-		
+
 		if (!dir.exists() && !dir.mkdirs())
 			throw new RuntimeException("Spooler dir " + path + " cannot be created!");
 		if (!dir.canRead())
-			throw new RuntimeException("Spooler dir " + path
-					+ " is not readable. Please change permissions");
+			throw new RuntimeException("Spooler dir " + path + " is not readable. Please change permissions");
 		if (!dir.canWrite())
-			throw new RuntimeException("Spooler dir " + path
-					+ " is not writable. Please change permissions");
-		if (!dir.isDirectory())
-			throw new RuntimeException("Spooler dir " + path + " is not a directory!");
-		
+			throw new RuntimeException("Spooler dir " + path + " is not writable. Please change permissions");
+		if (!dir.isDirectory()) throw new RuntimeException("Spooler dir " + path + " is not a directory!");
+
 		return dir;
 	}
 
 
-	public boolean isRejectedDirEmpty()
-	{
+	public boolean isRejectedDirEmpty() {
+
 		return rejectedDir.listFiles().length == 0;
 	}
 
 
-	public FileSpoolerSetup getSetup()
-	{
+	public FileSpoolerSetup getSetup() {
+
 		return setup;
 	}
 
 
-	File getInputDir()
-	{
+	File getInputDir() {
+
 		return inputDir;
 	}
 
 
-	File getProcessingDir()
-	{
+	File getProcessingDir() {
+
 		return processingDir;
 	}
 
 
-	File getRejectedDir()
-	{
+	File getRejectedDir() {
+
 		return rejectedDir;
 	}
 
 
-	public FileImporter getImporter()
-	{
+	public FileImporter getImporter() {
+
 		return importer;
 	}
 
 
-	public String getNextImportExpectedBeforeFormatted()
-	{
-		if (getImporter() instanceof FileImporterControlledIntervals)
-		{
-			return DateUtils.toMySQLdate(((FileImporterControlledIntervals) getImporter())
-					.getNextImportExpectedBefore(lastRun));
+	public String getNextImportExpectedBeforeFormatted() {
+
+		if (getImporter() instanceof FileImporterControlledIntervals) {
+
+			FileImporterControlledIntervals importer = (FileImporterControlledIntervals) getImporter();
+
+			return importer.getNextImportExpectedBefore(lastRun).toString();
 		}
 		else
 			return "<no expectation defined>";
 	}
 
 
-	public String getLastImportFormatted()
-	{
-		Calendar lastImport = ImportTimeManager.getLastImportTime(setup.getName());
+	public String getLastImportFormatted() {
+
+		Date lastImport = ImportTimeManager.getLastImportTime(setup.getName());
+
 		if (lastImport == null)
 			return "Never";
 		else
-			return DateUtils.toMySQLdate(lastImport);
+			return lastImport.toString();
 	}
 
 
-	public Calendar getLastRun()
-	{
+	public Date getLastRun() {
+
 		return lastRun;
 	}
 
 
-	public boolean isOverdue()
-	{
-		if (!(getImporter() instanceof FileImporterControlledIntervals)) return false;
-		return ((FileImporterControlledIntervals) getImporter()).getNextImportExpectedBefore(
-				lastRun).before(Calendar.getInstance());
+	public boolean isOverdue() {
+
+		if (!(getImporter() instanceof FileImporterControlledIntervals)) {
+
+			return false;
+		}
+
+		FileImporterControlledIntervals importer = (FileImporterControlledIntervals) getImporter();
+
+		return importer.getNextImportExpectedBefore(lastRun).getTime() > System.currentTimeMillis();
 	}
 
 
@@ -452,10 +435,9 @@ public class FileSpooler extends BasicSpooler
 	 * @param fileSet
 	 *            The file path to put the RejectReason into.
 	 */
-	void printErrorMessageToRejectFile(FileImporterException e, File fileSet)
-	{
-		try
-		{
+	void printErrorMessageToRejectFile(FileImporterException e, File fileSet) {
+
+		try {
 			File rejFile = new File(fileSet.getAbsolutePath() + "/RejectReason");
 			rejFile.createNewFile();
 			BufferedWriter br = new BufferedWriter(new FileWriter(rejFile));
@@ -471,24 +453,23 @@ public class FileSpooler extends BasicSpooler
 			e.printStackTrace(pr);
 			pr.close();
 		}
-		catch (Exception e1)
-		{
+		catch (Exception e1) {
 			logger.error(
-					"Exception when creating RejectReason file in reject dir "
-							+ fileSet.getAbsolutePath(), e1);
+					"Exception when creating RejectReason file in reject dir " + fileSet.getAbsolutePath(),
+					e1);
 		}
 	}
 
 
-	public Collection<String> getActiveFiles()
-	{
+	public Collection<String> getActiveFiles() {
+
 		return activeFiles;
 	}
 
 
 	@Override
-	public String getName()
-	{
+	public String getName() {
+
 		return setup.getName();
 	}
 

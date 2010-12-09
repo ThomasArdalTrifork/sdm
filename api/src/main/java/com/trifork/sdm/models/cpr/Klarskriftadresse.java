@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Person")
-public class Klarskriftadresse extends CPREntity {
+public class Klarskriftadresse extends CPRRecord {
 	String cpr;
 	String adresseringsNavn;
 	String coNavn;

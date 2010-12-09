@@ -1,8 +1,9 @@
 package com.trifork.sdm.importer.importers;
 
-import java.util.Calendar;
+import java.util.Date;
 
-public interface FileImporterControlledIntervals extends FileImporter
-{
-	public Calendar getNextImportExpectedBefore(Calendar lastImport);
+
+public interface FileImporterControlledIntervals extends FileImporter {
+	
+	Date getNextImportExpectedBefore(Date lastImport);
 }

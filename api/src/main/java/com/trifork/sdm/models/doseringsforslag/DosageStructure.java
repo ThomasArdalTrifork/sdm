@@ -1,6 +1,6 @@
 package com.trifork.sdm.models.doseringsforslag;
 
-import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,7 +45,7 @@ public class DosageStructure extends AbstractRecord {
 	// lægemidlets doseringsenhed. Obligatorisk. Strengm 10000 tegn.
 	private String longTranslation;
 
-	private Calendar validFrom;
+	private Date validFrom;
 
 
 	public void setReleaseNumber(long releaseNumber) {
@@ -155,7 +155,7 @@ public class DosageStructure extends AbstractRecord {
 
 
 	@Override
-	public Calendar getValidFrom() {
+	public Date getValidFrom() {
 
 		return validFrom;
 	}

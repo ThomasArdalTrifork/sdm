@@ -4,6 +4,8 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -73,15 +75,21 @@ public class SORImporter implements FileImporterControlledIntervals
 	/**
 	 * Should be updated every day
 	 */
-	public Calendar getNextImportExpectedBefore(Calendar lastImport)
+	public Date getNextImportExpectedBefore(Date lastImport)
 	{
 		Calendar cal;
+
 		if (lastImport == null)
 			cal = Calendar.getInstance();
-		else
-			cal = ((Calendar) lastImport.clone());
+		else {
+			cal = new GregorianCalendar();
+			cal.setTime(lastImport);
+		}
+		
 		cal.add(Calendar.DATE, 3);
-		return cal;
+		
+		
+		return cal.getTime();
 	}
 
 }

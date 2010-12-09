@@ -1,6 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class Enhedspriser extends TakstEntity {
+public class Enhedspriser extends TakstRecord {
 
 	private Long drugID; // Ref. t. LMS01
 	private Long varenummer; // Ref. t. LMS02

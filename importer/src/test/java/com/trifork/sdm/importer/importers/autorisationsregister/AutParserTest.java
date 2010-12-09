@@ -7,7 +7,7 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Calendar;
+import java.util.Date;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class AutParserTest {
 	public void testParse() throws IOException {
 
 		AutorisationsregisterParser parser = new AutorisationsregisterParser();
-		Autorisationsregisterudtraek auts = parser.parse(valid, Calendar.getInstance());
+		Autorisationsregisterudtraek auts = parser.parse(valid, new Date());
 
 		assertEquals(4, auts.getEntities().size());
 		Autorisation a = auts.getEntityById("0013H");
@@ -52,7 +52,7 @@ public class AutParserTest {
 
 		try {
 			AutorisationsregisterParser parser = new AutorisationsregisterParser();
-			Autorisationsregisterudtraek auts = parser.parse(invalid, Calendar.getInstance());
+			Autorisationsregisterudtraek auts = parser.parse(invalid, new Date());
 			auts.getEntities();
 			fail();
 		}

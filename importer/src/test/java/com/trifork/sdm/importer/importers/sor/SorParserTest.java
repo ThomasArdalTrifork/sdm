@@ -46,7 +46,7 @@ public class SorParserTest {
 		assertEquals(new Long(8331000016009L), p.getSorNummer());
 		assertEquals(new Long(1084L), p.getRegionCode());
 		assertEquals(SOREventHandler.toCalendar("1999-03-25"), p.getValidFrom());
-		assertEquals(AbstractRecord.FUTURE, p.getValidTo());
+		assertEquals(DateUtils.FUTURE, p.getValidTo());
 		assertEquals(new Long(5790000141227L), p.getEanLokationsnummer());
 
 		Yder y = yder.iterator().next();

@@ -2,7 +2,7 @@ package com.trifork.sdm.models;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,12 +17,12 @@ import com.trifork.sdm.util.DateUtils;
 
 public abstract class AbstractRecord implements Record {
 
-	public static final Calendar FUTURE = DateUtils.FUTURE;
-
 	private static final Logger logger = Logger.getLogger(AbstractRecord.class);
 
 	private static final Map<Class<? extends Record>, Method> idMethodCache = new HashMap<Class<? extends Record>, Method>();
 	private static final Map<Method, String> outputFieldNames = new HashMap<Method, String>();
+
+	private Date validFrom;
 
 
 	public Object getRecordId() {
@@ -130,11 +130,21 @@ public abstract class AbstractRecord implements Record {
 	}
 
 
-	public Calendar getValidTo() {
+	public Date getValidTo() {
 
 		return DateUtils.FUTURE;
 	}
 
 
-	public abstract Calendar getValidFrom();
+	public void setValidFrom(Date validfrom) {
+
+		this.validFrom = validfrom;
+	}
+
+
+	@Override
+	public Date getValidFrom() {
+
+		return validFrom;
+	}
 }

@@ -6,7 +6,7 @@ import java.util.Locale;
 import javax.persistence.Column;
 
 
-public class Priser extends TakstEntity {
+public class Priser extends TakstRecord {
 
 	private Long varenummer; // Ref. t. LMS02, felt 02
 	private Long aIP; // Apotekets indkøbspris

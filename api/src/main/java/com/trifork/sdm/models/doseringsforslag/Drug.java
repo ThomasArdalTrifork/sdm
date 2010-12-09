@@ -1,6 +1,6 @@
 package com.trifork.sdm.models.doseringsforslag;
 
-import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +14,7 @@ import com.trifork.sdm.models.AbstractRecord;
 @Documented("Indeholder information om lægemidlers drug-id og doseringsenhed.")
 public class Drug extends AbstractRecord {
 
-	private Calendar validFrom;
+	private Date validFrom;
 	private int releaseNumber;
 	private long drugId;
 	private int dosageUnitCode;
@@ -61,14 +61,14 @@ public class Drug extends AbstractRecord {
 	}
 
 
-	public void setValidFrom(Calendar validfrom) {
+	public void setValidFrom(Date validfrom) {
 
 		this.validFrom = validfrom;
 	}
 
 
 	@Override
-	public Calendar getValidFrom() {
+	public Date getValidFrom() {
 
 		return validFrom;
 	}

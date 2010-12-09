@@ -1,6 +1,6 @@
 package com.trifork.sdm.models;
 
-import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -10,7 +10,7 @@ public interface Record {
 
 	Object getRecordId();
 
-	Calendar getValidFrom();
+	Date getValidFrom();
 
-	Calendar getValidTo();
+	Date getValidTo();
 }

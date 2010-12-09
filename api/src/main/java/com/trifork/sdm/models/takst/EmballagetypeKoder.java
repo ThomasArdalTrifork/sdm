@@ -1,6 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class EmballagetypeKoder extends TakstEntity {
+public class EmballagetypeKoder extends TakstRecord {
 
 	private String kode; // Ref. t. LMS02, felt 09
 	private String kortTekst;

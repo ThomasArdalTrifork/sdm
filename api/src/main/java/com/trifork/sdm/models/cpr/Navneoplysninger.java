@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Person")
-public class Navneoplysninger extends CPREntity {
+public class Navneoplysninger extends CPRRecord {
 	String fornavn;
 	String fornavnMarkering;
 	String mellemnavn;

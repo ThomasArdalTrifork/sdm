@@ -1,6 +1,6 @@
 package com.trifork.sdm.importer.persistence;
 
-import java.util.Calendar;
+import java.util.Date;
 
 import com.trifork.sdm.models.Record;
 
@@ -8,35 +8,35 @@ import com.trifork.sdm.models.Record;
 public interface TemporalStamdataEntityStorage<T extends Record>
 {
 
-	boolean fetchEntityVersions(Object entityId, Calendar validFrom, Calendar validTo);
+	boolean fetchEntityVersions(Object entityId, Date validFrom, Date validTo);
 
 
-	void insertRow(T entity, Calendar transactionTime);
+	void insertRow(T entity, Date transactionTime);
 
 
-	void insertAndUpdateRow(T entity, Calendar transactionTime);
+	void insertAndUpdateRow(T entity, Date transactionTime);
 
 
-	void updateRow(T sde, Calendar transactionTime, Calendar existingValidFrom,
-			Calendar existingValidTo);
+	void updateRow(T sde, Date transactionTime, Date existingValidFrom,
+			Date existingValidTo);
 
 
-	Calendar getCurrentRowValidFrom();
+	Date getCurrentRowValidFrom();
 
 
-	Calendar getCurrentRowValidTo();
+	Date getCurrentRowValidTo();
 
 
 	boolean dataInCurrentRowEquals(T entity);
 
 
-	void copyCurrentRowButWithChangedValidFrom(Calendar validTo, Calendar now);
+	void copyCurrentRowButWithChangedValidFrom(Date validTo, Date now);
 
 
-	void updateValidToOnCurrentRow(Calendar validFrom, Calendar now);
+	void updateValidToOnCurrentRow(Date validFrom, Date now);
 
 
-	void updateValidFromOnCurrentRow(Calendar validFrom, Calendar now);
+	void updateValidFromOnCurrentRow(Date validFrom, Date now);
 
 
 	void deleteCurrentRow();

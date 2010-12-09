@@ -1,6 +1,5 @@
 package com.trifork.sdm.models.yderregisteret;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -13,6 +12,7 @@ import com.trifork.sdm.util.DateUtils;
 
 @Entity
 public class Yderregister extends AbstractRecord {
+	
 	private String nummer;
 	private String telefon;
 	private String navn;
@@ -211,18 +211,23 @@ public class Yderregister extends AbstractRecord {
 
 
 	@Override
-	public Calendar getValidFrom() {
+	public Date getValidFrom() {
 
-		return DateUtils.toCalendar(tilgangDato);
+		return tilgangDato;
 	}
 
 
 	@Override
-	public Calendar getValidTo() {
+	public Date getValidTo() {
 
-		if (afgangDato != null) return DateUtils.toCalendar(afgangDato);
+		Date validTo;
+		
+		if (afgangDato != null) 
+			validTo = afgangDato;
+		else
+			validTo = DateUtils.FUTURE;
 
-		return FUTURE;
+		return validTo;
 	}
 
 }

@@ -6,11 +6,10 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 
 import com.trifork.sdm.importer.jobs.Job;
-import com.trifork.sdm.util.DateUtils;
 
 
-public class JobSpooler extends BasicSpooler
-{
+public class JobSpooler extends BasicSpooler {
+	
 	private static Logger logger = Logger.getLogger(FileSpooler.class);
 
 	private final JobSpoolerSetup setup;
@@ -19,83 +18,78 @@ public class JobSpooler extends BasicSpooler
 	Calendar lastRun = null;
 
 
-	public JobSpooler(JobSpoolerSetup setup)
-	{
+	public JobSpooler(JobSpoolerSetup setup) {
+
 		super();
 
 		this.setup = setup;
 
-		try
-		{
+		try {
 			job = setup.getJobExecutorClass().newInstance();
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			logger.error("Could not instantiate importer of class", e);
 			setMessage("Spooler cannot get an instance if importer class. Please change the setup");
 			setStatus(Status.ERROR);
-			
+
 			return;
 		}
 
 		setStatus(Status.RUNNING);
-		setActivity(Activity.AWAITING);
+		setStatus(Activity.AWAITING);
 	}
 
 
-	public JobSpoolerSetup getSetup()
-	{
+	public JobSpoolerSetup getSetup() {
+
 		return setup;
 	}
 
 
-	public String getLastRunFormatted()
-	{
+	public String getLastRunFormatted() {
+
 		if (lastRun == null)
 			return "Never";
 		else
-			return DateUtils.toMySQLdate(lastRun);
+			return lastRun.toString();
 	}
 
 
-	public Calendar getLastRun()
-	{
+	public Calendar getLastRun() {
+
 		return lastRun;
 	}
 
 
 	@Override
-	public String getName()
-	{
+	public String getName() {
+
 		return setup.getName();
 	}
 
 
 	@Override
-	public void execute()
-	{
-		if (getStatus() == Status.RUNNING)
-		{
-			try
-			{
-				setActivity(Activity.EXECUTING);
-				
+	public void execute() {
+
+		if (getStatus() == Status.RUNNING) {
+			try {
+				setStatus(Activity.EXECUTING);
+
 				job.run();
-				
+
 				Calendar runTime = Calendar.getInstance();
 				runTime.setTime(new Date());
 				lastRun = runTime;
-				
-				setActivity(Activity.AWAITING);
+
+				setStatus(Activity.AWAITING);
 			}
-			catch (Exception e)
-			{
+			catch (Exception e) {
 				String message = "Job " + getName() + " failed during job execution.";
-				
+
 				logger.error(message, e);
-				
+
 				setMessage(message);
-				
+
 				setStatus(Status.ERROR);
 			}
 		}

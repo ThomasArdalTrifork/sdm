@@ -3,6 +3,7 @@ package com.trifork.sdm.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 
@@ -13,12 +14,11 @@ import org.apache.log4j.Logger;
 // which is a dependency for this project anyway. 
 
 public class DateUtils {
+	
 	private static Logger logger = Logger.getLogger(DateUtils.class);
 
-	public static final Calendar FUTURE = toCalendar(2999, 12, 31);
-	public static final Calendar PAST = toCalendar(1950, 1, 1);
-
-	public static final String MYSQL_FUTURE_DATE = toMySQLdate(FUTURE);
+	public static final Date FUTURE = toCalendar(2999, 12, 31);
+	public static final Date PAST = toCalendar(1950, 1, 1);
 
 
 	/**
@@ -73,54 +73,22 @@ public class DateUtils {
 	 * @param date
 	 *            (1-31)
 	 */
-	public static Calendar toCalendar(int year, int month, int date) {
+	public static Date toCalendar(int year, int month, int date) {
 
-		Calendar cal = Calendar.getInstance();
-		cal.clear();
-		cal.set(year, month - 1, date);
+		Calendar calendar = Calendar.getInstance();
+		calendar.clear();
+		calendar.set(year, month - 1, date);
 
-		return cal;
+		return calendar.getTime();
 	}
 
 
-	public static Calendar toCalendar(int year, int month, int date, int hours, int minutes, int secs) {
+	public static Date toCalendar(int year, int month, int date, int hours, int minutes, int secs) {
 
-		Calendar cal = Calendar.getInstance();
-		cal.clear();
-		cal.set(year, month - 1, date, hours, minutes, secs);
-		return cal;
-	}
-
-
-	public static Calendar toCalendar(java.sql.Date date) {
-
-		if (date == null) return null;
-		Calendar cal = Calendar.getInstance();
-		cal.clear();
-		cal.setTimeInMillis(date.getTime());
-		return cal;
-	}
-
-
-	public static Calendar toCalendar(java.util.Date date) {
-
-		if (date == null) return null;
-		Calendar cal = Calendar.getInstance();
-		cal.clear();
-		cal.setTimeInMillis(date.getTime());
-		return cal;
-	}
-
-
-	public static String toMySQLdate(Calendar date) {
-
-		if (date == null) {
-			logger.warn("Cannot convert null to mysqldate");
-			return null;
-		}
-
-		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-		return dateFormatter.format(date.getTime());
+		Calendar calendar = Calendar.getInstance();
+		calendar.clear();
+		calendar.set(year, month - 1, date, hours, minutes, secs);
+		
+		return calendar.getTime();
 	}
 }

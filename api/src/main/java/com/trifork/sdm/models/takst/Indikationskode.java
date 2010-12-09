@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "IndikationATCRef")
-public class Indikationskode extends TakstEntity {
+public class Indikationskode extends TakstRecord {
 
 	private String aTC; // Ref. t. LMS01
 	private Long indikationskode; // Ref. t. LMS26

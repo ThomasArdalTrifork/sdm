@@ -3,7 +3,7 @@ package com.trifork.sdm.models.takst;
 import javax.persistence.Column;
 
 
-public class Firma extends TakstEntity {
+public class Firma extends TakstRecord {
 
 	private Long firmanummer; // Ref. t. LMS01, felt 13 - 14
 	private String firmamaerkeKort; // TODO: P.t. tomt

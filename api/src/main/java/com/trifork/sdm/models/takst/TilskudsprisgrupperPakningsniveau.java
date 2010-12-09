@@ -1,6 +1,6 @@
 package com.trifork.sdm.models.takst;
 
-public class TilskudsprisgrupperPakningsniveau extends TakstEntity {
+public class TilskudsprisgrupperPakningsniveau extends TakstRecord {
 
 	private Long tilskudsprisGruppe;
 	private Long varenummer; // Ref. t. LMS02

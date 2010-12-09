@@ -30,7 +30,7 @@ public abstract class BasicSpooler
 	}
 
 
-	void setActivity(Activity activity)
+	void setStatus(Activity activity)
 	{
 		if (this.activity != activity)
 		{
