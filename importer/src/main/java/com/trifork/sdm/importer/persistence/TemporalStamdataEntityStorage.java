@@ -42,7 +42,7 @@ public interface TemporalStamdataEntityStorage<T extends Record>
 	void deleteCurrentRow();
 
 
-	boolean nextRow();
+	boolean hasMoreRows();
 
 
 	int getUpdatedRecords();

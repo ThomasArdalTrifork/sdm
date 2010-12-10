@@ -14,7 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -47,7 +47,9 @@ public class TakstParserTest {
 		// Assert
 		List<Laegemiddel> drugs = new ArrayList<Laegemiddel>();
 		drugs.add(drug);
-		Calendar now = GregorianCalendar.getInstance();
+		
+		Date now = new Date();
+		
 		Takst takst = new Takst(now, now);
 		TakstDataset<Laegemiddel> ds = new TakstDataset<Laegemiddel>(takst, drugs,
 				Laegemiddel.class);
@@ -89,8 +91,10 @@ public class TakstParserTest {
 		// Assert
 		List<Laegemiddel> drugs = new ArrayList<Laegemiddel>();
 		drugs.add(drug);
-		Calendar now = GregorianCalendar.getInstance();
+		
+		Date now = new Date();
 		Takst takst = new Takst(now, now);
+		
 		TakstDataset<Laegemiddel> ds = new TakstDataset<Laegemiddel>(takst, drugs,
 				Laegemiddel.class);
 		takst.addDataset(ds);
@@ -115,9 +119,10 @@ public class TakstParserTest {
 		TakstParser takstParser = new TakstParser();
 
 		// Act
-		Calendar c = takstParser
-				.getValidFromDate("0012.0 LMS-TAKST                               20090713                0131LMS.ZIP     200929");
-
+		Date date = takstParser.getValidFromDate("0012.0 LMS-TAKST                               20090713                0131LMS.ZIP     200929");
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		
 		// Assert
 		assertEquals(2009, c.get(Calendar.YEAR));
 		assertEquals(6, c.get(Calendar.MONTH)); // 0 indexed
@@ -240,7 +245,8 @@ public class TakstParserTest {
 		laegemidler.add(lmVet);
 
 		// Add the arrays to the takst as datasets
-		Takst takst = new Takst(new GregorianCalendar(), new GregorianCalendar());
+		Date date = new Date();
+		Takst takst = new Takst(date, date);
 		TakstDataset<Laegemiddel> lmr = new TakstDataset<Laegemiddel>(takst, laegemidler,
 				Laegemiddel.class);
 		TakstDataset<Pakning> pkr = new TakstDataset<Pakning>(takst, pakninger, Pakning.class);

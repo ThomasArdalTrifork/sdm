@@ -10,7 +10,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Arrays;
-import java.util.Calendar;
+import java.util.Date;
 
 import org.junit.After;
 import org.junit.Before;
@@ -268,14 +268,14 @@ public class CPRIntegrationTest {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 
-		Calendar latestIkraft = CPRImporter.getLatestIkraft(con);
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-11-16"), latestIkraft.getTime());
+		Date latestIkraft = CPRImporter.getLatestIkraft(con);
+		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-11-16"), latestIkraft);
 
 		fInitial = TestHelper.getFile(TESTDATA_DIR + "testSequence2/D100314.L431101");
 		new CPRImporter().importFiles(Arrays.asList(fInitial));
 
 		latestIkraft = CPRImporter.getLatestIkraft(con);
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-11-19"), latestIkraft.getTime());
+		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-11-19"), latestIkraft);
 
 		fInitial = TestHelper.getFile(TESTDATA_DIR + "testOutOfSequence/D100314.L431101");
 		new CPRImporter().importFiles(Arrays.asList(fInitial));
@@ -296,7 +296,7 @@ public class CPRIntegrationTest {
 
 		// When running a full load (file doesn't ends on 01) of CPR no
 		// LatestIkraft should be written to the db
-		Calendar latestIkraft = CPRImporter.getLatestIkraft(con);
+		Date latestIkraft = CPRImporter.getLatestIkraft(con);
 		assertNull(latestIkraft);
 		con.close();
 	}

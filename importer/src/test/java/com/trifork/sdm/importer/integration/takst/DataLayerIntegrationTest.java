@@ -162,7 +162,6 @@ public class DataLayerIntegrationTest {
 		// Arrange
 		Takst takstinit = parseTakst(TAKST_TESTDATA_DIR + "/realtakst");
 
-
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
 		StamdataVersionedDao versionedDao = new MySQLTemporalDao(con);
@@ -188,9 +187,11 @@ public class DataLayerIntegrationTest {
 
 		ResultSet rs = statement.executeQuery("Select count(*) from Laegemiddel");
 		Integer recordsfound = 0;
+		
 		if (rs.next()) {
 			recordsfound = rs.getInt(1);
 		}
+		
 		return recordsfound;
 	}
 

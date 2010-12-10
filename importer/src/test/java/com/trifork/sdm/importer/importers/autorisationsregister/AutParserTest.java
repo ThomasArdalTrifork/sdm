@@ -39,7 +39,7 @@ public class AutParserTest {
 		Autorisationsregisterudtraek auts = parser.parse(valid, new Date());
 
 		assertEquals(4, auts.getEntities().size());
-		Autorisation a = auts.getEntityById("0013H");
+		Autorisation a = auts.getRecordById("0013H");
 
 		assertNotNull(a);
 		assertEquals("0101280063", a.getCpr());

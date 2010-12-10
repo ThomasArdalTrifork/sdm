@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -209,17 +210,22 @@ public class FileSpoolerImplTest {
 		assertEquals(1, succeedingImporter.importFileCalled);
 
 		// Check that importtime was set in mysql and that we can get it out
-		Calendar importTime = ImportTimeManager.getLastImportTime(spooler.getSetup().getName());
+		Date importTime = ImportTimeManager.getLastImportTime(spooler.getSetup().getName());
 		assertNotNull(importTime);
+		
 		// Check that importtime was set to the timestamp of the execution. I.e.
 		// before now
-		assertTrue(importTime.before(Calendar.getInstance()));
+		assertTrue(importTime.getTime() < new Date().getTime());
+		
 		// Check that importtime was set to the timestamp of the execution. I.e.
 		// after before the call.
 		// Due to MySQL not having sub-second presicion and the fact that it
 		// rounds down, a second is added before the comparision
-		importTime.add(1, Calendar.SECOND);
-		assertTrue(importTime.after(beforeCall));
+		
+		Calendar c = Calendar.getInstance();
+		c.setTime(importTime);
+		c.add(1, Calendar.SECOND);
+		assertTrue(c.after(beforeCall));
 
 		// Check that the input files are deleted, as they should be after
 		// succesful processing

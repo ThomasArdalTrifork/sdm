@@ -69,7 +69,7 @@ public class SksParser {
 			while (reader.ready())
 			{
 				Organisation org = new OrganisationParser(reader.readLine()).getOrganisation();
-				if (org != null) dataset.addEntity(org);
+				if (org != null) dataset.addRecord(org);
 			}
 		}
 		catch (IOException e)

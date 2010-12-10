@@ -95,7 +95,7 @@ public class CPRImporter implements FileImporterControlledIntervals {
 			}
 		}
 		catch (Exception e) {
-			throw new FileImporterException("Error during import of CPR files", e);
+			throw new FileImporterException("Error during import of CPR files.", e);
 		}
 		finally {
 			MySQLConnectionManager.close(connection);
@@ -150,7 +150,7 @@ public class CPRImporter implements FileImporterControlledIntervals {
 			Statement stm = con.createStatement();
 			ResultSet rs = stm.executeQuery("SELECT MAX(IkraftDato) AS Ikraft FROM PersonIkraft");
 
-			if (rs.first()) return new Date(rs.getTimestamp(1).getTime());
+			if (rs.first()) return rs.getTimestamp(1);
 		}
 		catch (SQLException sqle) {
 			throw new FilePersistException(
@@ -169,6 +169,8 @@ public class CPRImporter implements FileImporterControlledIntervals {
 
 			PreparedStatement stm = con.prepareStatement("INSERT INTO PersonIkraft (IkraftDato) VALUES (?)");
 
+			// This is a date. Not a timestamp.
+			// TODO: Change this is the Database.
 			stm.setDate(1, new java.sql.Date(date.getTime()));
 
 			stm.execute();

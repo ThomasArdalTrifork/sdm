@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.After;
@@ -69,8 +69,7 @@ public class TakstImporterTest {
 	@Test
 	public void testGetNextImportExpectedBefore() throws SQLException {
 
-		assertTrue(new TakstImporter().getNextImportExpectedBefore(null).before(
-				Calendar.getInstance()));
+		assertTrue(new TakstImporter().getNextImportExpectedBefore(null).getTime() < new Date().getTime());
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
@@ -81,38 +80,40 @@ public class TakstImporterTest {
 
 		// We expect that the next takst after the first week in 2010 will be 3
 		// week in 2010, or latest sat. January 16th at noon
-		assertEquals(DateUtils.toCalendar(2010, 1, 16, 12, 0, 0).getTime(), new TakstImporter()
-				.getNextImportExpectedBefore(DateUtils.toCalendar(2008, 12, 12, 15, 10, 0))
-				.getTime());
+		assertEquals(DateUtils.toDate(2010, 1, 16, 12, 0, 0).getTime(), new TakstImporter()
+				.getNextImportExpectedBefore(DateUtils.toDate(2008, 12, 12, 15, 10, 0)).getTime());
 	}
 
 
 	@Test
 	public void testLaegemiddelDoseringRef() throws Exception {
 
-		Calendar from = DateUtils.toCalendar(2008, 01, 01);
-		Calendar to = DateUtils.toCalendar(2009, 01, 01);
+		Date from = DateUtils.toDate(2008, 01, 01);
+		Date to = DateUtils.toDate(2009, 01, 01);
+
 		Takst takst = new Takst(from, to);
+
 		Doseringskode d = new Doseringskode();
 		d.setDoseringskode(1l);
 		d.setDrugid(2l);
 		List<Doseringskode> dk = new ArrayList<Doseringskode>();
 		dk.add(d);
-		TakstDataset<Doseringskode> dataset = new TakstDataset<Doseringskode>(takst, dk,
-				Doseringskode.class);
+
+		TakstDataset<Doseringskode> dataset = new TakstDataset<Doseringskode>(takst, dk, Doseringskode.class);
 		takst.addDataset(dataset);
 		assertEquals(1, takst.getEntities().size());
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		MySQLTemporalDao dao = new MySQLTemporalDao(con);
 		dao.persistCompleteDataset(dataset);
 
-		ResultSet rs = con.createStatement().executeQuery(
-				"select count(*) from LaegemiddelDoseringRef");
+		ResultSet rs = con.createStatement().executeQuery("SELECT count(*) FROM LaegemiddelDoseringRef");
 		rs.next();
 		assertEquals(1, rs.getInt(1));
 		dao.persistCompleteDataset(dataset);
-		rs = con.createStatement().executeQuery("select count(*) from LaegemiddelDoseringRef");
+		rs = con.createStatement().executeQuery("SELECT count(*) FROM LaegemiddelDoseringRef");
+		
 		rs.next();
+		
 		assertEquals(1, rs.getInt(1));
 	}
 

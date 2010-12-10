@@ -34,7 +34,7 @@ public class NavnebeskyttelseRestrukt implements Job {
 			// We need to set the milliseconds to 0.
 			// TODO (thb): Why is this?
 			Calendar now = Calendar.getInstance();
-			;
+			
 			now.set(Calendar.MILLISECOND, 0);
 
 			cprDS.setValidFrom(now.getTime());

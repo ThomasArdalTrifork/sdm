@@ -35,12 +35,12 @@ public class YderregisterDatasets {
 
 	public void addYderregister(Yderregister entity) {
 
-		yderregisterDS.addEntity(entity);
+		yderregisterDS.addRecord(entity);
 	}
 
 
 	public void addYderregisterPerson(YderregisterPerson entity) {
 
-		yderregisterPersonDS.addEntity(entity);
+		yderregisterPersonDS.addRecord(entity);
 	}
 }

@@ -15,6 +15,7 @@ import com.trifork.sdm.models.Record;
 
 
 public class Dataset<T extends Record> {
+
 	private Map<Object, List<T>> entities = new HashMap<Object, List<T>>();
 	private Class<? extends Record> type;
 
@@ -49,7 +50,7 @@ public class Dataset<T extends Record> {
 	}
 
 
-	public T getEntityById(Object id) {
+	public T getRecordById(Object id) {
 
 		List<T> ents = entities.get(id);
 
@@ -108,15 +109,17 @@ public class Dataset<T extends Record> {
 	}
 
 
-	public void addEntity(T entity) {
+	public void addRecord(T record) {
 
-		Object id = entity.getRecordId();
-		List<T> ents = entities.get(id);
-		if (ents == null) {
-			ents = new ArrayList<T>();
-			entities.put(id, ents);
+		Object id = record.getRecordId();
+		
+		List<T> records = entities.get(id);
+		if (records == null) {
+			records = new ArrayList<T>();
+			entities.put(id, records);
 		}
-		ents.add(entity);
+		
+		records.add(record);
 	}
 
 

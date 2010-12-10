@@ -12,7 +12,8 @@ import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -39,7 +40,7 @@ public class MySQLStamDAOTest {
 	@Before
 	public void setUp() throws Exception {
 
-		takst = new Takst(DateUtils.toCalendar(2009, 7, 1), DateUtils.toCalendar(2009, 7, 14));
+		takst = new Takst(DateUtils.toDate(2009, 7, 1), DateUtils.toDate(2009, 7, 14));
 
 		// Add a dataset to the takst with one member
 
@@ -51,8 +52,7 @@ public class MySQLStamDAOTest {
 
 		list.add(laegemiddel);
 
-		TakstDataset<Laegemiddel> dataset = new TakstDataset<Laegemiddel>(takst, list,
-				Laegemiddel.class);
+		TakstDataset<Laegemiddel> dataset = new TakstDataset<Laegemiddel>(takst, list, Laegemiddel.class);
 
 		takst.addDataset(dataset);
 
@@ -71,7 +71,6 @@ public class MySQLStamDAOTest {
 				DivEnheder.class);
 		takst.addDataset(hiddenDataset);
 
-
 		// Setup database mocking.
 
 		Connection con = mock(Connection.class);
@@ -89,15 +88,15 @@ public class MySQLStamDAOTest {
 	@Test
 	public void testPersistOneLaegemiddel() throws Exception {
 
-		when(
-				laegemiddeltableMock.fetchEntityVersions(anyObject(), any(Calendar.class),
-						any(Calendar.class))).thenReturn(false);
-		// Simulate no existing entities
+		when(laegemiddeltableMock.fetchEntityVersions(anyObject(), any(Date.class), any(Date.class)))
+				.thenReturn(false);
+		
+		// Simulate no existing entities.
 
 		dao.persistCompleteDatasets(takst.getDatasets());
 
-		// Verify that the new record is inserted
-		verify(laegemiddeltableMock, times(1)).insertRow(eq(laegemiddel), any(Calendar.class));
+		// Verify that the new record is inserted.
+		verify(laegemiddeltableMock, times(1)).insertRow(eq(laegemiddel), any(Date.class));
 	}
 
 
@@ -105,14 +104,12 @@ public class MySQLStamDAOTest {
 	public void testDeltaPutChanged() throws Exception {
 
 		// Simulate that the entity is already present.
-		when(
-				laegemiddeltableMock.fetchEntityVersions(anyObject(), any(Calendar.class),
-						any(Calendar.class))).thenReturn(true);
+		when(laegemiddeltableMock.fetchEntityVersions(anyObject(), any(Date.class), any(Date.class)))
+				.thenReturn(true);
 
 		// Simulate that the existing row's validity range is 1950 to infinity.
 		// So it must be updated.
-		when(laegemiddeltableMock.getCurrentRowValidFrom()).thenReturn(
-				DateUtils.toCalendar(1950, 01, 1));
+		when(laegemiddeltableMock.getCurrentRowValidFrom()).thenReturn(DateUtils.toDate(1950, 01, 1));
 		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(DateUtils.FUTURE);
 
 		// Simulate that the entity has changed.
@@ -121,12 +118,11 @@ public class MySQLStamDAOTest {
 		dao.persistCompleteDatasets(takst.getDatasets());
 
 		// Verify that the new record is inserted
-		verify(laegemiddeltableMock, times(1)).insertAndUpdateRow(eq(laegemiddel),
-				any(Calendar.class));
+		verify(laegemiddeltableMock, times(1)).insertAndUpdateRow(eq(laegemiddel), any(Date.class));
 
 		// Verify that the existing record is updated
 		verify(laegemiddeltableMock, times(1)).updateValidToOnCurrentRow(eq(takst.getValidFrom()),
-				any(Calendar.class));
+				any(Date.class));
 	}
 
 
@@ -134,13 +130,11 @@ public class MySQLStamDAOTest {
 	public void testDeltaPutUnchanged() throws Exception {
 
 		// Simulate that the entity is already present.
-		when(
-				laegemiddeltableMock.fetchEntityVersions(anyObject(), any(Calendar.class),
-						any(Calendar.class))).thenReturn(true);
+		when(laegemiddeltableMock.fetchEntityVersions(anyObject(), any(Date.class), any(Date.class)))
+				.thenReturn(true);
 
 		// Simulate that the existing row's validity range is 1950 to infinity.
-		when(laegemiddeltableMock.getCurrentRowValidFrom()).thenReturn(
-				DateUtils.toCalendar(1950, 01, 1));
+		when(laegemiddeltableMock.getCurrentRowValidFrom()).thenReturn(DateUtils.toDate(1950, 01, 1));
 		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(DateUtils.FUTURE);
 
 		// Simulate that the entity is unchanged.
@@ -149,11 +143,11 @@ public class MySQLStamDAOTest {
 		dao.persistCompleteDatasets(takst.getDatasets());
 
 		// Verify that the new record is inserted
-		verify(laegemiddeltableMock, times(0)).insertRow(eq(laegemiddel), any(Calendar.class));
+		verify(laegemiddeltableMock, times(0)).insertRow(eq(laegemiddel), any(Date.class));
 
 		// Verify that the existing record is not updated
 		verify(laegemiddeltableMock, times(0)).updateValidToOnCurrentRow(eq(takst.getValidFrom()),
-				any(Calendar.class));
+				any(Date.class));
 	}
 
 
@@ -161,7 +155,7 @@ public class MySQLStamDAOTest {
 	public void testDeltaPutRemoved() throws Exception {
 
 		// An empty takst
-		takst = new Takst(DateUtils.toCalendar(2009, 7, 1), DateUtils.toCalendar(2009, 7, 14));
+		takst = new Takst(DateUtils.toDate(2009, 7, 1), DateUtils.toDate(2009, 7, 14));
 		// ..with an empty dataset
 		TakstDataset lmr = new TakstDataset(takst, new ArrayList<Laegemiddel>(), Laegemiddel.class);
 		takst.addDataset(lmr);
@@ -172,18 +166,17 @@ public class MySQLStamDAOTest {
 		sv.id = 1;
 
 		// Simulate that the existing row's validity range is 1950 to infinity.
-		sv.validFrom = DateUtils.toCalendar(1950, 01, 1);
+		sv.validFrom = DateUtils.toDate(1950, 01, 1);
 		sev.add(sv);
 
-		when(laegemiddeltableMock.getEntityVersions(any(Calendar.class), any(Calendar.class)))
+		when(laegemiddeltableMock.getEntityVersions(any(Date.class), any(Date.class)))
 				.thenReturn(sev);
 
 		dao.persistCompleteDatasets(takst.getDatasets());
 
 		// Verify that the existing record is updated
 		verify(laegemiddeltableMock, times(1)).updateValidToOnEntityVersion(
-				eq(DateUtils.toCalendar(2009, 7, 1)), any(StamdataEntityVersion.class),
-				any(Calendar.class));
+				eq(DateUtils.toDate(2009, 7, 1)), any(StamdataEntityVersion.class), any(Date.class));
 
 	}
 

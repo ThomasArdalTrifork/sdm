@@ -5,6 +5,7 @@ import static java.lang.String.format;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -23,13 +24,15 @@ public class ImportTimeManager {
 
 		try {
 			connection = MySQLConnectionManager.getAutoCommitConnection();
-			statement = connection.prepareStatement(format("SELECT MAX(importtime) FROM %s.Import WHERE spoolername = ?", MySQLConnectionManager.getHousekeepingDBName()));
+			statement = connection.prepareStatement(format("SELECT max(importtime) FROM %s.Import WHERE spoolername = ?", MySQLConnectionManager.getHousekeepingDBName()));
 
+			statement.setString(1, spoolername);
+			
 			ResultSet rs = statement.executeQuery();
 
 			if (rs.next()) {
 				
-				return new Date(rs.getTimestamp(1).getTime());
+				return rs.getTimestamp(1);
 			}
 			else
 				return null;
@@ -58,8 +61,10 @@ public class ImportTimeManager {
 			
 			stmt = connection.prepareStatement(format("INSERT INTO %s.Import VALUES (?, ?)", schema));
 			
-			stmt.setDate(1, new java.sql.Date(importTime.getTime()));
+			stmt.setTimestamp(1, new Timestamp(importTime.getTime()));
 			stmt.setString(2, spoolerName);
+			
+			stmt.execute();
 		}
 		catch (Exception e) {
 			

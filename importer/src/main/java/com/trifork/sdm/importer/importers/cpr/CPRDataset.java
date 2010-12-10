@@ -59,18 +59,18 @@ public class CPRDataset {
 		entity.setValidFrom(getValidFrom());
 
 		if (entity instanceof Personoplysninger)
-			personoplysninger.addEntity((Personoplysninger) entity);
+			personoplysninger.addRecord((Personoplysninger) entity);
 		else if (entity instanceof Klarskriftadresse)
-			klarskriftadresse.addEntity((Klarskriftadresse) entity);
+			klarskriftadresse.addRecord((Klarskriftadresse) entity);
 		else if (entity instanceof NavneBeskyttelse)
-			navneBeskyttelse.addEntity((NavneBeskyttelse) entity);
+			navneBeskyttelse.addRecord((NavneBeskyttelse) entity);
 		else if (entity instanceof Navneoplysninger)
-			navneoplysninger.addEntity((Navneoplysninger) entity);
+			navneoplysninger.addRecord((Navneoplysninger) entity);
 		else if (entity instanceof UmyndiggoerelseVaergeRelation)
-			umyndiggoerelseVaergeRelation.addEntity((UmyndiggoerelseVaergeRelation) entity);
+			umyndiggoerelseVaergeRelation.addRecord((UmyndiggoerelseVaergeRelation) entity);
 		else if (entity instanceof ForaeldreMyndighedRelation)
-			foraeldreMyndighedRelation.addEntity((ForaeldreMyndighedRelation) entity);
-		else if (entity instanceof BarnRelation) barnRelation.addEntity((BarnRelation) entity);
+			foraeldreMyndighedRelation.addRecord((ForaeldreMyndighedRelation) entity);
+		else if (entity instanceof BarnRelation) barnRelation.addRecord((BarnRelation) entity);
 	}
 
 

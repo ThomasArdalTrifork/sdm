@@ -141,7 +141,7 @@ public class YderregisterImporter implements FileImporterControlledIntervals {
 			cal.setTime(lastImport);
 		}
 		
-		cal.add(Calendar.DATE, 95);
+		cal.add(Calendar.DATE, 95); // FIXME: 95 Days? Is this right?
 		
 		return cal.getTime();
 	}

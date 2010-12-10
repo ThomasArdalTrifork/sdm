@@ -509,21 +509,23 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 			PreparedStatement stmt = connection.prepareStatement(String.format(
 					"INSERT INTO %s (%s) VALUES (%s)", tablename, columns, values));
 
-			stmt.setString(1, APP_ID);
-			stmt.setString(2, APP_ID);
-			stmt.setDate(3, new java.sql.Date(transactionTime.getTime()));
-			stmt.setDate(4, new java.sql.Date(transactionTime.getTime()));
-			stmt.setDate(5, new java.sql.Date(validFrom.getTime()));
-			stmt.setTimestamp(6, currentRS.getTimestamp("ValidTo"));
-
-			int idx = 1;
-
+			int i = 1;
+			
+			stmt.setString(i++, APP_ID);
+			stmt.setString(i++, APP_ID);
+			stmt.setTimestamp(i++, new Timestamp(transactionTime.getTime()));
+			stmt.setTimestamp(i++, new Timestamp(transactionTime.getTime()));
+			stmt.setTimestamp(i++, new Timestamp(validFrom.getTime()));
+			stmt.setTimestamp(i++, currentRS.getTimestamp("ValidTo"));
+			
 			for (Method method : outputMethods) {
-				stmt.setObject(idx++, currentRS.getObject(AbstractRecord.getOutputFieldName(method)));
+				Object value = currentRS.getObject(AbstractRecord.getOutputFieldName(method));
+				stmt.setObject(i++, value);
 			}
 
 			for (String notUpdateName : notUpdatedColumns) {
-				stmt.setObject(idx++, currentRS.getObject(notUpdateName));
+				Object value = currentRS.getObject(notUpdateName);
+				stmt.setObject(i++, value);
 			}
 
 			stmt.executeUpdate();
@@ -557,6 +559,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 		try {
 			deleteStmt.setObject(1, currentRS.getObject(Dataset.getIdOutputName(type)));
 			deleteStmt.setObject(2, currentRS.getObject("ValidFrom"));
+
 			int rowsAffected = deleteStmt.executeUpdate();
 			if (rowsAffected != 1)
 				logger.error("deleteCurrentRow - expected to delete 1 row. Deleted: " + rowsAffected);
@@ -583,11 +586,12 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 	public boolean fetchEntityVersions(Date validFrom, Date validTo) {
 
 		try {
-			PreparedStatement stm = connection.prepareStatement(String.format(
-					"SELECT * FROM %s WHERE NOT (ValidFrom > ?) OR (ValidTo < ?)", tablename));
-
-			stm.setDate(1, new java.sql.Date(validFrom.getTime()));
-			stm.setDate(2, new java.sql.Date(validTo.getTime()));
+			String sql = format("SELECT * FROM %s WHERE NOT (ValidTo < ? OR ValidFrom > ?)", tablename);
+			
+			PreparedStatement stm = connection.prepareStatement(sql);
+			
+			stm.setTimestamp(1, new Timestamp(validFrom.getTime()));
+			stm.setTimestamp(2, new Timestamp(validTo.getTime()));
 
 			currentRS = stm.executeQuery();
 
@@ -611,19 +615,17 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 	public boolean fetchEntityVersions(Object id, Date validFrom, Date validTo) {
 
 		try {
-			selectByIdStmt.setObject(1, id);
-			selectByIdStmt.setTimestamp(2, new Timestamp(validFrom.getTime()));
-			selectByIdStmt.setTimestamp(3, new Timestamp(validTo.getTime()));
-
+			this.selectByIdStmt.setObject(1, id);
+			this.selectByIdStmt.setTimestamp(2, new Timestamp(validFrom.getTime()));
+			this.selectByIdStmt.setTimestamp(3, new Timestamp(validTo.getTime()));
 			currentRS = selectByIdStmt.executeQuery();
-
 			return currentRS.next();
 		}
 		catch (SQLException e) {
 			logger.error("", e);
 		}
-
 		return false;
+
 	}
 
 
@@ -666,12 +668,13 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 		try {
 			String idMethodName = AbstractRecord.getOutputFieldName(idMethod);
 
-			String sql = format("SELECT %s, ValidFrom FROM %s WHERE NOT (ValidFrom > ? OR ValidTo < ?)",
+			String sql = format("SELECT %s, ValidFrom FROM %s WHERE NOT (ValidTo < ? OR ValidFrom > ?)",
 					idMethodName, tablename);
+
 			PreparedStatement stm = connection.prepareStatement(sql);
 
-			stm.setDate(1, new java.sql.Date(validFrom.getTime()));
-			stm.setDate(2, new java.sql.Date(validTo.getTime()));
+			stm.setTimestamp(1, new Timestamp(validFrom.getTime()));
+			stm.setTimestamp(2, new Timestamp(validTo.getTime()));
 
 			currentRS = stm.executeQuery();
 
@@ -681,7 +684,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 
 				StamdataEntityVersion version = new StamdataEntityVersion();
 				version.id = currentRS.getObject(1);
-				version.validFrom = new Date(currentRS.getTimestamp(2).getTime());
+				version.validFrom = currentRS.getTimestamp(2);
 				evs.add(version);
 			}
 
@@ -829,7 +832,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 	}
 
 
-	public boolean nextRow() {
+	public boolean hasMoreRows() {
 
 		try {
 			return currentRS.next();

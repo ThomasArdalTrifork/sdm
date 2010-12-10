@@ -1,7 +1,7 @@
 package com.trifork.sdm.importer.importers.takst;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 
 import junit.framework.TestCase;
 
@@ -18,9 +18,11 @@ public class TakstModelTest extends TestCase {
 	@Test
 	public void testManyToMany() throws Exception {
 
-		Calendar from = DateUtils.toCalendar(2000, 1, 1);
-		Calendar to = DateUtils.toCalendar(2000, 15, 1);
+		Date from = DateUtils.toDate(2000, 1, 1);
+		Date to = DateUtils.toDate(2000, 15, 1);
+		
 		Takst takst = new Takst(from, to);
+		
 		TakstDataset<ATCKoderOgTekst> atckoder = new TakstDataset<ATCKoderOgTekst>(takst,
 				new ArrayList<ATCKoderOgTekst>(), ATCKoderOgTekst.class);
 		takst.addDataset(atckoder);

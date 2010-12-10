@@ -16,9 +16,9 @@ public class Autorisationsregisterudtraek extends CompleteDataset<Autorisation> 
 
 
 	@Override
-	public void addEntity(Autorisation aut) {
+	public void addRecord(Autorisation aut) {
 
 		aut.setValidFrom(getValidFrom());
-		super.addEntity(aut);
+		super.addRecord(aut);
 	}
 }

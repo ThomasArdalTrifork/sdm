@@ -242,7 +242,7 @@ public class Pakning extends TakstRecord {
 	public NumeriskMedEnhed getOpbevaringstid() {
 
 		final int enhedstype = 1;
-		DivEnheder enhed = takst.getDatasetOfType(DivEnheder.class).getEntityById(
+		DivEnheder enhed = takst.getDatasetOfType(DivEnheder.class).getRecordById(
 				opbevaringstidEnhed + "-" + enhedstype);
 		return new NumeriskMedEnhed(takst, null, opbevaringstidNumerisk, enhed);
 
@@ -257,7 +257,7 @@ public class Pakning extends TakstRecord {
 
 	public Opbevaringsbetingelser getOpbevaringsbetingelser() {
 
-		return takst.getDatasetOfType(Opbevaringsbetingelser.class).getEntityById(opbevaringsbetingelser);
+		return takst.getDatasetOfType(Opbevaringsbetingelser.class).getRecordById(opbevaringsbetingelser);
 	}
 
 
@@ -383,12 +383,12 @@ public class Pakning extends TakstRecord {
 			for (Substitution substitution : subst.getEntities()) {
 				if (substitution.getSubstitutionsgruppenummer().equals(substgruppe)
 						&& !substitution.getReceptensVarenummer().equals(this.varenummer))
-					substitutioner.add(pakninger.getEntityById(substitution.getReceptensVarenummer()));
+					substitutioner.add(pakninger.getRecordById(substitution.getReceptensVarenummer()));
 			}
 			for (SubstitutionAfLaegemidlerUdenFastPris substitution : substufp.getEntities()) {
 				if (substitution.getSubstitutionsgruppenummer().equals(substgruppe)
 						&& !substitution.getVarenummer().equals(this.varenummer))
-					substitutioner.add(pakninger.getEntityById(substitution.getVarenummer()));
+					substitutioner.add(pakninger.getRecordById(substitution.getVarenummer()));
 			}
 		}
 		return substitutioner;
@@ -403,7 +403,7 @@ public class Pakning extends TakstRecord {
 		for (Substitution substitution : subst.getEntities()) {
 			if (substitution.getReceptensVarenummer().equals(varenummer)
 					&& !this.varenummer.equals(substitution.getBilligsteVarenummer())) {
-				Pakning p = pakninger.getEntityById(substitution.getBilligsteVarenummer());
+				Pakning p = pakninger.getRecordById(substitution.getBilligsteVarenummer());
 				if (p != null) substitutioner.add(p);
 			}
 		}

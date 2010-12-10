@@ -42,11 +42,9 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 	}
 
 
-	public void persistCompleteDataset(CompleteDataset dataset) throws FilePersistException {
+	public void persistCompleteDataset(CompleteDataset<?> dataset) throws FilePersistException {
 
-		Entity output = (Entity) dataset.getType().getAnnotation(Entity.class);
-
-		if (output == null) return;
+		if (!dataset.getType().isAnnotationPresent(Entity.class)) return;
 
 		updateValidToOnRecordsNotInDataset(dataset);
 		persistDeltaDataset(dataset);
@@ -63,7 +61,6 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 	 * in this dataset. If an entity is no longer in the dataset, its record
 	 * will be "closed" in mysql by assigning validto.
 	 */
-
 	public void persistDeltaDataset(Dataset<? extends Record> dataset) throws FilePersistException {
 
 		final Date now = new Date();
@@ -73,20 +70,11 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 		logger.debug("persistDeltaDataset dataset: " + dataset.getEntityTypeDisplayName() + " with: "
 				+ dataset.getEntities().size() + " entities...");
 
-		// List<Method> outputMethods =
-		// AbstractStamdataEntity.getOutputMethods(dataset.getType());
-
 		int processedEntities = 0;
 
 		for (Record sde : dataset.getEntities()) {
-			processedEntities++;
 
-			// logger.debug("total recs: " + dataset.getEntities().size() +
-			// " inserted: " + insertRecords + " updated: "
-			// + updateRecords + " unmodified: " + unmodififedRecords +
-			// " invalidated: " + invalidateRecords +
-			// " remaining: " + (dataset.getEntities().size() -
-			// (insertRecords+updateRecords+unmodififedRecords+invalidateRecords)));
+			processedEntities++;
 
 			Date validFrom = sde.getValidFrom();
 
@@ -98,10 +86,13 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 			else {
 				// At least one version was found in the same validity range.
 				boolean insertVersion = true;
+
 				do {
 					Date existingValidFrom = table.getCurrentRowValidFrom();
 					Date existingValidTo = table.getCurrentRowValidTo();
+
 					boolean dataEquals = table.dataInCurrentRowEquals(sde);
+
 					if (existingValidFrom.before(sde.getValidFrom())) {
 						if (existingValidTo.equals(sde.getValidFrom())) {
 							// This existing row is not in the range of our
@@ -223,7 +214,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 						}
 
 					}
-				} while (table.nextRow());
+				} while (table.hasMoreRows());
 
 				if (insertVersion) {
 					table.insertAndUpdateRow(sde, now);
@@ -243,20 +234,11 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 	}
 
 
-	private Calendar nextDay(Calendar date) {
-
-		Calendar nextDay = (Calendar) date.clone();
-		nextDay.roll(Calendar.DATE, true);
-
-		return nextDay;
-	}
-
-
 	/**
 	 * @param dataset
 	 * @throws FilePersistException
 	 */
-	private void updateValidToOnRecordsNotInDataset(CompleteDataset<? extends Entity> dataset)
+	private void updateValidToOnRecordsNotInDataset(CompleteDataset<? extends Record> dataset)
 			throws FilePersistException {
 
 		logger.debug("updateValidToOnRecordsNotInDataset " + dataset.getEntityTypeDisplayName()
@@ -273,7 +255,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 
 		for (StamdataEntityVersion ev : evs) {
 
-			List<? extends Entity> entitiesWithId = dataset.getEntitiesById(ev.id);
+			List<? extends Record> entitiesWithId = dataset.getEntitiesById(ev.id);
 
 			boolean recordFoundInCompleteDataset = entitiesWithId != null && entitiesWithId.size() > 0;
 
@@ -296,14 +278,4 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 
 		return this.connection;
 	}
-
-	/*
-	 * public Entity loadStamdataEntities(String querySql, Class<? extends
-	 * Entity> clazz) throws Exception{ Statement st =
-	 * connection.createStatement(); ResultSet rs = st.executeQuery(querySql);
-	 * while (rs.next()){ Entity instance = clazz.newInstance(); List<Method>
-	 * outputMethods = getOutputMethods(clazz); }
-	 * 
-	 * }
-	 */
 }

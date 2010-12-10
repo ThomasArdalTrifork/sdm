@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -26,6 +27,7 @@ import com.trifork.sdm.util.DateUtils;
 
 
 public class SOREventHandler extends DefaultHandler {
+
 	private static Logger logger = Logger.getLogger(SOREventHandler.class);
 
 	private String elementValue;
@@ -84,7 +86,6 @@ public class SOREventHandler extends DefaultHandler {
 
 			curOUE.setBelongsTo(curHIE);
 		}
-
 	}
 
 
@@ -115,19 +116,17 @@ public class SOREventHandler extends DefaultHandler {
 
 						Yder y = XMLModelMapper.toYder(oue);
 
-						dataSets.getYderDS().addEntity(y);
+						dataSets.getYderDS().addRecord(y);
 
 						if (!oue.getSons().isEmpty()) {
+							// TODO: what does 'har' mean?
 							new SAXException(
 									"Lægepraksis skal ikke have en level 2 OrganizationalUnitEntity. SORId="
-											+ oue.getSorIdentifier() + " har!!"); // TODO:
-																					// what
-																					// does
-																					// 'har'
-																					// mean?
+											+ oue.getSorIdentifier() + " har!!");
 						}
 					}
-					dataSets.getPraksisDS().addEntity(p);
+
+					dataSets.getPraksisDS().addRecord(p);
 				}
 				else if (hie.getInstitutionType() == 22232009L) {
 					// Sygehus
@@ -137,13 +136,13 @@ public class SOREventHandler extends DefaultHandler {
 						addAfdelinger(oue);
 					}
 
-					dataSets.getSygehusDS().addEntity(s);
+					dataSets.getSygehusDS().addRecord(s);
 				}
 				else if (hie.getInstitutionType() == 264372000L) {
 					// Apotek
 					for (OrganizationalUnitEntity oue : hie.getOrganizationalUnitEntities()) {
 						Apotek a = XMLModelMapper.toApotek(oue);
-						dataSets.getApotekDS().addEntity(a);
+						dataSets.getApotekDS().addRecord(a);
 					}
 				}
 			}
@@ -172,7 +171,7 @@ public class SOREventHandler extends DefaultHandler {
 		if (oue.getShakIdentifier() != null) {
 			// Ignore all 'SygehusAfdeling' with no SKS
 			SygehusAfdeling sa = XMLModelMapper.toSygehusAfdeling(oue);
-			dataSets.getSygehusAfdelingDS().addEntity(sa);
+			dataSets.getSygehusAfdelingDS().addRecord(sa);
 
 			for (OrganizationalUnitEntity soue : oue.getSons()) {
 				addAfdelinger(soue);
@@ -235,9 +234,10 @@ public class SOREventHandler extends DefaultHandler {
 	private boolean setProperty(String qName, String value) throws Exception {
 
 		boolean found = false;
+
 		Method method = null;
 		Object object = null;
-		
+
 		try {
 			if (curOUE != null) {
 				object = curOUE;
@@ -251,6 +251,7 @@ public class SOREventHandler extends DefaultHandler {
 
 			if (object != null) {
 				Class<?> target = object.getClass();
+
 				while (target != null && method == null) {
 					Method methods[] = target.getDeclaredMethods();
 					for (Method prop : methods) {
@@ -262,11 +263,11 @@ public class SOREventHandler extends DefaultHandler {
 					target = target.getSuperclass();
 				}
 			}
-			
+
 			if (method != null) {
-				
+
 				Class<?> param = method.getParameterTypes()[0];
-				
+
 				try {
 
 					if (param.isAssignableFrom(String.class)) {
@@ -280,7 +281,7 @@ public class SOREventHandler extends DefaultHandler {
 						}
 						catch (NumberFormatException e) {
 							logger.error(
-									"Numberformat exception on property " + qName + ", method "
+									"Number format exception on property " + qName + ", method "
 											+ object.getClass().getName() + "." + method.getName() + "("
 											+ param.getName() + ")", e);
 							throw e;
@@ -289,13 +290,13 @@ public class SOREventHandler extends DefaultHandler {
 						found = true;
 					}
 					else if (param.isAssignableFrom(Date.class)) {
-						
+
 						Date convValue = toDate(value);
 						method.invoke(object, convValue);
 						found = true;
 					}
 					else if (param.isAssignableFrom(Boolean.class)) {
-						
+
 						Boolean b = ("true".equalsIgnoreCase(value)) ? new Boolean(true) : new Boolean(false);
 						method.invoke(object, b);
 					}
@@ -331,7 +332,7 @@ public class SOREventHandler extends DefaultHandler {
 			logger.error("Security exception on property " + qName, e);
 			throw e;
 		}
-		
+
 		return found;
 	}
 

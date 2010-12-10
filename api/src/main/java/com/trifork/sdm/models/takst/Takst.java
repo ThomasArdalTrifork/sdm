@@ -95,7 +95,7 @@ public class Takst extends TakstRecord {
 
 		if (avds == null) return null;
 
-		return avds.getEntityById(entityId);
+		return avds.getRecordById(entityId);
 	}
 
 

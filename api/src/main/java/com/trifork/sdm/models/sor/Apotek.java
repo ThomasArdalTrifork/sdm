@@ -229,10 +229,4 @@ public class Apotek extends AbstractRecord {
 
 		this.validTo = validTo;
 	}
-
-
-	public Calendar getCreatedDate() {
-
-		return new GregorianCalendar();
-	}
 }

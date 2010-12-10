@@ -17,8 +17,8 @@ public class DateUtils {
 	
 	private static Logger logger = Logger.getLogger(DateUtils.class);
 
-	public static final Date FUTURE = toCalendar(2999, 12, 31);
-	public static final Date PAST = toCalendar(1950, 1, 1);
+	public static final Date FUTURE = toDate(2999, 12, 31);
+	public static final Date PAST = toDate(1950, 1, 1);
 
 
 	/**
@@ -73,7 +73,7 @@ public class DateUtils {
 	 * @param date
 	 *            (1-31)
 	 */
-	public static Date toCalendar(int year, int month, int date) {
+	public static Date toDate(int year, int month, int date) {
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.clear();
@@ -83,7 +83,7 @@ public class DateUtils {
 	}
 
 
-	public static Date toCalendar(int year, int month, int date, int hours, int minutes, int secs) {
+	public static Date toDate(int year, int month, int date, int hours, int minutes, int secs) {
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.clear();

@@ -21,7 +21,7 @@ public class AutorisationsregisterParser {
 				"ISO8859-15"));
 
 		while (reader.ready()) {
-			dataset.addEntity(autorisationEntity(reader.readLine()));
+			dataset.addRecord(autorisationEntity(reader.readLine()));
 		}
 
 		return dataset;

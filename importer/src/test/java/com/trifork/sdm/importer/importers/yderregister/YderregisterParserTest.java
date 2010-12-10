@@ -31,7 +31,7 @@ public class YderregisterParserTest {
 				.asList(TestHelper.getFile(PATH + "initial/").listFiles()));
 
 		assertEquals(12, yderReg.getYderregisterDS().getEntities().size());
-		Yderregister y = yderReg.getYderregisterDS().getEntityById("4219");
+		Yderregister y = yderReg.getYderregisterDS().getRecordById("4219");
 		assertNotNull(y);
 		assertEquals("Yders Navn", "Jørgen Vagn Nielsen", y.getNavn());
 		assertEquals("Yders Vejnavn", "Store Kongensgade 96,4.", y.getVejnavn());
@@ -45,7 +45,7 @@ public class YderregisterParserTest {
 		assertEquals("Yders slutdato", "2999-12-31", df.format(y.getValidTo().getTime()));
 
 		assertEquals(21, yderReg.getYderregisterPersonDS().getEntities().size());
-		YderregisterPerson yp = yderReg.getYderregisterPersonDS().getEntityById("15458-1234567893");
+		YderregisterPerson yp = yderReg.getYderregisterPersonDS().getRecordById("15458-1234567893");
 		assertEquals("Personens Ydernummer", "15458", yp.getNummer());
 		assertEquals("Personens CPR", "1234567893", yp.getCpr());
 		assertEquals("Personens rollekode", new Long("15"), yp.getPersonrolleKode());
