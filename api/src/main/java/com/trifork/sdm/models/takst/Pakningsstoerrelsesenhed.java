@@ -33,7 +33,7 @@ public class Pakningsstoerrelsesenhed extends TakstRecord {
 
 
 	@Override
-	public String getRecordId() {
+	public String getKey() {
 
 		return enheder.getKode();
 	}

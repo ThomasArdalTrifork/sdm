@@ -45,7 +45,8 @@ public class UdgaaedeNavne extends TakstRecord {
 	}
 
 
-	public String getRecordId() {
+	@Override
+	public String getKey() {
 
 		return datoForAendringen + '-' + tidligereNavn + '-' + drugid;
 	}

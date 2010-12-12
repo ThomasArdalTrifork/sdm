@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
@@ -12,20 +13,16 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServlet;
 
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.Matcher;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 import com.google.inject.Provides;
 import com.google.inject.servlet.ServletModule;
 import com.mysql.jdbc.AssertionFailedException;
-import com.trifork.sdm.models.Record;
-import com.trifork.sdm.replication.ResourceServletTest.Resource;
 import com.trifork.sdm.replication.configuration.properties.Host;
 import com.trifork.sdm.replication.configuration.properties.Port;
 import com.trifork.sdm.replication.junit.TestRunner;
@@ -35,7 +32,6 @@ import com.trifork.sdm.replication.junit.TestRunner;
 public abstract class ReplicationTest extends ServletModule {
 
 	private static Server server;
-	private static ConnectionManager manager;
 
 	private static URL contextRoot;
 
@@ -44,7 +40,7 @@ public abstract class ReplicationTest extends ServletModule {
 	private static Map<String, String> params = new TreeMap<String, String>();
 	private static Map<String, String> headers = new TreeMap<String, String>();
 
-	private Calendar testTime;
+	private static Calendar testTime;
 
 
 	protected enum Day {
@@ -75,30 +71,16 @@ public abstract class ReplicationTest extends ServletModule {
 
 		return Long.toString(time.getTimeInMillis() / 1000);
 	}
-	
-	protected HttpServlet servlet(Class<? extends Record> resource) {
-
-		return new ResourceServlet(Resource.class, manager);
-	}
-
-
-	@Before
-	public void before() {
-
-		testTime = Calendar.getInstance();
-	}
 
 
 	@Override
 	public final void configureServlets() {
 
-		ConnectionManager manager = new MySQLConnectionManager("sdm", "root", "", "jdbc:mysql://localhost/");
-		
-		initialize(manager);
+		initialize();
 	}
 
 
-	public abstract void initialize(ConnectionManager manager);
+	public abstract void initialize();
 
 
 	@Inject
@@ -123,12 +105,14 @@ public abstract class ReplicationTest extends ServletModule {
 
 
 	@BeforeClass
-	public static void start(Server server, ConnectionManager manager) {
+	public static void start(Server server) throws MalformedURLException {
 
-		ReplicationTest.manager = manager;
+		testTime = Calendar.getInstance();
 
 		ReplicationTest.server = server;
 		new Thread(server).run();
+		
+		ReplicationTest.contextRoot = new URL("http", "0.0.0.0", 3001, "");
 	}
 
 
@@ -176,6 +160,7 @@ public abstract class ReplicationTest extends ServletModule {
 			connection.connect();
 		}
 		catch (Exception e) {
+			
 			throw new AssertionFailedException(e);
 		}
 	}
@@ -190,6 +175,13 @@ public abstract class ReplicationTest extends ServletModule {
 	protected void setHeader(String key, String value) {
 
 		headers.put(key, value);
+	}
+	
+
+
+	protected void printContent() throws IOException {
+
+		System.out.println(readInputStream(connection));
 	}
 
 

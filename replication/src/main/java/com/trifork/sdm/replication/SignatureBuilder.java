@@ -1,4 +1,4 @@
-package com.trifork.sdm.replication.security;
+package com.trifork.sdm.replication;
 
 import java.security.SignatureException;
 import java.util.Date;

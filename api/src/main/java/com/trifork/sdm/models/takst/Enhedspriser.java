@@ -70,7 +70,8 @@ public class Enhedspriser extends TakstRecord {
 	}
 
 
-	public String getRecordId() {
+	@Override
+	public String getKey() {
 
 		return "" + varenummer;
 	}

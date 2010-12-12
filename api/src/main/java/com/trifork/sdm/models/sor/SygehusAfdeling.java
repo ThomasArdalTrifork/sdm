@@ -12,7 +12,7 @@ import com.trifork.sdm.util.DateUtils;
 
 @Entity
 public class SygehusAfdeling extends AbstractRecord {
-	
+
 	private String navn;
 	private Long eanLokationsnummer;
 	private String nummer;
@@ -256,6 +256,7 @@ public class SygehusAfdeling extends AbstractRecord {
 	}
 
 
+	@Override
 	public void setValidFrom(Date validFrom) {
 
 		this.validFrom = validFrom;

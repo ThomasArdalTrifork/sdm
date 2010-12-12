@@ -13,7 +13,6 @@ import static org.mockito.Mockito.when;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -34,7 +33,7 @@ public class MySQLStamDAOTest {
 	private Laegemiddel laegemiddel;
 	private MySQLTemporalDao dao;
 
-	private MySQLTemporalTable laegemiddeltableMock;
+	private MySQLTemporalTable<Record> laegemiddeltableMock;
 
 
 	@Before
@@ -57,16 +56,18 @@ public class MySQLStamDAOTest {
 		takst.addDataset(dataset);
 
 		/*
-		 * // Add an empty dataset to the takst (should be ignored)
+		 * Add an empty dataset to the takst (should be ignored)
 		 * List<Pakning> tomListe = new ArrayList<Pakning>(); Dataset<Pakning>
 		 * tomtDataset = new Dataset<Pakning>(takst, tomListe, Pakning.class);
 		 * takst.addDataset(tomtDataset);
 		 */
+		
 		// Add a dataset to the takst, which should be ignored because it is not
-		// rootMember
 		List<DivEnheder> enheder = new ArrayList<DivEnheder>();
 		DivEnheder enhed = new DivEnheder();
+		
 		enhed.setTekst("millimol pr. gigajoule");
+		
 		TakstDataset<DivEnheder> hiddenDataset = new TakstDataset<DivEnheder>(takst, enheder,
 				DivEnheder.class);
 		takst.addDataset(hiddenDataset);
@@ -157,7 +158,7 @@ public class MySQLStamDAOTest {
 		// An empty takst
 		takst = new Takst(DateUtils.toDate(2009, 7, 1), DateUtils.toDate(2009, 7, 14));
 		// ..with an empty dataset
-		TakstDataset lmr = new TakstDataset(takst, new ArrayList<Laegemiddel>(), Laegemiddel.class);
+		TakstDataset<Laegemiddel> lmr = new TakstDataset<Laegemiddel>(takst, new ArrayList<Laegemiddel>(), Laegemiddel.class);
 		takst.addDataset(lmr);
 
 		List<StamdataEntityVersion> sev = new ArrayList<StamdataEntityVersion>();

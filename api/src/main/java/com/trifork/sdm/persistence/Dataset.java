@@ -1,8 +1,5 @@
 package com.trifork.sdm.persistence;
 
-import static com.trifork.sdm.models.AbstractRecord.getIdMethod;
-import static com.trifork.sdm.models.AbstractRecord.getOutputFieldName;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,6 +8,7 @@ import java.util.Map;
 
 import javax.persistence.Table;
 
+import com.trifork.sdm.models.EntityHelper;
 import com.trifork.sdm.models.Record;
 
 
@@ -27,7 +25,7 @@ public class Dataset<T extends Record> {
 		for (T entity : entities) {
 			List<T> ents = new ArrayList<T>();
 			ents.add(entity);
-			this.entities.put(entity.getRecordId(), ents);
+			this.entities.put(entity.getKey(), ents);
 		}
 	}
 
@@ -104,34 +102,31 @@ public class Dataset<T extends Record> {
 	public void removeEntities(List<T> entities) {
 
 		for (T entity : entities) {
-			this.entities.remove(entity.getRecordId());
+			this.entities.remove(entity.getKey());
 		}
 	}
 
 
 	public void addRecord(T record) {
 
-		Object id = record.getRecordId();
-		
+		Object id = record.getKey();
+
 		List<T> records = entities.get(id);
 		if (records == null) {
 			records = new ArrayList<T>();
 			entities.put(id, records);
 		}
-		
+
 		records.add(record);
 	}
 
-
 	public String getIdOutputName() {
 
-		return getOutputFieldName(getIdMethod(type));
+		return EntityHelper.getOutputFieldName(EntityHelper.getIdMethod(type));
 	}
 
-
-	// TODO: What is this method for?
 	public static String getIdOutputName(Class<? extends Record> type) {
 
-		return getOutputFieldName(getIdMethod(type));
+		return EntityHelper.getOutputFieldName(EntityHelper.getIdMethod(type));
 	}
 }

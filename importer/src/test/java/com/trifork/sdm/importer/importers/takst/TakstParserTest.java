@@ -261,23 +261,23 @@ public class TakstParserTest {
 		assertTrue(pakHuman.isTilHumanAnvendelse());
 		assertFalse(atcVet.isTilHumanAnvendelse());
 		assertTrue(atcHum.isTilHumanAnvendelse());
-		assertNotNull(takst.getEntity(Pakning.class, pakVet.getRecordId()));
-		assertNotNull(takst.getEntity(Pakning.class, pakHuman.getRecordId()));
-		assertNotNull(takst.getEntity(Laegemiddel.class, lmVet.getRecordId()));
-		assertNotNull(takst.getEntity(Laegemiddel.class, lmHum.getRecordId()));
-		assertNotNull(takst.getEntity(ATCKoderOgTekst.class, atcVet.getRecordId()));
-		assertNotNull(takst.getEntity(ATCKoderOgTekst.class, atcHum.getRecordId()));
+		assertNotNull(takst.getEntity(Pakning.class, pakVet.getKey()));
+		assertNotNull(takst.getEntity(Pakning.class, pakHuman.getKey()));
+		assertNotNull(takst.getEntity(Laegemiddel.class, lmVet.getKey()));
+		assertNotNull(takst.getEntity(Laegemiddel.class, lmHum.getKey()));
+		assertNotNull(takst.getEntity(ATCKoderOgTekst.class, atcVet.getKey()));
+		assertNotNull(takst.getEntity(ATCKoderOgTekst.class, atcHum.getKey()));
 
 		// Filter the takst
 		TakstParser.filterOutVetDrugs(takst);
 
 		// Check that the correct entities were removed from takst
-		assertNull(takst.getEntity(Pakning.class, pakVet.getRecordId()));
-		assertNotNull(takst.getEntity(Pakning.class, pakHuman.getRecordId()));
-		assertNull(takst.getEntity(Laegemiddel.class, lmVet.getRecordId()));
-		assertNotNull(takst.getEntity(Laegemiddel.class, lmHum.getRecordId()));
-		assertNull(takst.getEntity(ATCKoderOgTekst.class, atcVet.getRecordId()));
-		assertNotNull(takst.getEntity(ATCKoderOgTekst.class, atcHum.getRecordId()));
+		assertNull(takst.getEntity(Pakning.class, pakVet.getKey()));
+		assertNotNull(takst.getEntity(Pakning.class, pakHuman.getKey()));
+		assertNull(takst.getEntity(Laegemiddel.class, lmVet.getKey()));
+		assertNotNull(takst.getEntity(Laegemiddel.class, lmHum.getKey()));
+		assertNull(takst.getEntity(ATCKoderOgTekst.class, atcVet.getKey()));
+		assertNotNull(takst.getEntity(ATCKoderOgTekst.class, atcHum.getKey()));
 	}
 
 }

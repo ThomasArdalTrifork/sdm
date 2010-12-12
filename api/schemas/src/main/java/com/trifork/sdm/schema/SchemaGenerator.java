@@ -28,8 +28,8 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
-import com.trifork.sdm.Documented;
-import com.trifork.sdm.Versioned;
+import com.trifork.sdm.models.Documented;
+import com.trifork.sdm.models.Versioned;
 
 
 /**

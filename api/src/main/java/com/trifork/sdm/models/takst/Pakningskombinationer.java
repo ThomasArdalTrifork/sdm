@@ -85,7 +85,8 @@ public class Pakningskombinationer extends TakstRecord {
 	}
 
 
-	public String getRecordId() {
+	@Override
+	public String getKey() {
 
 		return "" + varenummerOrdineret + '-' + varenummerSubstitueret + '-' + varenummerAlternativt + '-'
 				+ antalPakninger;

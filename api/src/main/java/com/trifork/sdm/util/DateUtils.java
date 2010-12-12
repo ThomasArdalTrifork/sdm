@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 // which is a dependency for this project anyway. 
 
 public class DateUtils {
-	
+
 	private static Logger logger = Logger.getLogger(DateUtils.class);
 
 	public static final Date FUTURE = toDate(2999, 12, 31);
@@ -88,7 +88,7 @@ public class DateUtils {
 		Calendar calendar = Calendar.getInstance();
 		calendar.clear();
 		calendar.set(year, month - 1, date, hours, minutes, secs);
-		
+
 		return calendar.getTime();
 	}
 }

@@ -77,17 +77,19 @@ public class Indholdsstoffer extends TakstRecord {
 	}
 
 
-	public String getRecordId() {
+	@Override
+	public String getKey() {
 
 		return substans + "-" + substansgruppe + "-" + stofklasse + "-" + drugID;
 	}
 
 
+	@Override
 	public boolean equals(Object o) {
 
 		if (o.getClass() != Indholdsstoffer.class) return false;
 		Indholdsstoffer stof = (Indholdsstoffer) o;
-		return getRecordId().equals(stof.getRecordId());
+		return getKey().equals(stof.getKey());
 
 	}
 

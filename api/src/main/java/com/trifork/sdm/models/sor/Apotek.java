@@ -1,9 +1,6 @@
 package com.trifork.sdm.models.sor;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,12 +12,12 @@ import com.trifork.sdm.util.DateUtils;
 @Entity
 public class Apotek extends AbstractRecord {
 
-	private Long sorNummer;
-	private Long apotekNummer;
-	private Long filialNummer;
-	private Long eanLokationsnummer;
-	private Long cvr;
-	private Long pcvr;
+	private long sorNummer;
+	private long apotekNummer;
+	private long filialNummer;
+	private long eanLokationsnummer;
+	private long cvr;
+	private long pcvr;
 	private String navn;
 	private String telefon;
 	private String vejnavn;
@@ -28,89 +25,82 @@ public class Apotek extends AbstractRecord {
 	private String bynavn;
 	private String email;
 	private String www;
-	private Date validFrom;
-	private Date validTo;
-
-
-	public Apotek() {
-
-	}
 
 
 	@Id
 	@Column
-	public Long getSorNummer() {
+	public long getSorNummer() {
 
 		return sorNummer;
 	}
 
 
-	public void setSorNummer(Long sorNummer) {
+	public void setSorNummer(long sorNummer) {
 
 		this.sorNummer = sorNummer;
 	}
 
 
 	@Column
-	public Long getApotekNummer() {
+	public long getApotekNummer() {
 
 		return apotekNummer;
 	}
 
 
-	public void setApotekNummer(Long apotekNummer) {
+	public void setApotekNummer(long apotekNummer) {
 
 		this.apotekNummer = apotekNummer;
 	}
 
 
 	@Column
-	public Long getFilialNummer() {
+	public long getFilialNummer() {
 
 		return filialNummer;
 	}
 
 
-	public void setFilialNummer(Long filialNummer) {
+	public void setFilialNummer(long filialNummer) {
 
 		this.filialNummer = filialNummer;
 	}
 
 
 	@Column
-	public Long getEanLokationsnummer() {
+	public long getEanLokationsnummer() {
 
 		return eanLokationsnummer;
 	}
 
 
-	public void setEanLokationsnummer(Long eanLokationsnummer) {
+	public void setEanLokationsnummer(long eanLokationsnummer) {
 
 		this.eanLokationsnummer = eanLokationsnummer;
 	}
 
 
 	@Column
-	public Long getCvr() {
+	public long getCvr() {
 
 		return cvr;
 	}
 
 
-	public void setCvr(Long cvr) {
+	public void setCvr(long cvr) {
 
 		this.cvr = cvr;
 	}
 
 
 	@Column
-	public Long getPcvr() {
+	public long getPcvr() {
 
 		return pcvr;
 	}
 
 
-	public void setPcvr(Long pcvr) {
+	public void setPcvr(long pcvr) {
 
 		this.pcvr = pcvr;
 	}
@@ -204,29 +194,5 @@ public class Apotek extends AbstractRecord {
 	public void setWww(String www) {
 
 		this.www = www;
-	}
-
-
-	public Date getValidFrom() {
-
-		return validFrom;
-	}
-
-
-	public void setValidFrom(Date validFrom) {
-
-		this.validFrom = validFrom;
-	}
-
-
-	public Date getValidTo() {
-
-		return (validTo != null) ? validTo : DateUtils.FUTURE;
-	}
-
-
-	public void setValidTo(Date validTo) {
-
-		this.validTo = validTo;
 	}
 }

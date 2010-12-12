@@ -13,15 +13,6 @@ import java.io.OutputStream;
 public interface EntityWriter {
 
 	/**
-	 * Implementing classes must ensure (read assert) that the instance given if
-	 * of the entity type it supports.
-	 * 
-	 * @param instance
-	 *            the instance entity the entity you want to output.
-	 */
-	void write(Object entityInstance, OutputStream outputStream) throws IOException;
-	
-	/**
 	 * Implementing classes must return the HTTP content type for the generated output,
 	 * you should only every have one output writer generating a given content type attached
 	 * to the application.
@@ -29,4 +20,6 @@ public interface EntityWriter {
 	 * @return the HTTP content type of the generated output.
 	 */
 	String getContentType();
+
+	void output(Query query, OutputStream outputStream) throws IOException;
 }

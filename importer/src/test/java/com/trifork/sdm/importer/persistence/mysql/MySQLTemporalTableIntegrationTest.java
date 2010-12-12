@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 import org.junit.Test;
 
-import com.trifork.sdm.models.Record;
+import com.trifork.sdm.models.AbstractRecord;
 
 
 public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTest {
@@ -27,7 +27,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		table.insertRow(a, new Date());
-		boolean found = table.fetchEntityVersions(a.getRecordId(), t2, t3);
+		boolean found = table.fetchEntityVersions(a.getKey(), t2, t3);
 		assertFalse(found);
 		con.close();
 	}
@@ -40,7 +40,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
 		SDE a = new SDE(t2, t3);
 		table.insertRow(a, new Date());
-		boolean found = table.fetchEntityVersions(a.getRecordId(), t0, t1);
+		boolean found = table.fetchEntityVersions(a.getKey(), t0, t1);
 		assertFalse(found);
 		con.close();
 	}
@@ -53,7 +53,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t3);
 		table.insertRow(a, new Date());
-		boolean found = table.fetchEntityVersions(a.getRecordId(), t1, t2);
+		boolean found = table.fetchEntityVersions(a.getKey(), t1, t2);
 		assertTrue(found);
 		con.close();
 	}
@@ -66,7 +66,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t2);
 		table.insertRow(a, new Date());
-		boolean found = table.fetchEntityVersions(a.getRecordId(), t0, t3);
+		boolean found = table.fetchEntityVersions(a.getKey(), t0, t3);
 		assertTrue(found);
 		con.close();
 	}
@@ -79,7 +79,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t2);
 		table.insertRow(a, new Date());
-		boolean found = table.fetchEntityVersions(a.getRecordId(), t1, t3);
+		boolean found = table.fetchEntityVersions(a.getKey(), t1, t3);
 		assertTrue(found);
 		con.close();
 	}
@@ -92,7 +92,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t3);
 		table.insertRow(a, new Date());
-		boolean found = table.fetchEntityVersions(a.getRecordId(), t0, t2);
+		boolean found = table.fetchEntityVersions(a.getKey(), t0, t2);
 		assertTrue(found);
 		con.close();
 	}
@@ -105,7 +105,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		table.insertRow(a, new Date());
-		boolean found = table.fetchEntityVersions(a.getRecordId(), t0, t1);
+		boolean found = table.fetchEntityVersions(a.getKey(), t0, t1);
 		assertTrue(found);
 		assertEquals(table.getCurrentRowValidFrom().getTime(), t0.getTime());
 		assertEquals(table.getCurrentRowValidTo(), t1);
@@ -118,18 +118,18 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
-		
+
 		SDE a = new SDE(t2, t3);
 		table.insertRow(a, new Date());
-		
+
 		// Find the row we just created.
-		
-		table.fetchEntityVersions(a.getRecordId(), t2, t3); 
+
+		table.fetchEntityVersions(a.getKey(), t2, t3);
 		table.copyCurrentRowButWithChangedValidFrom(t0, new Date());
 
 		// We should find the copy only.
-		
-		assertTrue(table.fetchEntityVersions(a.getRecordId(), t0, t1));
+
+		assertTrue(table.fetchEntityVersions(a.getKey(), t0, t1));
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(table.getCurrentRowValidTo(), t3);
 		assertFalse(table.hasMoreRows());
@@ -144,11 +144,11 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		table.insertRow(a, new Date());
-		table.fetchEntityVersions(a.getRecordId(), t0, t1); // Find the row we
+		table.fetchEntityVersions(a.getKey(), t0, t1); // Find the row we
 															// just created
 		table.updateValidToOnCurrentRow(t2, new Date());
 
-		table.fetchEntityVersions(a.getRecordId(), t0, t1); // We should find it
+		table.fetchEntityVersions(a.getKey(), t0, t1); // We should find it
 															// again.
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(table.getCurrentRowValidTo(), t2);
@@ -166,16 +166,16 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		SDE b = new SDE(t2, t3);
 		table.insertRow(a, new Date());
 		table.insertRow(b, new Date());
-		table.fetchEntityVersions(a.getRecordId(), t2, t3); // Find only the 'b'
+		table.fetchEntityVersions(a.getKey(), t2, t3); // Find only the 'b'
 															// row we just
 															// created
 		table.updateValidToOnCurrentRow(t4, new Date());
 
-		table.fetchEntityVersions(a.getRecordId(), t0, t1); // Find the 'a' row
+		table.fetchEntityVersions(a.getKey(), t0, t1); // Find the 'a' row
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(table.getCurrentRowValidTo(), t1);
 		assertFalse(table.hasMoreRows());
-		table.fetchEntityVersions(a.getRecordId(), t2, t3); // Find the 'b' row
+		table.fetchEntityVersions(a.getKey(), t2, t3); // Find the 'b' row
 		assertEquals(table.getCurrentRowValidFrom(), t2);
 		assertEquals(table.getCurrentRowValidTo(), t4);
 		assertFalse(table.hasMoreRows());
@@ -190,9 +190,9 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		table.insertRow(a, new Date());
-		table.fetchEntityVersions(a.getRecordId(), t0, t1);
+		table.fetchEntityVersions(a.getKey(), t0, t1);
 		table.deleteCurrentRow();
-		assertFalse(table.fetchEntityVersions(a.getRecordId(), t0, t1));
+		assertFalse(table.fetchEntityVersions(a.getKey(), t0, t1));
 		con.close();
 	}
 
@@ -204,11 +204,11 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t2);
 		table.insertRow(a, new Date());
-		table.fetchEntityVersions(a.getRecordId(), t1, t2); // Find the row we
+		table.fetchEntityVersions(a.getKey(), t1, t2); // Find the row we
 															// just created
 		table.updateValidFromOnCurrentRow(t0, new Date());
 
-		table.fetchEntityVersions(a.getRecordId(), t1, t2); // We should find it
+		table.fetchEntityVersions(a.getKey(), t1, t2); // We should find it
 															// again.
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(table.getCurrentRowValidTo(), t2);
@@ -225,7 +225,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3);
 		table.insertRow(a, new Date());
-		table.fetchEntityVersions(a.getRecordId(), t0, t1); // Find the row we
+		table.fetchEntityVersions(a.getKey(), t0, t1); // Find the row we
 															// just created
 		assertTrue(table.dataInCurrentRowEquals(b));
 		con.close();
@@ -248,7 +248,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 			}
 		};
 		table.insertRow(a, new Date());
-		table.fetchEntityVersions(a.getRecordId(), t0, t1); // Find the row we
+		table.fetchEntityVersions(a.getKey(), t0, t1); // Find the row we
 															// just created
 		assertFalse(table.dataInCurrentRowEquals(b));
 		con.close();
@@ -273,7 +273,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 
 	@Entity
 	@Table(name = "TakstVersion")
-	public static class SDE implements Record {
+	public static class SDE extends AbstractRecord {
 
 		Date validfrom, validto;
 
@@ -285,30 +285,26 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		}
 
 
-		public Object getRecordId() {
+		public Object getKey() {
 
-			// TODO Auto-generated method stub
 			return getTakstuge();
 		}
 
 
 		public Date getValidFrom() {
 
-			// TODO Auto-generated method stub
 			return validfrom;
 		}
 
 
 		public Date getValidTo() {
 
-			// TODO Auto-generated method stub
 			return validto;
 		}
 
 
 		public Map<String, Object> serialize() {
 
-			// TODO Auto-generated method stub
 			return null;
 		}
 
@@ -319,7 +315,5 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 
 			return "1999-11";
 		}
-
 	}
-
 }

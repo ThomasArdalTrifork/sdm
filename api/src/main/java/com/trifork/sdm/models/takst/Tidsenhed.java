@@ -33,7 +33,7 @@ public class Tidsenhed extends TakstRecord {
 
 
 	@Override
-	public String getRecordId() {
+	public String getKey() {
 
 		return enheder.getKode();
 	}

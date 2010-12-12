@@ -5,7 +5,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-import com.trifork.sdm.Versioned;
+import com.trifork.sdm.models.Versioned;
 
 
 @Entity

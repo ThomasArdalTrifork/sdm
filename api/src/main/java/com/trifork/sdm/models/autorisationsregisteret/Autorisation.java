@@ -12,7 +12,7 @@ import com.trifork.sdm.util.DateUtils;
 
 @Entity
 public class Autorisation extends AbstractRecord {
-	
+
 	private String nummer;
 	private String cpr;
 
@@ -104,6 +104,7 @@ public class Autorisation extends AbstractRecord {
 	}
 
 
+	@Override
 	public void setValidFrom(Date validFrom) {
 
 		this.validFrom = validFrom;

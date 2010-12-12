@@ -1,8 +1,6 @@
 package com.trifork.sdm.importer.persistence.mysql;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -21,6 +19,7 @@ import com.trifork.sdm.models.Record;
 import com.trifork.sdm.persistence.CompleteDataset;
 import com.trifork.sdm.util.DateUtils;
 
+import com.trifork.sdm.models.*;
 import static com.trifork.sdm.util.DateUtils.FUTURE;
 
 
@@ -35,12 +34,13 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		try {
 			stmt.executeUpdate("drop table SDE");
 		}
-		catch (Exception e) {}
+		catch (Exception e) {
+		}
 
 		try {
 			con.createStatement().executeUpdate(
-					"create table SDE(id VARCHAR(20) NOT NULL, " + "data VARCHAR(20),"
-							+ "date DATETIME," + "				 ModifiedBy VARCHAR(200) NOT NULL,"
+					"create table SDE(id VARCHAR(20) NOT NULL, " + "data VARCHAR(20)," + "date DATETIME,"
+							+ "				 ModifiedBy VARCHAR(200) NOT NULL,"
 							+ "				 ModifiedDate DATETIME NOT NULL," + "				 ValidFrom DATETIME ,"
 							+ "				 ValidTo DATETIME," + "				 CreatedBy VARCHAR(200),"
 							+ "				 CreatedDate DATETIME);");
@@ -48,7 +48,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		catch (Exception e) {
 			// it probably already existed
 		}
-		
+
 		stmt.close();
 		con.close();
 	}
@@ -138,27 +138,27 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		CompleteDataset<SDE> dataset2 = new CompleteDataset<SDE>(SDE.class, t1, t2);
 		dataset1.addRecord(new SDE(t0, FUTURE, "1", "a"));
 		dataset2.addRecord(new SDE(t1, FUTURE, "1", "b"));
-		
+
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		
+
 		MySQLTemporalDao dao = new MySQLTemporalDao(con);
 		dao.persistCompleteDataset(dataset1);
 		dao.persistCompleteDataset(dataset2);
-		
+
 		MySQLTemporalTable table = dao.getTable(SDE.class);
-		
+
 		assertTrue(table.fetchEntityVersions(t0, t0)); // Get the old version
 		assertEquals(t0, table.getCurrentRowValidFrom());
 		assertEquals(t1, table.getCurrentRowValidTo());
 		assertEquals("a", table.currentRS.getString("data"));
 		assertFalse(table.hasMoreRows());
-		
+
 		assertTrue(table.fetchEntityVersions(t2, t2)); // Get the new version
 		assertEquals(t1, table.getCurrentRowValidFrom());
 		assertEquals(FUTURE, table.getCurrentRowValidTo());
 		assertEquals("b", table.currentRS.getString("data"));
 		assertFalse(table.hasMoreRows());
-		
+
 		MySQLConnectionManager.close(con);
 	}
 
@@ -169,20 +169,20 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		CompleteDataset<SDE> dataset1 = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		CompleteDataset<SDE> dataset2 = new CompleteDataset<SDE>(SDE.class, t1, t2);
 		CompleteDataset<SDE> dataset3 = new CompleteDataset<SDE>(SDE.class, t2, t1000);
-		
+
 		// Normal t0 -> FUTURE
 		dataset1.addRecord(new SDE(t0, FUTURE, "1", "a"));
-		
+
 		// Limit validTo to T1 no data change
 		dataset2.addRecord(new SDE(t0, t1, "1", "a"));
-		
+
 		// Extend validTo to after FUTURE
 		dataset3.addRecord(new SDE(t0, t1000, "1", "a"));
-		
+
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		MySQLTemporalDao dao = new MySQLTemporalDao(con);
 		dao.persistCompleteDataset(dataset1);
-		
+
 		MySQLTemporalTable table = dao.getTable(SDE.class);
 		assertTrue(table.fetchEntityVersions(t0, FUTURE));
 		assertEquals(t0, table.getCurrentRowValidFrom());
@@ -210,59 +210,39 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 
 
 	@Entity
-	private static class SDE implements Record {
+	private static class SDE extends AbstractRecord {
 
-		Date validfrom;
-		Date validto;
-		String id = "1"; // default value
-		String data = "a"; // default value
-		Date date = DateUtils.toDate(2001, 1, 1, 1, 2, 3);
+		private String id = "1";
+		private String data = "a";
+		Date date;
 
 
 		public SDE(Date validFrom, Date validTo) {
 
-			this.validfrom = validFrom;
-			this.validto = validTo;
+			this(validFrom, validTo, "1", "a");
 		}
 
 
 		public SDE(Date validFrom, Date validTo, String id, String data) {
 
-			this.validfrom = validFrom;
-			this.validto = validTo;
-			this.data = data;
-			this.id = id;
+			this(validFrom, validTo, id, data, DateUtils.toDate(2001, 1, 1, 1, 2, 3));
 		}
 
 
 		public SDE(Date validFrom, Date validTo, String id, String data, Date date) {
 
-			this.validfrom = validFrom;
-			this.validto = validTo;
+			setValidFrom(validFrom);
+			setValidTo(validTo);
 			this.data = data;
 			this.id = id;
 			this.date = date;
 		}
 
 
-		public Date getValidFrom() {
+		@Override
+		public long getPID() {
 
-			// TODO Auto-generated method stub
-			return validfrom;
-		}
-
-
-		public Date getValidTo() {
-
-			// TODO Auto-generated method stub
-			return validto;
-		}
-
-
-		public Map<String, Object> serialize() {
-
-			// TODO Auto-generated method stub
-			return null;
+			return 0;
 		}
 
 
@@ -275,9 +255,8 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 
 		@Id
 		@Column(name = "id")
-		public Object getRecordId() {
+		public Object getKey() {
 
-			// TODO Auto-generated method stub
 			return id;
 		}
 

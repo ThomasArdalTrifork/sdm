@@ -75,7 +75,8 @@ public class DivEnheder extends TakstRecord {
 	}
 
 
-	public String getRecordId() {
+	@Override
+	public String getKey() {
 
 		/*
 		 * This is a pseudo table that is not referenced or persisted The 'kode'

@@ -16,11 +16,11 @@ public class TakstDataset<T extends TakstRecord> extends CompleteDataset<T> {
 	public TakstDataset(Takst takst, List<T> entities, Class<T> type) {
 
 		super(type, entities, takst.getValidFrom(), takst.getValidTo());
-		
+
 		for (TakstRecord entity : entities) {
 			entity.takst = takst;
 		}
-		
+
 		this.takst = takst;
 	}
 

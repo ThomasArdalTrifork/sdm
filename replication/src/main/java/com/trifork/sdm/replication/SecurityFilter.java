@@ -1,6 +1,8 @@
-package com.trifork.sdm.replication.security;
+package com.trifork.sdm.replication;
 
-import static java.net.HttpURLConnection.*;
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
+import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
+import static java.net.HttpURLConnection.HTTP_GONE;
 
 import java.io.IOException;
 import java.util.Enumeration;
@@ -18,8 +20,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.trifork.sdm.replication.SignatureBuilder.HTTPMethod;
 import com.trifork.sdm.replication.configuration.properties.Secret;
-import com.trifork.sdm.replication.security.SignatureBuilder.HTTPMethod;
 
 
 @Singleton

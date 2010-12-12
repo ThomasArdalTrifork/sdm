@@ -1,12 +1,14 @@
 package com.trifork.sdm.replication;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.number.OrderingComparison.*;
-import static org.junit.Assert.*;
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.number.OrderingComparison.greaterThan;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import static java.net.HttpURLConnection.*;
 import java.net.URL;
 import java.security.SignatureException;
 import java.util.Date;
@@ -15,11 +17,9 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
+import com.trifork.sdm.replication.SignatureBuilder.HTTPMethod;
 import com.trifork.sdm.replication.configuration.Bucket;
 import com.trifork.sdm.replication.configuration.properties.Secret;
-import com.trifork.sdm.replication.security.GatewayServlet;
-import com.trifork.sdm.replication.security.SignatureBuilder;
-import com.trifork.sdm.replication.security.SignatureBuilder.HTTPMethod;
 
 
 public class GatewayTest extends ReplicationTest {
@@ -38,7 +38,7 @@ public class GatewayTest extends ReplicationTest {
 
 
 	@Override
-	public void initialize(ConnectionManager manager) {
+	public void initialize() {
 
 		bindConstant().annotatedWith(Bucket.class).to("/gateway");
 		serve("/gateway").with(GatewayServlet.class);

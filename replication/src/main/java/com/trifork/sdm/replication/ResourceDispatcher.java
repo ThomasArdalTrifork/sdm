@@ -1,7 +1,6 @@
 package com.trifork.sdm.replication;
 
 import javax.inject.Inject;
-
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 

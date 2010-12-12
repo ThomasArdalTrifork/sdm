@@ -1,4 +1,4 @@
-package com.trifork.sdm.replication.security;
+package com.trifork.sdm.replication;
 
 import java.net.URL;
 import java.util.Date;
@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import com.trifork.sdm.replication.security.SignatureBuilder.HTTPMethod;
+import com.trifork.sdm.replication.SignatureBuilder.HTTPMethod;
 
 
 public class URLBuilder {

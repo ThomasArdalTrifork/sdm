@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 
 import com.trifork.sdm.importer.persistence.FilePersistException;
 import com.trifork.sdm.importer.persistence.TemporalStamdataEntityStorage;
-import com.trifork.sdm.models.AbstractRecord;
+import com.trifork.sdm.models.EntityHelper;
 import com.trifork.sdm.models.Record;
 import com.trifork.sdm.persistence.Dataset;
 
@@ -66,10 +66,10 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 		this.tablename = tableName;
 		this.type = clazz;
 		this.connection = connection;
-		this.idMethod = AbstractRecord.getIdMethod(clazz);
+		this.idMethod = EntityHelper.getIdMethod(clazz);
 
 		try {
-			outputMethods = AbstractRecord.getOutputMethods(clazz);
+			outputMethods = EntityHelper.getOutputMethods(clazz);
 			notUpdatedColumns = locateNotUpdatedColumns();
 			insertRecordStmt = prepareInsertStatement();
 			insertAndUpdateRecordStmt = prepareInsertAndUpdateStatement();
@@ -96,7 +96,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 
 		long t0 = System.nanoTime();
 
-		String fieldname = AbstractRecord.getOutputFieldName(method);
+		String fieldname = EntityHelper.getOutputFieldName(method);
 		tgetOutputFieldName += System.nanoTime() - t0;
 
 		Object o = method.invoke(sde);
@@ -156,7 +156,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 				+ "CreatedBy, ModifiedBy, ModifiedDate, CreatedDate, ValidFrom, ValidTo";
 		for (Method method : outputMethods) {
 			sql += ", ";
-			String name = AbstractRecord.getOutputFieldName(method);
+			String name = EntityHelper.getOutputFieldName(method);
 			sql += name;
 		}
 		for (String notUpdateName : notUpdatedColumns) {
@@ -189,7 +189,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 				+ "CreatedBy, ModifiedBy, ModifiedDate, CreatedDate, ValidFrom, ValidTo";
 		for (Method method : outputMethods) {
 			sql += ", ";
-			String name = AbstractRecord.getOutputFieldName(method);
+			String name = EntityHelper.getOutputFieldName(method);
 			sql += name;
 		}
 		sql += ") values (";
@@ -244,7 +244,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 		String sql = "update " + tablename + " set ModifiedBy = '" + APP_ID
 				+ "', ModifiedDate = ?, ValidFrom = ?, ValidTo = ?";
 		for (Method method : outputMethods) {
-			sql += ", " + AbstractRecord.getOutputFieldName(method) + " = ?";
+			sql += ", " + EntityHelper.getOutputFieldName(method) + " = ?";
 		}
 
 		sql += " where " + Dataset.getIdOutputName(type) + " = ? and ValidFrom = ? and ValidTo = ?";
@@ -337,7 +337,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 		catch (SQLException e) {
 			throw new RuntimeException(
 					"An error occured during application of parameters to a prepared statement. "
-							+ "The database contained no records for entity id [" + sde.getRecordId() + "]");
+							+ "The database contained no records for entity id [" + sde.getKey() + "]");
 		}
 		for (String notUpdateName : notUpdatedColumns) {
 			try {
@@ -347,7 +347,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 							+ ". DB mapping unknown");
 					throw new RuntimeException(
 							"An error occured during application of parameters to a prepared statement. Entity type: ["
-									+ sde.getClass() + "]. The entity id was: [" + sde.getRecordId()
+									+ sde.getClass() + "]. The entity id was: [" + sde.getKey()
 									+ "]. There was an error setting value for record: [" + notUpdateName
 									+ "]. The type is not supported");
 				}
@@ -355,7 +355,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 			catch (SQLException sqle) {
 				throw new RuntimeException(
 						"An error occured during application of parameters to a prepared statement. Entity type:["
-								+ sde.getClass() + "]. The entity id was: [" + sde.getRecordId()
+								+ sde.getClass() + "]. The entity id was: [" + sde.getKey()
 								+ "]. Could not set field for record name: [" + notUpdateName + "].", sqle);
 			}
 		}
@@ -388,13 +388,13 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 			catch (InvocationTargetException ite) {
 				throw new RuntimeException(
 						"An error occured during application of parameters to a prepared statement. Entity type: ["
-								+ sde.getClass() + "]. The entity id was: [" + sde.getRecordId()
+								+ sde.getClass() + "]. The entity id was: [" + sde.getKey()
 								+ "]. Could not invoke target method: [" + method.getName() + "]", ite);
 			}
 			catch (IllegalAccessException iae) {
 				throw new RuntimeException(
 						"An error occured during application of parameters to a prepared statement. Entity type: ["
-								+ sde.getClass() + "]. The entity id was: [" + sde.getRecordId()
+								+ sde.getClass() + "]. The entity id was: [" + sde.getKey()
 								+ "]. Could not access method: [" + method.getName() + "]", iae);
 			}
 			try {
@@ -403,7 +403,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 							+ method.getName() + " has unsupported returntype: " + o + ". DB mapping unknown");
 					throw new RuntimeException(
 							"An error occured during application of parameters to a prepared statement. Entity type: ["
-									+ sde.getClass() + "]. The entity id was: [" + sde.getRecordId()
+									+ sde.getClass() + "]. The entity id was: [" + sde.getKey()
 									+ "]. There was an error setting value for method: [" + method.getName()
 									+ "]. The type is not supported");
 				}
@@ -411,7 +411,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 			catch (SQLException sqle) {
 				throw new RuntimeException(
 						"An error occured during application of parameters to a prepared statement. Entity type:["
-								+ sde.getClass() + "]. The entity id was: [" + sde.getRecordId()
+								+ sde.getClass() + "]. The entity id was: [" + sde.getKey()
 								+ "]. Could not set field for method name: [" + method.getName() + "].", sqle);
 			}
 		}
@@ -442,13 +442,13 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 			catch (InvocationTargetException ite) {
 				throw new RuntimeException(
 						"An error occured during application of parameters to a prepared statement. Entity type: ["
-								+ sde.getClass() + "]. The entity id was: [" + sde.getRecordId()
+								+ sde.getClass() + "]. The entity id was: [" + sde.getKey()
 								+ "]. Could not invoke target method: [" + method.getName() + "]", ite);
 			}
 			catch (IllegalAccessException iae) {
 				throw new RuntimeException(
 						"An error occured during application of parameters to a prepared statement. Entity type: ["
-								+ sde.getClass() + "]. The entity id was: [" + sde.getRecordId()
+								+ sde.getClass() + "]. The entity id was: [" + sde.getKey()
 								+ "]. Could not access method: [" + method.getName() + "]", iae);
 			}
 			try {
@@ -457,7 +457,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 							+ method.getName() + " has unsupported returntype: " + o + ". DB mapping unknown");
 					throw new RuntimeException(
 							"An error occured during application of parameters to a prepared statement. Entity type: ["
-									+ sde.getClass() + "]. The entity id was: [" + sde.getRecordId()
+									+ sde.getClass() + "]. The entity id was: [" + sde.getKey()
 									+ "]. There was an error setting value for method: [" + method.getName()
 									+ "]. The type is not supported");
 				}
@@ -465,7 +465,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 			catch (SQLException sqle) {
 				throw new RuntimeException(
 						"An error occured during application of parameters to a prepared statement. Entity type:["
-								+ sde.getClass() + "]. The entity id was: [" + sde.getRecordId()
+								+ sde.getClass() + "]. The entity id was: [" + sde.getKey()
 								+ "]. Could not set field for method name: [" + method.getName() + "].", sqle);
 			}
 		}
@@ -473,7 +473,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 		try {
 
 			updateValidToStmt.setObject(3, currentRS.getObject(Dataset.getIdOutputName(type)));
-			setObjectOnPreparedStatement(pstmt, idx++, sde.getRecordId());
+			setObjectOnPreparedStatement(pstmt, idx++, sde.getKey());
 
 			pstmt.setTimestamp(idx++, new Timestamp(existingValidFrom.getTime()));
 			pstmt.setTimestamp(idx++, new Timestamp(existingValidTo.getTime()));
@@ -496,7 +496,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 
 			for (Method method : outputMethods) {
 				columns.append(", ");
-				columns.append(AbstractRecord.getOutputFieldName(method));
+				columns.append(EntityHelper.getOutputFieldName(method));
 				values.append(", ?");
 			}
 
@@ -519,7 +519,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 			stmt.setTimestamp(i++, currentRS.getTimestamp("ValidTo"));
 			
 			for (Method method : outputMethods) {
-				Object value = currentRS.getObject(AbstractRecord.getOutputFieldName(method));
+				Object value = currentRS.getObject(EntityHelper.getOutputFieldName(method));
 				stmt.setObject(i++, value);
 			}
 
@@ -666,7 +666,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 	public List<StamdataEntityVersion> getEntityVersions(Date validFrom, Date validTo) {
 
 		try {
-			String idMethodName = AbstractRecord.getOutputFieldName(idMethod);
+			String idMethodName = EntityHelper.getOutputFieldName(idMethod);
 
 			String sql = format("SELECT %s, ValidFrom FROM %s WHERE NOT (ValidTo < ? OR ValidFrom > ?)",
 					idMethodName, tablename);
@@ -743,7 +743,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 			String message = "An error occured while inserting new entity of type: "
 					+ Dataset.getEntityTypeDisplayName(type);
 			try {
-				message += "entityid: " + sde.getRecordId() + " SQLError: " + sqle.getMessage();
+				message += "entityid: " + sde.getKey() + " SQLError: " + sqle.getMessage();
 			}
 			catch (Exception e) {
 				message += " Error: " + e.getMessage();
@@ -767,7 +767,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 			String message = "An error occured while inserting new entity of type: "
 					+ Dataset.getEntityTypeDisplayName(type);
 			try {
-				message += "entityid: " + sde.getRecordId();
+				message += "entityid: " + sde.getKey();
 			}
 			catch (Exception e) {
 			}
@@ -806,7 +806,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 				boolean found = false;
 				for (Method method : outputMethods) {
 					// Ignore the columns that are updated by the entity
-					String name = AbstractRecord.getOutputFieldName(method);
+					String name = EntityHelper.getOutputFieldName(method);
 					if (colName.equalsIgnoreCase(name)) {
 						found = true;
 						continue;
@@ -886,7 +886,7 @@ public class MySQLTemporalTable<T extends Record> implements TemporalStamdataEnt
 			String message = "An error occured while inserting new entity of type: "
 					+ Dataset.getEntityTypeDisplayName(type);
 			try {
-				message += "entityid: " + sde.getRecordId();
+				message += "entityid: " + sde.getKey();
 			}
 			catch (Exception ex) {
 				// TODO: Log?

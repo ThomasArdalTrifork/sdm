@@ -20,10 +20,10 @@ public class ForaeldreMyndighedRelation extends CPRRecord {
 	Date foraeldreMyndighedStartDato;
 	String foraeldreMyndighedMarkering;
 	Date foraeldreMyndighedSlettedato;
-	
+
 	// If the relation is neither Mother or Farther.
 	String relationCpr;
-	
+
 	Date relationCprStartDato;
 
 

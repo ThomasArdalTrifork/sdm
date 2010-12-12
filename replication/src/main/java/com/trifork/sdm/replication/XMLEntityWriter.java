@@ -6,12 +6,13 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.Column;
+
+import com.trifork.sdm.models.Record;
 
 
 /**
@@ -23,10 +24,15 @@ import javax.persistence.Column;
  */
 public class XMLEntityWriter implements EntityWriter {
 
-	private final String startTag;
-	private final String endTag;
+	private final String collectionStartTag;
+	private final String collectionEndTag;
+	
+	private final static Object[] NO_ARGUMENTS = new Object[] {};
 
 	private final List<EntityEntry> elements = new ArrayList<EntityEntry>();
+	private String startTag;
+	private String endTag;
+	private String entityXMLName;
 
 
 	/**
@@ -38,16 +44,15 @@ public class XMLEntityWriter implements EntityWriter {
 	private class EntityEntry {
 
 		public String startTag;
-		public String name;
 		public String endTag;
+		
 		public Method method;
-
 
 		public EntityEntry(Method method) {
 
 			this.method = method;
 
-			name = inferElementName(method);
+			String name = inferElementName(method);
 			startTag = String.format("\t<%s>", name);
 			endTag = String.format("</%s>\n", name);
 		}
@@ -55,7 +60,7 @@ public class XMLEntityWriter implements EntityWriter {
 
 		private String inferElementName(Method method) {
 
-			// TODO: Move this to a helper that can share code with the schema
+			// FIXME: Move this to a helper that can share code with the schema
 			// project.
 
 			String name;
@@ -82,15 +87,17 @@ public class XMLEntityWriter implements EntityWriter {
 	}
 
 
-	public XMLEntityWriter(Class<?> entity) {
+	public XMLEntityWriter(Class<? extends Record> entity) {
 
 		// Calculate all tags.
 		
-		String entityXMLName = entity.getSimpleName().toLowerCase();
+		entityXMLName = entity.getSimpleName().toLowerCase();
 		
-		startTag = String.format("<%s>\n", entityXMLName);
-		endTag = String.format("</%s>\n", entityXMLName);
-
+		endTag = String.format("\t</%s>\n", entityXMLName);
+		
+		collectionStartTag = String.format("<%sCollection>\n", entityXMLName);
+		collectionEndTag = String.format("</%sCollection>\n", entityXMLName);
+		
 		for (Method method : entity.getMethods()) {
 
 			Column annotation = method.getAnnotation(Column.class);
@@ -100,56 +107,6 @@ public class XMLEntityWriter implements EntityWriter {
 				elements.add(new EntityEntry(method));
 			}
 		}
-
-		// The SDM schema convention says that elements must appear
-		// in alphanumerical order.
-
-		Collections.sort(elements, new Comparator<EntityEntry>() {
-
-			@Override
-			public int compare(EntityEntry element1, EntityEntry element2) {
-
-				return element1.name.compareTo(element2.name);
-			}
-		});
-	}
-
-
-	public void write(Object instance, OutputStream outputStream) throws IOException {
-
-		final Object[] NO_ARGUMENTS = new Object[] {};
-
-		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-		StringBuilder builder = new StringBuilder();
-
-		builder.append(startTag);
-
-		for (EntityEntry entry : elements) {
-
-			builder.append(entry.startTag);
-
-			try {
-
-				Object value = entry.method.invoke(instance, NO_ARGUMENTS);
-
-				if (value != null) {
-					builder.append(String.format("%s", value.toString()));
-				}
-			}
-			catch (IllegalAccessException e) {
-				// TODO: Call failure notifier.
-			}
-			catch (InvocationTargetException e) {
-				// TODO: Call failure notifier.
-			}
-
-			builder.append(entry.endTag);
-		}
-
-		builder.append(endTag);
-
-		writer.write(builder.toString());
-		writer.flush();
 	}
 
 
@@ -157,5 +114,67 @@ public class XMLEntityWriter implements EntityWriter {
 	public String getContentType() {
 
 		return "application/xml";
+	}
+
+
+	@Override
+	public void output(Query query, OutputStream outputStream) throws IOException {
+
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
+		
+		writer.write(collectionStartTag);
+		
+		BigInteger i = new BigInteger("12123128930000000000");
+		
+		for (Record record : query) {
+			
+			i = i.add(new BigInteger("1"));
+			
+			StringBuilder builder = new StringBuilder();
+			
+			builder.append(String.format("\t<%s recordId=\"%s\" updateToken=\"%s\">\n", entityXMLName, record.getKey(), i.toString()));
+
+			for (EntityEntry entry : elements) {
+				
+				builder.append("\t");
+				builder.append(entry.startTag);
+
+				try {
+					Object value = entry.method.invoke(record, NO_ARGUMENTS);
+
+					if (value != null) {
+						builder.append("<[CDATA[");
+						builder.append(value);
+						builder.append("]]>");
+					}
+				}
+				catch (IllegalAccessException e) {
+					// TODO: Call failure notifier.
+					throw new RuntimeException(e);
+				}
+				catch (InvocationTargetException e) {
+					// TODO: Call failure notifier.
+					throw new RuntimeException(e);
+				}
+
+				builder.append(entry.endTag);
+			}
+			
+			builder.append("\t\t<validFrom>");
+			builder.append(record.getValidFrom());
+			builder.append("</validFrom>\n");
+			
+			builder.append("\t\t<validTo>");
+			builder.append(record.getValidTo());
+			builder.append("</validTo>\n");
+			
+			builder.append(endTag);
+			
+			writer.write(builder.toString());
+			writer.flush();
+		}
+		
+		writer.write(collectionEndTag);
+		writer.flush();
 	}
 }

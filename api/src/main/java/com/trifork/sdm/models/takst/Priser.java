@@ -120,7 +120,8 @@ public class Priser extends TakstRecord {
 	}
 
 
-	public Long getRecordId() {
+	@Override
+	public Long getKey() {
 
 		return this.varenummer;
 	}

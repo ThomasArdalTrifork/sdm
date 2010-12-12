@@ -17,7 +17,7 @@ import com.trifork.sdm.persistence.Dataset;
 @Entity
 @Table(name = "TakstVersion")
 public class Takst extends TakstRecord {
-	
+
 	private final List<CompleteDataset<? extends Record>> datasets = new ArrayList<CompleteDataset<? extends Record>>();
 
 	// The week-number for which LMS guarantees some sort of stability/validity
@@ -118,6 +118,7 @@ public class Takst extends TakstRecord {
 	}
 
 
+	@Override
 	@Id
 	public Date getValidFrom() {
 
@@ -125,6 +126,7 @@ public class Takst extends TakstRecord {
 	}
 
 
+	@Override
 	public Date getValidTo() {
 
 		return validTo;

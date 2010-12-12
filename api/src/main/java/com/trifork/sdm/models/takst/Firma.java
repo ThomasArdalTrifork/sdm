@@ -64,7 +64,8 @@ public class Firma extends TakstRecord {
 	}
 
 
-	public Long getRecordId() {
+	@Override
+	public Long getKey() {
 
 		return this.firmanummer;
 	}

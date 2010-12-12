@@ -3,14 +3,10 @@ package com.trifork.sdm.models;
 import java.util.Date;
 
 
-/**
- * Describes a contract that all models in SDM uphold.
- */
-public interface Record {
+public abstract class Record {
 
-	Object getRecordId();
-
-	Date getValidFrom();
-
-	Date getValidTo();
+	public abstract long getPID();
+	public abstract Object getKey();
+	public abstract Date getValidFrom();
+	public abstract Date getValidTo();
 }

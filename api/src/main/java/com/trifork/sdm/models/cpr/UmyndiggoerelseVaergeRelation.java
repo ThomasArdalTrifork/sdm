@@ -249,20 +249,19 @@ public class UmyndiggoerelseVaergeRelation extends CPRRecord {
 		// produktionsdatoen.
 
 		Date validFrom;
-		
+
 		if (umyndigStartDato == null) {
-			
+
 			validFrom = super.getValidFrom();
 		}
-		else if(umyndigStartDato.getTime() > super.getValidFrom().getTime()) {
-			
+		else if (umyndigStartDato.getTime() > super.getValidFrom().getTime()) {
+
 			validFrom = umyndigStartDato;
 		}
-		else
-		{
+		else {
 			validFrom = super.getValidFrom();
 		}
-		
+
 		return validFrom;
 	}
 

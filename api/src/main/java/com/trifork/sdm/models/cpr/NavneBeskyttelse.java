@@ -16,6 +16,7 @@ public class NavneBeskyttelse extends CPRRecord {
 	Date navneBeskyttelseSletteDato;
 
 
+	@Override
 	@Id
 	@Column
 	public String getCpr() {

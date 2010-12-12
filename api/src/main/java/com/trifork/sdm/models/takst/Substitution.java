@@ -84,7 +84,8 @@ public class Substitution extends TakstRecord {
 	}
 
 
-	public Long getRecordId() {
+	@Override
+	public Long getKey() {
 
 		return receptensVarenummer;
 	}

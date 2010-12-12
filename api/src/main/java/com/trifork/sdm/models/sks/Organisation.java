@@ -73,6 +73,7 @@ public class Organisation extends AbstractRecord {
 	}
 
 
+	@Override
 	public Date getValidTo() {
 
 		return validTo;
@@ -99,6 +100,7 @@ public class Organisation extends AbstractRecord {
 	}
 
 
+	@Override
 	public void setValidFrom(Date validFrom) {
 
 		this.validFrom = validFrom;

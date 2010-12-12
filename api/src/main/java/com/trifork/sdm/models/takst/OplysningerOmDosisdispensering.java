@@ -111,7 +111,8 @@ public class OplysningerOmDosisdispensering extends TakstRecord {
 	}
 
 
-	public Long getRecordId() {
+	@Override
+	public Long getKey() {
 
 		return varenummer;
 	}

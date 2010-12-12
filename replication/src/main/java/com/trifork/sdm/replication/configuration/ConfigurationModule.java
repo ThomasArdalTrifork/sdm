@@ -1,12 +1,10 @@
 package com.trifork.sdm.replication.configuration;
 
-import java.io.InputStream;
-import java.util.Properties;
-
 import com.google.inject.AbstractModule;
 import com.trifork.sdm.replication.configuration.properties.AuthorizationTTL;
-import com.trifork.sdm.replication.configuration.properties.Secret;
 import com.trifork.sdm.replication.configuration.properties.PageSize;
+import com.trifork.sdm.replication.configuration.properties.Secret;
+
 
 public class ConfigurationModule extends AbstractModule {
 
@@ -15,16 +13,17 @@ public class ConfigurationModule extends AbstractModule {
 
 		// Load configuration file.
 
-		//Properties properties = loadProperties();
-		
+		// Properties properties = loadProperties();
+
 		// Token Settings
 
 		bindConstant().annotatedWith(Secret.class).to("secret");
-		
+
 		bindConstant().annotatedWith(PageSize.class).to(1000);
 		bindConstant().annotatedWith(AuthorizationTTL.class).to(15);
 	}
 
+/*
 	public Properties loadProperties() {
 
 		// Load properties from the 'config.properties' file.
@@ -43,4 +42,5 @@ public class ConfigurationModule extends AbstractModule {
 
 		return properties;
 	}
+	*/
 }

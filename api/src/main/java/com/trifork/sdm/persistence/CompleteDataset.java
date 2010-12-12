@@ -13,7 +13,7 @@ import com.trifork.sdm.models.Record;
  * 
  */
 public class CompleteDataset<T extends Record> extends Dataset<T> {
-	
+
 	private final Date validFrom;
 	private final Date validTo;
 
@@ -21,7 +21,7 @@ public class CompleteDataset<T extends Record> extends Dataset<T> {
 	protected CompleteDataset(Class<T> type, List<T> entities, Date validFrom, Date ValidTo) {
 
 		super(entities, type);
-		
+
 		this.validFrom = validFrom;
 		this.validTo = ValidTo;
 	}
@@ -30,7 +30,7 @@ public class CompleteDataset<T extends Record> extends Dataset<T> {
 	public CompleteDataset(Class<? extends T> type, Date validFrom, Date ValidTo) {
 
 		super(type);
-		
+
 		this.validFrom = validFrom;
 		this.validTo = ValidTo;
 	}

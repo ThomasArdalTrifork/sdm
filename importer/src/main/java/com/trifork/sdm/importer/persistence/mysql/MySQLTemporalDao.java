@@ -78,7 +78,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 
 			Date validFrom = sde.getValidFrom();
 
-			boolean exists = table.fetchEntityVersions(sde.getRecordId(), validFrom, sde.getValidTo());
+			boolean exists = table.fetchEntityVersions(sde.getKey(), validFrom, sde.getValidTo());
 			if (!exists) {
 				// Entity was not found, so create it
 				table.insertRow(sde, now);

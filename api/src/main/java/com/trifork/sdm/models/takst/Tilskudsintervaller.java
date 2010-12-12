@@ -69,7 +69,8 @@ public class Tilskudsintervaller extends TakstRecord {
 	}
 
 
-	public String getRecordId() {
+	@Override
+	public String getKey() {
 
 		return type + "-" + niveau;
 	}

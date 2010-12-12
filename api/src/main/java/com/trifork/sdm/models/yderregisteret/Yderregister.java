@@ -12,7 +12,7 @@ import com.trifork.sdm.util.DateUtils;
 
 @Entity
 public class Yderregister extends AbstractRecord {
-	
+
 	private String nummer;
 	private String telefon;
 	private String navn;
@@ -221,8 +221,8 @@ public class Yderregister extends AbstractRecord {
 	public Date getValidTo() {
 
 		Date validTo;
-		
-		if (afgangDato != null) 
+
+		if (afgangDato != null)
 			validTo = afgangDato;
 		else
 			validTo = DateUtils.FUTURE;

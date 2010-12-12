@@ -1,10 +1,9 @@
-package com.trifork.sdm.replication.security;
+package com.trifork.sdm.replication;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
 import java.util.Calendar;
 
 import javax.inject.Inject;

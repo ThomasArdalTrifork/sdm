@@ -71,7 +71,8 @@ public class PakningskombinationerUdenPriser extends TakstRecord {
 	}
 
 
-	public Long getRecordId() {
+	@Override
+	public Long getKey() {
 
 		return this.varenummerOrdineret;
 	}

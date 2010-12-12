@@ -16,12 +16,14 @@ public class SplitCPRFile {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		
 		int fileSplit = args.length -1;
+		
 		if (fileSplit < 2 || fileSplit > 9) {
 			System.err.println("Use this as: java SplitCPRFile <infile> <ourfile1> <ourfile2> .. <ourfileN> where N < 10");
 			System.exit(-1);
 		}
+		
 		String name = args[0];
 		BufferedWriter[] outputs = new BufferedWriter[fileSplit];
 
@@ -49,7 +51,7 @@ public class SplitCPRFile {
 				outputs[i].close(); 
 			}
 			
-			
+		// FIXME: Proper exception handling.
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
@@ -57,7 +59,5 @@ public class SplitCPRFile {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
-
 }

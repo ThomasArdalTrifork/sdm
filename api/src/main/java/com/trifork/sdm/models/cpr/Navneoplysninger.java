@@ -22,6 +22,7 @@ public class Navneoplysninger extends CPRRecord {
 	String adresseringsNavn;
 
 
+	@Override
 	@Id
 	@Column
 	public String getCpr() {

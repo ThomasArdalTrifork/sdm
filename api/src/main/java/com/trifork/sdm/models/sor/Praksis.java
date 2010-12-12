@@ -78,12 +78,14 @@ public class Praksis extends AbstractRecord {
 	}
 
 
+	@Override
 	public Date getValidFrom() {
 
 		return validFrom;
 	}
 
 
+	@Override
 	public void setValidFrom(Date validFrom) {
 
 		this.validFrom = validFrom;

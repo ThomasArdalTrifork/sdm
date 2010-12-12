@@ -43,7 +43,8 @@ public class EmballagetypeKoder extends TakstRecord {
 	}
 
 
-	public String getRecordId() {
+	@Override
+	public String getKey() {
 
 		return "" + this.kode;
 	}

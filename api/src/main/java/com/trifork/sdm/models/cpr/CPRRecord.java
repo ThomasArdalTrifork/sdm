@@ -7,8 +7,9 @@ public abstract class CPRRecord extends AbstractRecord {
 
 	private String cpr;
 
+
 	public String getCpr() {
-		
+
 		return cpr;
 	}
 

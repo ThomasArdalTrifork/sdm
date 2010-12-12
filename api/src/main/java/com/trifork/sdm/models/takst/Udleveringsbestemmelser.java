@@ -56,7 +56,8 @@ public class Udleveringsbestemmelser extends TakstRecord {
 	}
 
 
-	public String getRecordId() {
+	@Override
+	public String getKey() {
 
 		return "" + this.kode;
 	}

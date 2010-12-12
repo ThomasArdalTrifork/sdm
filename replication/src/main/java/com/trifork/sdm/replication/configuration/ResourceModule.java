@@ -1,6 +1,8 @@
 package com.trifork.sdm.replication.configuration;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -16,8 +18,9 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
 import com.google.inject.servlet.ServletModule;
-import com.trifork.sdm.replication.security.GatewayServlet;
-import com.trifork.sdm.replication.security.SecurityFilter;
+import com.trifork.sdm.replication.GatewayServlet;
+import com.trifork.sdm.replication.ResourceServlet;
+import com.trifork.sdm.replication.SecurityFilter;
 
 public class ResourceModule extends ServletModule {
 
@@ -43,17 +46,21 @@ public class ResourceModule extends ServletModule {
 
 		Set<Class<?>> entities = reflector.getTypesAnnotatedWith(Entity.class);
 
-		bind(Set.class).toInstance(entities);
-
+		Map entityMap = new HashMap<String, Class>();
+		
 		for (Class<?> entity : entities) {
-
 			final String resourcePath = "/" + entity.getSimpleName().toLowerCase();
 
-			//serve(resourcePath).with(new ResourceServlet(entity, ));
-			filter(resourcePath).through(SecurityFilter.class);
+			serve(resourcePath).with(ResourceServlet.class);
+			//filter(resourcePath).through(SecurityFilter.class);
+			
+			entityMap.put(resourcePath, entity);
 		}
+		
+		bind(Map.class).toInstance(entityMap); 
 
 		// Serve everything else with status 404.
+		// TODO: Is this needed?
 
 		serve("/*").with(new HttpServlet() {
 

@@ -4,7 +4,7 @@ import javax.persistence.Column;
 
 
 public class NumeriskMedEnhed extends TakstRecord {
-	
+
 	private String klartekst;
 	private double numerisk;
 	private Object enhed;
@@ -19,7 +19,8 @@ public class NumeriskMedEnhed extends TakstRecord {
 	}
 
 
-	public String getRecordId() {
+	@Override
+	public String getKey() {
 
 		return null;
 	}

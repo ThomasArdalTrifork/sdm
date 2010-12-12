@@ -113,7 +113,8 @@ public class Indikation extends TakstRecord {
 	}
 
 
-	public Long getRecordId() {
+	@Override
+	public Long getKey() {
 
 		return this.indikationskode;
 	}

@@ -33,7 +33,7 @@ public class Styrkeenhed extends TakstRecord {
 
 
 	@Override
-	public String getRecordId() {
+	public String getKey() {
 
 		return enheder.getKode();
 	}

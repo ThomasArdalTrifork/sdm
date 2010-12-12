@@ -30,7 +30,8 @@ public class Laegemiddelnavn extends TakstRecord {
 	}
 
 
-	public String getRecordId() {
+	@Override
+	public String getKey() {
 
 		return "" + this.drugid;
 	}

@@ -6,8 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.trifork.sdm.Documented;
 import com.trifork.sdm.models.AbstractRecord;
+import com.trifork.sdm.models.Documented;
 
 
 @Entity
@@ -61,6 +61,7 @@ public class Drug extends AbstractRecord {
 	}
 
 
+	@Override
 	public void setValidFrom(Date validfrom) {
 
 		this.validFrom = validfrom;

@@ -1,58 +1,57 @@
 package com.trifork.sdm.replication;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.Map;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.persistence.Entity;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.trifork.sdm.Versioned;
-import com.trifork.sdm.replication.UpdateQueryBuilder.UpdateQuery;
-import com.trifork.sdm.replication.persistence.EntityRepository;
+import com.trifork.sdm.models.Record;
+import com.trifork.sdm.replication.configuration.DatabaseModule.QueryFactory;
 
 
-/**
- * Serve an entity using it's {@link Entity} annotations.
- * 
- * Given an entity class it defines a number of default queries using
- * reflection. Output templates are cached to improve performance. You can
- * specialize the handled queries for a particular entity by extending this
- * class.
- * 
- * Only versions marked as supported in the {@link Versioned} annotations will
- * be served.
- */
 @Singleton
 public class ResourceServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
+	
+	@Inject
+	private Map entities;
 
-	private final EntityWriter writer;
-	private final EntityRepository repository;
-
-
-	public ResourceServlet(Class<?> entity, ConnectionManager connectionManager) {
-
-		assert entity.isAnnotationPresent(Entity.class);
-
-		this.writer = new XMLEntityWriter(entity);
-		this.repository = new EntityRepository(entity, connectionManager);
-	}
+	@Inject
+	private QueryFactory queryFactory;
 
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 
-		String token = request.getParameter("since");
-
-		UpdateQueryBuilder builder = new UpdateQueryBuilder(token);
-
-		UpdateQuery query = builder.build();
-
-		repository.writeAll(query, 5, writer, response.getOutputStream());
+		// Fetch the query parameters.
+		
+		String token = request.getParameter("token");		
+		Date since = new Date(Long.parseLong(token.substring(0, 9)));
+		long recordId = Long.parseLong(token.substring(10));
+		
+		// Figure out which resource has been requested. 
+		
+		String resource = request.getRequestURI();
+		Class<? extends Record> entity = (Class<? extends Record>)entities.get(resource);
+		
+		// Determine the output format.
+		
+		EntityWriter writer = new XMLEntityWriter(entity);
+		
+		// Construct a query.
+		
+		Query query = queryFactory.create(entity, recordId, since);
+		
+		// Return the resulting records.
+		
+		writer.output(query, response.getOutputStream());
 	}
 }

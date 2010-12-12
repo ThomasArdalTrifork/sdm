@@ -1,7 +1,9 @@
 package com.trifork.sdm.replication.configuration;
 
-import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+import java.lang.annotation.Retention;
+
 import javax.inject.Qualifier;
 
 @Qualifier

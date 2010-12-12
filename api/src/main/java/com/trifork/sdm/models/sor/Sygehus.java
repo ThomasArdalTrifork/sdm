@@ -164,6 +164,7 @@ public class Sygehus extends AbstractRecord {
 	}
 
 
+	@Override
 	public void setValidFrom(Date validFrom) {
 
 		this.validFrom = validFrom;

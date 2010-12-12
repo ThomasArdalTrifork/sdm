@@ -17,12 +17,13 @@ dependencies {
 	
 	// Injection
 	
-	def GUICE_VERSION = "3.0-SNAPSHOT-20101120"
+	def GUICE_VERSION = "3.0-rc1"
 	
 	compile "aopalliance:aopalliance:1.0"
 	compile "javax.inject:javax.inject:1.0"
-	compile "com.google.code.inject:guice:$GUICE_VERSION"
-	compile "com.google.code.inject:guice-servlet:$GUICE_VERSION"
+	compile "com.google.inject:guice:$GUICE_VERSION"
+	compile "com.google.inject:guice-assistedinject:$GUICE_VERSION"
+	compile "com.google.inject:guice-servlet:$GUICE_VERSION"
 	
 	
 	// MySQL

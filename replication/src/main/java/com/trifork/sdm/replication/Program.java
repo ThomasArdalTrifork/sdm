@@ -3,6 +3,7 @@ package com.trifork.sdm.replication;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.trifork.sdm.replication.configuration.ConfigurationModule;
+import com.trifork.sdm.replication.configuration.DatabaseModule;
 import com.trifork.sdm.replication.configuration.ResourceModule;
 import com.trifork.sdm.replication.configuration.ServerModule;
 
@@ -25,13 +26,16 @@ public final class Program {
 			// Set up component dependencies.
 
 			Injector injector = Guice.createInjector(new ConfigurationModule(), new ResourceModule(),
-					new ServerModule(host, port));
+					new ServerModule(host, port), new DatabaseModule());
 
 			// Start the server.
 
 			Server server = injector.getInstance(Server.class);
-			server.run();
-
+			
+			Thread runner = new Thread(server);
+			runner.run();
+			Thread.currentThread().join();
+			
 			System.exit(1);
 		}
 	}

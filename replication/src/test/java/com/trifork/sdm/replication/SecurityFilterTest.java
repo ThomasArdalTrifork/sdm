@@ -1,8 +1,12 @@
 package com.trifork.sdm.replication;
 
-import static java.net.HttpURLConnection.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
+import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
+import static java.net.HttpURLConnection.HTTP_GONE;
+import static java.net.HttpURLConnection.HTTP_OK;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -19,8 +23,6 @@ import org.junit.Test;
 
 import com.trifork.sdm.replication.configuration.Bucket;
 import com.trifork.sdm.replication.configuration.properties.Secret;
-import com.trifork.sdm.replication.security.SecurityFilter;
-import com.trifork.sdm.replication.security.URLBuilder;
 
 
 public class SecurityFilterTest extends ReplicationTest {
@@ -31,7 +33,7 @@ public class SecurityFilterTest extends ReplicationTest {
 
 
 	@Override
-	public void initialize(ConnectionManager manager) {
+	public void initialize() {
 
 		// The filter is what we are under testing.
 
