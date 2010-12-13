@@ -13,7 +13,7 @@ import com.trifork.sdm.util.DateUtils;
 /**
  * Convenience super-class that implements the Record interface.
  */
-public abstract class AbstractRecord extends Record {
+public abstract class AbstractRecord implements Record {
 
 	static final Logger logger = Logger.getLogger(AbstractRecord.class);
 
@@ -26,6 +26,8 @@ public abstract class AbstractRecord extends Record {
 	private Date validFrom = DateUtils.PAST;
 	private Date validTo = DateUtils.FUTURE;
 
+	private Date modifiedDate;
+
 
 	@Override
 	public long getPID() {
@@ -34,12 +36,28 @@ public abstract class AbstractRecord extends Record {
 	}
 
 
+	@Override
 	public void setPID(long pid) {
 
 		this.pid = pid;
 	}
 
+	
+	@Override
+	public void setModifiedDate(Date modifiedDate) {
+		
+		this.modifiedDate = modifiedDate;
+	}
 
+
+	@Override
+	public Date getModifiedDate() {
+		
+		return modifiedDate;
+	}
+	
+
+	@Override
 	public void setValidFrom(Date validfrom) {
 
 		this.validFrom = validfrom;
@@ -60,6 +78,7 @@ public abstract class AbstractRecord extends Record {
 	}
 
 
+	@Override
 	public void setValidTo(Date validTo) {
 
 		this.validTo = validTo;

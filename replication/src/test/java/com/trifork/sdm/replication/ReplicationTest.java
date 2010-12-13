@@ -111,7 +111,7 @@ public abstract class ReplicationTest extends ServletModule {
 
 		ReplicationTest.server = server;
 		new Thread(server).run();
-		
+
 		ReplicationTest.contextRoot = new URL("http", "0.0.0.0", 3001, "");
 	}
 
@@ -160,7 +160,7 @@ public abstract class ReplicationTest extends ServletModule {
 			connection.connect();
 		}
 		catch (Exception e) {
-			
+
 			throw new AssertionFailedException(e);
 		}
 	}
@@ -176,7 +176,6 @@ public abstract class ReplicationTest extends ServletModule {
 
 		headers.put(key, value);
 	}
-	
 
 
 	protected void printContent() throws IOException {

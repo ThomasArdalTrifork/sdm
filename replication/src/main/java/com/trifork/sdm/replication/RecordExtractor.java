@@ -19,12 +19,15 @@ public class RecordExtractor {
 
 	private final List<EntityEntry> elements = new ArrayList<EntityEntry>();
 	private Class<? extends Record> entity;
+	private final String pidColumn;
 
 
 	public RecordExtractor(Class<? extends Record> entity) {
 
 		this.entity = entity;
-		
+
+		this.pidColumn = EntityHelper.getTableName(entity) + "PID";
+
 		for (Method getter : entity.getMethods()) {
 
 			Column annotation = getter.getAnnotation(Column.class);
@@ -78,9 +81,18 @@ public class RecordExtractor {
 			}
 			else {
 
-				throw new RuntimeException("Unsupported Extractor Column Type: " + entry.parameterType.getSimpleName());
+				throw new RuntimeException("Unsupported Extractor Column Type: "
+						+ entry.parameterType.getSimpleName());
 			}
 		}
+		
+		// Set the standard properties.
+		
+		long pid = row.getLong(pidColumn);
+		record.setPID(pid);
+		
+		Date modifiedDate = row.getTimestamp("ModifiedDate");
+		record.setModifiedDate(modifiedDate);
 
 		return record;
 	}

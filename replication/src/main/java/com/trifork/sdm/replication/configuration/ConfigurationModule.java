@@ -20,7 +20,7 @@ public class ConfigurationModule extends AbstractModule {
 		bindConstant().annotatedWith(Secret.class).to("secret");
 
 		bindConstant().annotatedWith(PageSize.class).to(1000);
-		bindConstant().annotatedWith(AuthorizationTTL.class).to(15);
+		bindConstant().annotatedWith(AuthorizationTTL.class).to(60);
 	}
 
 /*

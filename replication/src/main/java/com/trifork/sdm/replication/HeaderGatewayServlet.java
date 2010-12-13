@@ -5,7 +5,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -22,7 +21,7 @@ import com.trifork.sdm.replication.configuration.properties.Secret;
 
 
 @Singleton
-public class GatewayServlet extends HttpServlet {
+public class HeaderGatewayServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -33,20 +32,19 @@ public class GatewayServlet extends HttpServlet {
 
 	private final URL baseURL;
 
-	@Inject
-	Map entities;
-
 
 	@Inject
-	GatewayServlet(@Secret String key, @AuthorizationTTL int ttl, @PageSize int defaultPageSize,
+	HeaderGatewayServlet(@Secret String key, @AuthorizationTTL int ttl, @PageSize int defaultPageSize,
 			@Host String host, @Port int port) throws MalformedURLException {
 
-		/*
-		 * TODO: Use preconditions from JSR-305 instead assert key != null &&
-		 * !key.isEmpty(); assert ttl > 0; assert defaultPageSize > 0; assert
-		 * dateFormat != null; assert host != null;
+		/* TODO: Use preconditions from JSR-305 instead
+		assert key != null && !key.isEmpty();
+		assert ttl > 0;
+		assert defaultPageSize > 0;
+		assert dateFormat != null;
+		assert host != null;
 		 */
-
+		
 		this.key = key;
 		this.timeToLive = ttl;
 		this.baseURL = new URL("http", host, port, "");
@@ -60,12 +58,12 @@ public class GatewayServlet extends HttpServlet {
 		// FIXME: Pull the request's data from the SOAP envelope, and
 		// authenticate.
 
-		final String resource = request.getParameter("resource");
+		final String bucket = request.getHeader("X-Sdm-Bucket");
 
-		if (resource == null || resource.isEmpty()) {
+		if (bucket == null || bucket.isEmpty()) {
 
 			response.setStatus(HttpURLConnection.HTTP_BAD_REQUEST);
-			response.getOutputStream().println("A request must contain a 'resource' parameter.");
+			response.getOutputStream().println("A request must contain a 'X-Sdm-Bucket'-header.");
 		}
 		else {
 
@@ -74,7 +72,7 @@ public class GatewayServlet extends HttpServlet {
 			expires.add(Calendar.SECOND, timeToLive);
 
 			// HACK: Don't hard-code the host and port.
-			URL bucketURL = new URL(baseURL, "/" + resource);
+			final URL bucketURL = new URL(baseURL, "/" + bucket);
 
 			URLBuilder builder = new URLBuilder(bucketURL, username, key, expires.getTime());
 
@@ -83,14 +81,15 @@ public class GatewayServlet extends HttpServlet {
 			// NOTE: At the moment we only support one query parameter,
 			// namely since. This should be generalized in the future.
 
+			final String sinceHeader = request.getHeader("X-Sdm-Since");
+
 			// Since is not required. If it isn't there we make an
 			// initialization.
-
-			String token = request.getParameter("token");
-			
-			if (token != null) {
-				
-				builder.setQueryParameter("token", token);
+			if (sinceHeader != null) {
+				// We parse the header to make sure it is a value date.
+				// TODO: We might make this a bit more advanced.
+				final long since = Long.parseLong(sinceHeader);
+				builder.setQueryParameter("since", Long.toString(since));
 			}
 
 			// Create the response.
@@ -102,7 +101,7 @@ public class GatewayServlet extends HttpServlet {
 			// TODO: Should be written in a DGWS envelope.
 			response.getOutputStream().println(resourceURL);
 		}
-
+		
 		// TODO: Should we even do this?
 		response.getOutputStream().flush();
 		response.getOutputStream().close();

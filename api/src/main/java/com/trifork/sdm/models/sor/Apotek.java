@@ -1,15 +1,15 @@
 package com.trifork.sdm.models.sor;
 
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.sdm.models.AbstractRecord;
-import com.trifork.sdm.util.DateUtils;
+import com.trifork.sdm.models.Versioned;
 
 
 @Entity
+@Versioned({1,2})
 public class Apotek extends AbstractRecord {
 
 	private long sorNummer;
@@ -42,6 +42,7 @@ public class Apotek extends AbstractRecord {
 
 
 	@Column
+	@Versioned({2})
 	public long getApotekNummer() {
 
 		return apotekNummer;

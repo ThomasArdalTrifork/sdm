@@ -8,6 +8,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -26,11 +28,10 @@ public class XMLEntityWriter implements EntityWriter {
 
 	private final String collectionStartTag;
 	private final String collectionEndTag;
-	
+
 	private final static Object[] NO_ARGUMENTS = new Object[] {};
 
 	private final List<EntityEntry> elements = new ArrayList<EntityEntry>();
-	private String startTag;
 	private String endTag;
 	private String entityXMLName;
 
@@ -45,8 +46,9 @@ public class XMLEntityWriter implements EntityWriter {
 
 		public String startTag;
 		public String endTag;
-		
+
 		public Method method;
+
 
 		public EntityEntry(Method method) {
 
@@ -90,14 +92,14 @@ public class XMLEntityWriter implements EntityWriter {
 	public XMLEntityWriter(Class<? extends Record> entity) {
 
 		// Calculate all tags.
-		
+
 		entityXMLName = entity.getSimpleName().toLowerCase();
-		
+
 		endTag = String.format("\t</%s>\n", entityXMLName);
-		
+
 		collectionStartTag = String.format("<%sCollection>\n", entityXMLName);
 		collectionEndTag = String.format("</%sCollection>\n", entityXMLName);
-		
+
 		for (Method method : entity.getMethods()) {
 
 			Column annotation = method.getAnnotation(Column.class);
@@ -121,21 +123,38 @@ public class XMLEntityWriter implements EntityWriter {
 	public void output(Query query, OutputStream outputStream) throws IOException {
 
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-		
+
 		writer.write(collectionStartTag);
-		
-		BigInteger i = new BigInteger("12123128930000000000");
-		
+
 		for (Record record : query) {
-			
-			i = i.add(new BigInteger("1"));
-			
+
+			// Get the time in seconds.
+			String modifiedDate = Long.toString(record.getModifiedDate().getTime() / 1000);
+
+			// Pad the pid if needed (which it probably always will).
+			String pid = Long.toString(record.getPID());
+			int paddingLength = 10 - pid.length();
+
+			if (paddingLength > 0) {
+
+				for (int i = 0; i < paddingLength; i++) {
+					pid = "0" + pid; // TODO: Slow (but it works)
+				}
+			}
+			else if (paddingLength < 0) {
+				// TODO: Notify someone.
+				throw new IllegalStateException("The DB has run out of PID space according to the protocol.");
+			}
+
+			String updateToken = modifiedDate + pid;
+
 			StringBuilder builder = new StringBuilder();
-			
-			builder.append(String.format("\t<%s recordId=\"%s\" updateToken=\"%s\">\n", entityXMLName, record.getKey(), i.toString()));
+
+			builder.append(String.format("\t<%s recordId=\"%d\" updateToken=\"%s\">\n", entityXMLName,
+					record.getPID(), updateToken));
 
 			for (EntityEntry entry : elements) {
-				
+
 				builder.append("\t");
 				builder.append(entry.startTag);
 
@@ -143,7 +162,7 @@ public class XMLEntityWriter implements EntityWriter {
 					Object value = entry.method.invoke(record, NO_ARGUMENTS);
 
 					if (value != null) {
-						builder.append("<[CDATA[");
+						builder.append("<![CDATA[");
 						builder.append(value);
 						builder.append("]]>");
 					}
@@ -159,21 +178,21 @@ public class XMLEntityWriter implements EntityWriter {
 
 				builder.append(entry.endTag);
 			}
-			
+
 			builder.append("\t\t<validFrom>");
 			builder.append(record.getValidFrom());
 			builder.append("</validFrom>\n");
-			
+
 			builder.append("\t\t<validTo>");
 			builder.append(record.getValidTo());
 			builder.append("</validTo>\n");
-			
+
 			builder.append(endTag);
-			
+
 			writer.write(builder.toString());
 			writer.flush();
 		}
-		
+
 		writer.write(collectionEndTag);
 		writer.flush();
 	}

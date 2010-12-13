@@ -3,10 +3,31 @@ package com.trifork.sdm.models;
 import java.util.Date;
 
 
-public abstract class Record {
+public interface Record {
 
-	public abstract long getPID();
-	public abstract Object getKey();
-	public abstract Date getValidFrom();
-	public abstract Date getValidTo();
+	void setPID(long pid);
+
+
+	long getPID();
+
+
+	Object getKey();
+
+
+	Date getValidFrom();
+
+
+	Date getValidTo();
+
+
+	void setValidFrom(Date validfrom);
+
+
+	void setValidTo(Date validTo);
+
+
+	void setModifiedDate(Date modifiedDate);
+
+
+	Date getModifiedDate();
 }

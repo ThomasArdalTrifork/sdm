@@ -64,39 +64,45 @@ public class SchemaGenerator {
 
 	public void execute() throws IOException, URISyntaxException {
 
-		Reflections reflections = new Reflections(new ConfigurationBuilder()
-				.setUrls(ClasspathHelper.getUrlsForPackagePrefix(packageName))
-				.filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(packageName)))
-				.setScanners(new TypeAnnotationsScanner(), new TypeElementsScanner()));
-
 		// Copy the Stamdata element type definitions to the destination.
 
 		File typesFileDestination = new File(target, "Stamdata.xsd");
-
 		if (!typesFileDestination.exists()) {
 
 			File typesFile = new File(getClass().getClassLoader().getResource("Stamdata.xsd").toURI());
 			FileUtils.copyFile(typesFile, typesFileDestination);
 		}
 
+		
+		// Find all entities.
+
+		Reflections reflections = new Reflections(new ConfigurationBuilder()
+				.setUrls(ClasspathHelper.getUrlsForPackagePrefix(packageName))
+				.filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(packageName)))
+				.setScanners(new TypeAnnotationsScanner(), new TypeElementsScanner()));
+
 		Set<Class<?>> entities = reflections.getTypesAnnotatedWith(Entity.class);
 
 		for (Class<?> entity : entities) {
-
-			System.out.println("Entity: " + entity.getSimpleName());
-
+			
 			Entity typeAnnotation = entity.getAnnotation(Entity.class);
 			Versioned versioned = entity.getAnnotation(Versioned.class);
 
-			if (versioned.value() == null || versioned.value().length == 0) {
+			String versionString = versioned != null ? versioned.value().toString() : "1";
+			
+			System.out.println("Schema: " + entity.getSimpleName() + " " + versionString);
+
+
+			if (versioned == null || versioned.value().length == 0) {
 
 				generateSchemaVersion(entity, typeAnnotation, 1);
 			}
-			else
-				for (int version : versioned.value()) {
-
-					generateSchemaVersion(entity, typeAnnotation, version);
+			else {
+				for (int i=0; i<versioned.value().length; i++) {
+					
+					generateSchemaVersion(entity, typeAnnotation, versioned.value()[i]);
 				}
+			}
 		}
 	}
 
@@ -122,7 +128,7 @@ public class SchemaGenerator {
 
 		new File(target).mkdirs();
 
-		System.out.println(String.format("Generating Schema: %s (v%d)", schemaName, version));
+		//System.out.println(String.format("Generating Schema: %s (v%d)", schemaName, version));
 
 		String schemaCollectionFilePath = String.format("%s/%s_collection_v%d.xsd", target, schemaName,
 				version);
@@ -182,9 +188,11 @@ public class SchemaGenerator {
 			write(writer, 2, "</xs:annotation>");
 		}
 		else {
+			/*
 			System.err.println(String.format(
 					"The class '%s' is not documented! Add documentation to the @Column annotation.",
 					type.getSimpleName()));
+			*/
 		}
 
 		write(writer, 3, "<xs:all>");
@@ -283,7 +291,7 @@ public class SchemaGenerator {
 			String message = String.format("ERROR: Entity '%s' did not have a method named '%s'.",
 					type.getSimpleName(), methodName);
 
-			System.out.println(message);
+			//System.out.println(message);
 		}
 	}
 

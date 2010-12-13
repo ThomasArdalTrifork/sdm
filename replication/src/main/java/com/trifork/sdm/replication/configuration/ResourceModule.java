@@ -52,7 +52,7 @@ public class ResourceModule extends ServletModule {
 			final String resourcePath = "/" + entity.getSimpleName().toLowerCase();
 
 			serve(resourcePath).with(ResourceServlet.class);
-			//filter(resourcePath).through(SecurityFilter.class);
+			filter(resourcePath).through(SecurityFilter.class);
 			
 			entityMap.put(resourcePath, entity);
 		}

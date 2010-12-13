@@ -13,13 +13,17 @@ import javax.persistence.Table;
 @Table(name = "Indikation")
 public class Indikation extends TakstRecord {
 
-	private Long indikationskode; // Ref. t. LMS25
-	private String indikationstekstTotal; // Felt 03 + 04 + 05
+	// Ref. t. LMS25
+	private Long indikationskode;
+
+	// Field 03 + 04 + 05
+	private String indikationstekstTotal;
 	private String indikationstekstLinie1;
 	private String indikationstekstLinie2;
 	private String indikationstekstLinie3;
-	private String aktivInaktiv; // TODO: A = Aktiv kode. I = Inaktiv kode
-									// (bliver pt. ikke anvendes)
+
+	// A = Aktiv kode. I = Inaktiv kode (This field is not used currently).
+	private String aktivInaktiv;
 
 
 	public List<ATCKoderOgTekst> getATC() {
@@ -118,5 +122,4 @@ public class Indikation extends TakstRecord {
 
 		return this.indikationskode;
 	}
-
 }

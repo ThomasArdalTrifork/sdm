@@ -11,6 +11,7 @@ import javax.persistence.Id;
 
 import org.apache.log4j.Logger;
 
+import com.trifork.sdm.models.Versioned;
 import com.trifork.sdm.persistence.Dataset;
 
 
@@ -292,10 +293,13 @@ public class Laegemiddel extends TakstRecord {
 
 	public String getDatoForAfregistrAfLaegemiddel() {
 
-		if (this.datoForAfregistrAfLaegemiddel == null || "".equals(this.datoForAfregistrAfLaegemiddel))
+		if (this.datoForAfregistrAfLaegemiddel == null || "".equals(this.datoForAfregistrAfLaegemiddel)) {
 			return null;
+		}
+
 		SimpleDateFormat informat = new SimpleDateFormat("yyyyMMdd");
 		SimpleDateFormat outformat = new SimpleDateFormat("yyyy-MM-dd");
+
 		try {
 			return outformat.format(informat.parse(this.datoForAfregistrAfLaegemiddel));
 		}

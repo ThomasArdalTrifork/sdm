@@ -5,50 +5,11 @@ import static java.net.HttpURLConnection.HTTP_OK;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
 
 import org.junit.Test;
 
-import com.trifork.sdm.models.AbstractRecord;
-
 
 public class ResourceServletTest extends ReplicationTest {
-
-	@Entity
-	public static class Resource extends AbstractRecord {
-
-		private Date validFrom = new Date();
-		private String foo;
-
-
-		public Resource() {
-
-		}
-
-
-		@Column
-		public String getFoo() {
-
-			return foo;
-		}
-
-
-		public void setFoo(String value) {
-
-			this.foo = value;
-		}
-
-
-		@Override
-		public Date getValidFrom() {
-
-			return validFrom;
-		}
-	}
-
 
 	@Override
 	public void initialize() {
