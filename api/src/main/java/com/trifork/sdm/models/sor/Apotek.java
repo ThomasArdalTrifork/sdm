@@ -5,17 +5,15 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.sdm.models.AbstractRecord;
-import com.trifork.sdm.models.Versioned;
 
 
 @Entity
-@Versioned({1,2})
 public class Apotek extends AbstractRecord {
 
 	private long sorNummer;
-	private long apotekNummer;
-	private long filialNummer;
-	private long eanLokationsnummer;
+	private Long apotekNummer;
+	private Long filialNummer;
+	private Long eanLokationsnummer;
 	private long cvr;
 	private long pcvr;
 	private String navn;
@@ -42,40 +40,39 @@ public class Apotek extends AbstractRecord {
 
 
 	@Column
-	@Versioned({2})
-	public long getApotekNummer() {
+	public Long getApotekNummer() {
 
 		return apotekNummer;
 	}
 
 
-	public void setApotekNummer(long apotekNummer) {
+	public void setApotekNummer(Long apotekNummer) {
 
 		this.apotekNummer = apotekNummer;
 	}
 
 
 	@Column
-	public long getFilialNummer() {
+	public Long getFilialNummer() {
 
 		return filialNummer;
 	}
 
 
-	public void setFilialNummer(long filialNummer) {
+	public void setFilialNummer(Long filialNummer) {
 
 		this.filialNummer = filialNummer;
 	}
 
 
 	@Column
-	public long getEanLokationsnummer() {
+	public Long getEanLokationsnummer() {
 
 		return eanLokationsnummer;
 	}
 
 
-	public void setEanLokationsnummer(long eanLokationsnummer) {
+	public void setEanLokationsnummer(Long eanLokationsnummer) {
 
 		this.eanLokationsnummer = eanLokationsnummer;
 	}

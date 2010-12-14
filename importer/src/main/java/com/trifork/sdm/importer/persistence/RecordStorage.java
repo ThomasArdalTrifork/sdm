@@ -5,7 +5,7 @@ import java.util.Date;
 import com.trifork.sdm.models.Record;
 
 
-public interface TemporalStamdataEntityStorage<T extends Record>
+public interface RecordStorage<T extends Record>
 {
 
 	boolean fetchEntityVersions(Object entityId, Date validFrom, Date validTo);

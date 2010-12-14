@@ -1,11 +1,9 @@
 package com.trifork.sdm.models;
 
+import static java.lang.String.format;
+
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
 
 import com.trifork.sdm.util.DateUtils;
 
@@ -15,16 +13,10 @@ import com.trifork.sdm.util.DateUtils;
  */
 public abstract class AbstractRecord implements Record {
 
-	static final Logger logger = Logger.getLogger(AbstractRecord.class);
-
-	// TODO: These should be moved.
-	static final Map<Class<? extends Record>, Method> idMethodCache = new HashMap<Class<? extends Record>, Method>();
-	static final Map<Method, String> outputFieldNames = new HashMap<Method, String>();
-
 	private long pid = -1l;
 
-	private Date validFrom = DateUtils.PAST;
-	private Date validTo = DateUtils.FUTURE;
+	private Date validFrom = null;
+	private Date validTo = null;
 
 	private Date modifiedDate;
 
@@ -42,20 +34,20 @@ public abstract class AbstractRecord implements Record {
 		this.pid = pid;
 	}
 
-	
+
 	@Override
 	public void setModifiedDate(Date modifiedDate) {
-		
+
 		this.modifiedDate = modifiedDate;
 	}
 
 
 	@Override
 	public Date getModifiedDate() {
-		
+
 		return modifiedDate;
 	}
-	
+
 
 	@Override
 	public void setValidFrom(Date validfrom) {
@@ -67,14 +59,14 @@ public abstract class AbstractRecord implements Record {
 	@Override
 	public Date getValidFrom() {
 
-		return validFrom;
+		return validFrom != null ? validFrom : DateUtils.PAST;
 	}
 
 
 	@Override
 	public Date getValidTo() {
 
-		return validTo;
+		return validTo != null ? validTo : DateUtils.FUTURE;
 	}
 
 
@@ -90,14 +82,13 @@ public abstract class AbstractRecord implements Record {
 
 		// TODO: This method should not really be part of this class.
 
-		Method idMethod = EntityHelper.getIdMethod(getClass());
+		Method id = EntityHelper.getIdMethod(getClass());
 
 		try {
-			return idMethod.invoke(this);
+			return id.invoke(this);
 		}
 		catch (Exception e) {
-			logger.error("Error getting id for object of class: " + getClass());
-			return null;
+			throw new RuntimeException(format("Error getting id for object of class '%s'.", getClass().getSimpleName()));
 		}
 	}
 }

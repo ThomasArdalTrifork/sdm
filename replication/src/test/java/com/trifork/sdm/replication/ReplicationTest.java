@@ -26,6 +26,7 @@ import com.mysql.jdbc.AssertionFailedException;
 import com.trifork.sdm.replication.configuration.properties.Host;
 import com.trifork.sdm.replication.configuration.properties.Port;
 import com.trifork.sdm.replication.junit.TestRunner;
+import com.trifork.sdm.replication.service.Server;
 
 
 @RunWith(TestRunner.class)

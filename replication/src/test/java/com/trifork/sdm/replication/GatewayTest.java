@@ -17,9 +17,11 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
-import com.trifork.sdm.replication.SignatureBuilder.HTTPMethod;
 import com.trifork.sdm.replication.configuration.Bucket;
 import com.trifork.sdm.replication.configuration.properties.Secret;
+import com.trifork.sdm.replication.service.GatewayServlet;
+import com.trifork.sdm.replication.service.SignatureBuilder;
+import com.trifork.sdm.replication.service.SignatureBuilder.HTTPMethod;
 
 
 public class GatewayTest extends ReplicationTest {

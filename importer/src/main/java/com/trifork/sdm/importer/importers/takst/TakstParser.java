@@ -330,7 +330,7 @@ public class TakstParser {
 			for (Pakning pakning : pakninger.getEntities()) {
 				if (!pakning.isTilHumanAnvendelse()) pakningerToBeRemoved.add(pakning);
 			}
-			pakninger.removeEntities(pakningerToBeRemoved);
+			pakninger.removeRecords(pakningerToBeRemoved);
 		}
 		logger.debug("Number of entities after filtering pakninger: " + takst.getEntities().size());
 		Dataset<Laegemiddel> lmr = takst.getDatasetOfType(Laegemiddel.class);
@@ -339,7 +339,7 @@ public class TakstParser {
 			for (Laegemiddel lm : lmr.getEntities()) {
 				if (!lm.isTilHumanAnvendelse()) laegemidlerToBeRemoved.add(lm);
 			}
-			lmr.removeEntities(laegemidlerToBeRemoved);
+			lmr.removeRecords(laegemidlerToBeRemoved);
 		}
 		logger.debug("Number of entities after filtering lmr: " + takst.getEntities().size());
 		Dataset<ATCKoderOgTekst> atckoder = takst.getDatasetOfType(ATCKoderOgTekst.class);
@@ -348,7 +348,7 @@ public class TakstParser {
 			for (ATCKoderOgTekst atc : atckoder.getEntities()) {
 				if (!atc.isTilHumanAnvendelse()) atcToBeRemoved.add(atc);
 			}
-			atckoder.removeEntities(atcToBeRemoved);
+			atckoder.removeRecords(atcToBeRemoved);
 		}
 		logger.debug("Number of entities after filtering atc: " + takst.getEntities().size());
 	}

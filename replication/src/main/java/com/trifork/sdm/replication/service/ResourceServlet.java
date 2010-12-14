@@ -1,4 +1,4 @@
-package com.trifork.sdm.replication;
+package com.trifork.sdm.replication.service;
 
 import java.io.IOException;
 import java.util.Date;
@@ -60,7 +60,7 @@ public class ResourceServlet extends HttpServlet {
 		
 		// Determine the output format.
 		
-		EntityWriter writer = new XMLEntityWriter(entity);
+		EntitySerializer writer = new XMLEntitySerializer(entity);
 		
 		// Construct a query.
 		

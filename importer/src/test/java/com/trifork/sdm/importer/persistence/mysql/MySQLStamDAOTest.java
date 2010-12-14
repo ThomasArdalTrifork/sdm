@@ -18,7 +18,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.sdm.importer.persistence.mysql.MySQLTemporalTable.StamdataEntityVersion;
+import com.trifork.sdm.importer.persistence.mysql.MySQLTemporalTable.RecordVersion;
 import com.trifork.sdm.models.Record;
 import com.trifork.sdm.models.takst.DivEnheder;
 import com.trifork.sdm.models.takst.Laegemiddel;
@@ -161,23 +161,23 @@ public class MySQLStamDAOTest {
 		TakstDataset<Laegemiddel> lmr = new TakstDataset<Laegemiddel>(takst, new ArrayList<Laegemiddel>(), Laegemiddel.class);
 		takst.addDataset(lmr);
 
-		List<StamdataEntityVersion> sev = new ArrayList<StamdataEntityVersion>();
+		List<RecordVersion> sev = new ArrayList<RecordVersion>();
 		// Simulate that there is one record
-		StamdataEntityVersion sv = new StamdataEntityVersion();
+		RecordVersion sv = new RecordVersion();
 		sv.id = 1;
 
 		// Simulate that the existing row's validity range is 1950 to infinity.
 		sv.validFrom = DateUtils.toDate(1950, 01, 1);
 		sev.add(sv);
 
-		when(laegemiddeltableMock.getEntityVersions(any(Date.class), any(Date.class)))
+		when(laegemiddeltableMock.getRecordVersions(any(Date.class), any(Date.class)))
 				.thenReturn(sev);
 
 		dao.persistCompleteDatasets(takst.getDatasets());
 
 		// Verify that the existing record is updated
 		verify(laegemiddeltableMock, times(1)).updateValidToOnEntityVersion(
-				eq(DateUtils.toDate(2009, 7, 1)), any(StamdataEntityVersion.class), any(Date.class));
+				eq(DateUtils.toDate(2009, 7, 1)), any(RecordVersion.class), any(Date.class));
 
 	}
 

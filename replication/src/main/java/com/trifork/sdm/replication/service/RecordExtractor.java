@@ -1,4 +1,4 @@
-package com.trifork.sdm.replication;
+package com.trifork.sdm.replication.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,7 +11,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 
-import com.trifork.sdm.models.EntityHelper;
+import com.trifork.sdm.models.NamingConvention;
 import com.trifork.sdm.models.Record;
 
 
@@ -26,7 +26,7 @@ public class RecordExtractor {
 
 		this.entity = entity;
 
-		this.pidColumn = EntityHelper.getTableName(entity) + "PID";
+		this.pidColumn = NamingConvention.getTableName(entity) + "PID";
 
 		for (Method getter : entity.getMethods()) {
 
@@ -113,8 +113,8 @@ public class RecordExtractor {
 
 		public EntityEntry(Method getter) {
 
-			this.setter = EntityHelper.getSetterFromGetter(entity, getter);
-			this.columnName = EntityHelper.getColumnName(getter);
+			this.setter = NamingConvention.getSetterFromGetter(entity, getter);
+			this.columnName = NamingConvention.getColumnName(getter);
 			this.parameterType = setter.getParameterTypes()[0];
 		}
 	}

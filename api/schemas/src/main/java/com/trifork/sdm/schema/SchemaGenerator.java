@@ -90,7 +90,7 @@ public class SchemaGenerator {
 
 			String versionString = versioned != null ? versioned.value().toString() : "1";
 			
-			System.out.println("Schema: " + entity.getSimpleName() + " " + versionString);
+			System.out.println("Schema: " + entity.getName() + " " + versionString);
 
 
 			if (versioned == null || versioned.value().length == 0) {

@@ -1,4 +1,4 @@
-package com.trifork.sdm.replication;
+package com.trifork.sdm.replication.service;
 
 import javax.inject.Inject;
 import com.google.inject.Injector;

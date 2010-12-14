@@ -17,5 +17,4 @@ public class FilePersistException extends FileImporterException
 	{
 		super(message, cause);
 	}
-
 }

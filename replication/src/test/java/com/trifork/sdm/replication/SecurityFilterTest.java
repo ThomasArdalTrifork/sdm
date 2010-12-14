@@ -23,6 +23,8 @@ import org.junit.Test;
 
 import com.trifork.sdm.replication.configuration.Bucket;
 import com.trifork.sdm.replication.configuration.properties.Secret;
+import com.trifork.sdm.replication.service.SecurityFilter;
+import com.trifork.sdm.replication.service.URLBuilder;
 
 
 public class SecurityFilterTest extends ReplicationTest {

@@ -19,7 +19,7 @@ public class DateUtils {
 
 	// TODO: How do these date combine with java.util.Date?
 	public static final Date FUTURE = toDate(2999, 12, 31);
-	public static final Date PAST = toDate(1950, 1, 1);
+	public static final Date PAST = new Date(0l);
 
 
 	/**

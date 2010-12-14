@@ -1,4 +1,4 @@
-package com.trifork.sdm.replication;
+package com.trifork.sdm.replication.service;
 
 import com.trifork.sdm.models.Record;
 

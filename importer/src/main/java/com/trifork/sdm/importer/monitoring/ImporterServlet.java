@@ -16,7 +16,6 @@ import com.trifork.sdm.importer.importers.FileImporterControlledIntervals;
 import com.trifork.sdm.importer.persistence.mysql.MySQLConnectionManager;
 import com.trifork.sdm.importer.spoolers.FileSpooler;
 import com.trifork.sdm.importer.spoolers.SpoolerManager;
-import com.trifork.sdm.util.DateUtils;
 
 
 public class ImporterServlet extends HttpServlet {

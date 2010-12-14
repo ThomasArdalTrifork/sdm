@@ -1,4 +1,4 @@
-package com.trifork.sdm.replication;
+package com.trifork.sdm.replication.service;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -6,10 +6,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -24,7 +21,7 @@ import com.trifork.sdm.models.Record;
  * The class uses the information entity's {@link Column} annotations, and the
  * naming convention to infer names.
  */
-public class XMLEntityWriter implements EntityWriter {
+public class XMLEntitySerializer implements EntitySerializer {
 
 	private final String collectionStartTag;
 	private final String collectionEndTag;
@@ -89,7 +86,7 @@ public class XMLEntityWriter implements EntityWriter {
 	}
 
 
-	public XMLEntityWriter(Class<? extends Record> entity) {
+	public XMLEntitySerializer(Class<? extends Record> entity) {
 
 		// Calculate all tags.
 

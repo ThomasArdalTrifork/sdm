@@ -1,4 +1,4 @@
-package com.trifork.sdm.replication;
+package com.trifork.sdm.replication.service;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,7 +10,7 @@ import java.io.OutputStream;
  * Implementing classes should support a single output format e.g. XML or
  * FastInfoset.
  */
-public interface EntityWriter {
+public interface EntitySerializer {
 
 	/**
 	 * Implementing classes must return the HTTP content type for the generated output,

@@ -2,8 +2,10 @@ package com.trifork.sdm.replication.configuration;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Entity;
 import javax.servlet.ServletException;
@@ -18,13 +20,19 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
 import com.google.inject.servlet.ServletModule;
-import com.trifork.sdm.replication.GatewayServlet;
-import com.trifork.sdm.replication.ResourceServlet;
-import com.trifork.sdm.replication.SecurityFilter;
+import com.trifork.sdm.models.Record;
+import com.trifork.sdm.replication.service.GatewayServlet;
+import com.trifork.sdm.replication.service.ResourceServlet;
+import com.trifork.sdm.replication.service.SecurityFilter;
 
-public class ResourceModule extends ServletModule {
+
+public class ResourceModule extends ServletModule implements Iterable<Class<? extends Record>>{
+
+	private Set<Class<? extends Record>> resources = new TreeSet<Class<? extends Record>>();
+
 
 	@Override
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void configureServlets() {
 
 		// Security
@@ -32,46 +40,69 @@ public class ResourceModule extends ServletModule {
 
 		serve("/gateway").with(GatewayServlet.class);
 
+		Map entityMap = new HashMap<String, Class>();
+
+		for (Class<?> entity : resources) {
+			final String resourcePath = "/" + entity.getSimpleName().toLowerCase();
+
+			serve(resourcePath).with(ResourceServlet.class);
+			filter(resourcePath).through(SecurityFilter.class);
+
+			entityMap.put(resourcePath, entity);
+		}
+
+		bind(Map.class).toInstance(entityMap);
+
+		// Serve everything else with status 404.
+		// TODO: Is this really the best way? Can't the server handle this?
+
+		serve("/*").with(new HttpServlet() {
+
+			private static final long serialVersionUID = 1L;
+
+
+			@Override
+			protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+				resp.setStatus(404);
+			}
+		});
+	}
+
+
+	public ResourceModule add(Class<? extends Record> entity) {
+
+		if (!resources.contains(entity)) resources.add(entity);
+
+		return this;
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public ResourceModule addAll() {
+
 		// Find all entities and serve them as resources.
 
 		final String ENTITY_PACKAGE = "com.trifork.sdm.models";
 
-		Reflections reflector = new Reflections(new ConfigurationBuilder()
-				.setUrls(ClasspathHelper.getUrlsForPackagePrefix(ENTITY_PACKAGE))
-				.filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(ENTITY_PACKAGE)))
-				.setScanners(new TypeAnnotationsScanner()));
+		Reflections reflector = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.getUrlsForPackagePrefix(ENTITY_PACKAGE)).filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(ENTITY_PACKAGE))).setScanners(new TypeAnnotationsScanner()));
 
 		// Serve all entities by deferring their URLs and using their
 		// annotations.
 
 		Set<Class<?>> entities = reflector.getTypesAnnotatedWith(Entity.class);
 
-		Map entityMap = new HashMap<String, Class>();
-		
 		for (Class<?> entity : entities) {
-			final String resourcePath = "/" + entity.getSimpleName().toLowerCase();
-
-			serve(resourcePath).with(ResourceServlet.class);
-			filter(resourcePath).through(SecurityFilter.class);
-			
-			entityMap.put(resourcePath, entity);
+			resources.add((Class<? extends Record>) entity);
 		}
-		
-		bind(Map.class).toInstance(entityMap); 
 
-		// Serve everything else with status 404.
-		// TODO: Is this needed?
+		return this;
+	}
 
-		serve("/*").with(new HttpServlet() {
 
-			private static final long serialVersionUID = 1L;
+	@Override
+	public Iterator<Class<? extends Record>> iterator() {
 
-			@Override
-			protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-					IOException {
-
-				resp.setStatus(404);
-			}
-		});
+		return resources.iterator();
 	}
 }

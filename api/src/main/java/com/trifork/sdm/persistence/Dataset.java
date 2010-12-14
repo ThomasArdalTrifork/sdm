@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.persistence.Table;
 
 import com.trifork.sdm.models.EntityHelper;
+import com.trifork.sdm.models.NamingConvention;
 import com.trifork.sdm.models.Record;
 
 
@@ -99,7 +100,7 @@ public class Dataset<T extends Record> {
 	}
 
 
-	public void removeEntities(List<T> entities) {
+	public void removeRecords(List<T> entities) {
 
 		for (T entity : entities) {
 			this.entities.remove(entity.getKey());
@@ -112,6 +113,7 @@ public class Dataset<T extends Record> {
 		Object id = record.getKey();
 
 		List<T> records = entities.get(id);
+
 		if (records == null) {
 			records = new ArrayList<T>();
 			entities.put(id, records);
@@ -120,13 +122,15 @@ public class Dataset<T extends Record> {
 		records.add(record);
 	}
 
+
 	public String getIdOutputName() {
 
-		return EntityHelper.getOutputFieldName(EntityHelper.getIdMethod(type));
+		return NamingConvention.getColumnName(EntityHelper.getIdMethod(type));
 	}
+
 
 	public static String getIdOutputName(Class<? extends Record> type) {
 
-		return EntityHelper.getOutputFieldName(EntityHelper.getIdMethod(type));
+		return NamingConvention.getColumnName(EntityHelper.getIdMethod(type));
 	}
 }

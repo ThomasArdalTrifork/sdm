@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 import com.trifork.sdm.importer.importers.FileImporterControlledIntervals;
 import com.trifork.sdm.importer.importers.FileImporterException;
-import com.trifork.sdm.importer.persistence.StamdataVersionedDao;
+import com.trifork.sdm.importer.persistence.RecordDao;
 import com.trifork.sdm.importer.persistence.mysql.MySQLConnectionManager;
 import com.trifork.sdm.importer.persistence.mysql.MySQLTemporalDao;
 import com.trifork.sdm.models.sks.Organisation;
@@ -61,7 +61,7 @@ public class SksImporter implements FileImporterControlledIntervals
 		try
 		{
 			con = MySQLConnectionManager.getConnection();
-			StamdataVersionedDao dao = new MySQLTemporalDao(con);
+			RecordDao dao = new MySQLTemporalDao(con);
 			
 			for (File file : files)
 			{

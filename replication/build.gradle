@@ -36,7 +36,7 @@ dependencies {
 	compile 'bouncycastle:bcprov-jdk16:140'
 	
 	
-	// Token Encoding
+	// Encoding
 	
 	compile "commons-codec:commons-codec:1.4"
 	

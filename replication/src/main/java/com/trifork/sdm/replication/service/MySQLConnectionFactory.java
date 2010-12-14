@@ -1,10 +1,10 @@
-package com.trifork.sdm.replication;
+package com.trifork.sdm.replication.service;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 
-public class MySQLConnectionFactory implements ConnectionFactory {
+public class MySQLConnectionFactory implements JdbcConnectionFactory {
 
 	{
 		try {

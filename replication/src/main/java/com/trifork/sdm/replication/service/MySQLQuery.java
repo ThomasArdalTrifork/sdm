@@ -1,4 +1,4 @@
-package com.trifork.sdm.replication;
+package com.trifork.sdm.replication.service;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,7 +11,7 @@ import java.util.Iterator;
 import javax.inject.Inject;
 
 import com.google.inject.assistedinject.Assisted;
-import com.trifork.sdm.models.EntityHelper;
+import com.trifork.sdm.models.NamingConvention;
 import com.trifork.sdm.models.Record;
 
 
@@ -20,12 +20,12 @@ public class MySQLQuery implements Query {
 	private final long pid;
 	private final Date date;
 	private final Class<? extends Record> entity;
-	private final ConnectionFactory connectionFactory;
+	private final JdbcConnectionFactory connectionFactory;
 
 
 	@Inject
 	MySQLQuery(@Assisted Class<? extends Record> entity, @Assisted long pid, @Assisted Date since,
-			ConnectionFactory connectionFactory) {
+			JdbcConnectionFactory connectionFactory) {
 
 		this.pid = pid;
 		this.date = since;
@@ -54,7 +54,7 @@ public class MySQLQuery implements Query {
 		PreparedStatement stm;
 		final RecordExtractor extractor = new RecordExtractor(entity);
 
-		String tableName = EntityHelper.getTableName(entity);
+		String tableName = NamingConvention.getTableName(entity);
 
 		try {
 			StringBuilder sql = new StringBuilder();

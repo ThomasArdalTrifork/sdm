@@ -4,13 +4,13 @@ import java.util.EventListener;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import com.trifork.sdm.replication.JettyServer;
-import com.trifork.sdm.replication.ResourceDispatcher;
-import com.trifork.sdm.replication.Server;
 import com.trifork.sdm.replication.configuration.properties.AuthorizationTTL;
 import com.trifork.sdm.replication.configuration.properties.Host;
-import com.trifork.sdm.replication.configuration.properties.PageSize;
+import com.trifork.sdm.replication.configuration.properties.DefaultPageSize;
 import com.trifork.sdm.replication.configuration.properties.Port;
+import com.trifork.sdm.replication.service.JettyServer;
+import com.trifork.sdm.replication.service.ResourceDispatcher;
+import com.trifork.sdm.replication.service.Server;
 
 public class TestServerModule extends AbstractModule {
 
@@ -23,7 +23,7 @@ public class TestServerModule extends AbstractModule {
 		bind(EventListener.class).to(ResourceDispatcher.class);
 		
 		
-		bindConstant().annotatedWith(PageSize.class).to(1000);
+		bindConstant().annotatedWith(DefaultPageSize.class).to(1000);
 		bindConstant().annotatedWith(AuthorizationTTL.class).to(15);
 	}
 }

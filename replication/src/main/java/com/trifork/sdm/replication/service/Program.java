@@ -1,8 +1,8 @@
-package com.trifork.sdm.replication;
+package com.trifork.sdm.replication.service;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.trifork.sdm.replication.configuration.ConfigurationModule;
+import com.trifork.sdm.replication.configuration.GatewayModule;
 import com.trifork.sdm.replication.configuration.DatabaseModule;
 import com.trifork.sdm.replication.configuration.ResourceModule;
 import com.trifork.sdm.replication.configuration.ServerModule;
@@ -25,7 +25,7 @@ public final class Program {
 
 			// Set up component dependencies.
 
-			Injector injector = Guice.createInjector(new ConfigurationModule(), new ResourceModule(),
+			Injector injector = Guice.createInjector(new GatewayModule(), new ResourceModule(),
 					new ServerModule(host, port), new DatabaseModule());
 
 			// Start the server.

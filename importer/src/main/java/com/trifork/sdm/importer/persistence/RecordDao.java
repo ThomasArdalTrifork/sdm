@@ -7,8 +7,7 @@ import com.trifork.sdm.persistence.CompleteDataset;
 import com.trifork.sdm.persistence.Dataset;
 
 
-public interface StamdataVersionedDao
-{
+public interface RecordDao {
 
 	/**
 	 * This method is for persisting the complete dataset so it is represented
@@ -28,20 +27,17 @@ public interface StamdataVersionedDao
 	 * another version exist.
 	 * 
 	 */
-	public void persistCompleteDataset(CompleteDataset<? extends Record> dataset)
-			throws FilePersistException;
+	public void persistCompleteDataset(CompleteDataset<? extends Record> dataset) throws FilePersistException;
 
 
 	/**
 	 * Like persistCompleteDataset, but with multiple complete datasets.
 	 */
-	public void persistCompleteDatasets(List<CompleteDataset<? extends Record>> dataset)
-			throws FilePersistException;
+	public void persistCompleteDatasets(List<CompleteDataset<? extends Record>> dataset) throws FilePersistException;
 
 
 	/**
 	 * Persist the records in the dataset.
 	 */
-	public void persistDeltaDataset(Dataset<? extends Record> dataset)
-			throws FilePersistException;
+	public void persistDeltaDataset(Dataset<? extends Record> dataset) throws FilePersistException;
 }

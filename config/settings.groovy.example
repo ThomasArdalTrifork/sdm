@@ -12,8 +12,15 @@ cobertura {
 }
 
 
+replication {
+	defaults.pageSize = 1000
+	
+	security.secret = "CHANGE ME!"
+	security.urlTimeToLive = 15
+}                              
+
 // Environment specific settings.
-// These will override the defaults.
+// These will override the defaults settings above.
 
 environments {
 	production {

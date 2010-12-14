@@ -4,11 +4,11 @@ import java.util.EventListener;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import com.trifork.sdm.replication.JettyServer;
-import com.trifork.sdm.replication.ResourceDispatcher;
-import com.trifork.sdm.replication.Server;
 import com.trifork.sdm.replication.configuration.properties.Host;
 import com.trifork.sdm.replication.configuration.properties.Port;
+import com.trifork.sdm.replication.service.JettyServer;
+import com.trifork.sdm.replication.service.ResourceDispatcher;
+import com.trifork.sdm.replication.service.Server;
 
 public class ServerModule extends AbstractModule {
 	

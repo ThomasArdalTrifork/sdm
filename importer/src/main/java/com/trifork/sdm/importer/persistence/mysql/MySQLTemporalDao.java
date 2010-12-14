@@ -1,7 +1,6 @@
 package com.trifork.sdm.importer.persistence.mysql;
 
 import java.sql.Connection;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -10,38 +9,39 @@ import javax.persistence.Entity;
 import org.apache.log4j.Logger;
 
 import com.trifork.sdm.importer.persistence.FilePersistException;
-import com.trifork.sdm.importer.persistence.StamdataVersionedDao;
-import com.trifork.sdm.importer.persistence.mysql.MySQLTemporalTable.StamdataEntityVersion;
+import com.trifork.sdm.importer.persistence.RecordDao;
+import com.trifork.sdm.importer.persistence.mysql.MySQLTemporalTable.RecordVersion;
 import com.trifork.sdm.models.Record;
 import com.trifork.sdm.persistence.CompleteDataset;
 import com.trifork.sdm.persistence.Dataset;
 
 
-public class MySQLTemporalDao implements StamdataVersionedDao {
+public class MySQLTemporalDao implements RecordDao {
 
 	private static Logger logger = Logger.getLogger(MySQLTemporalDao.class);
 	protected Connection connection;
 
 
-	public MySQLTemporalDao(Connection con) {
+	public MySQLTemporalDao(Connection connection) {
 
-		this.connection = con;
+		this.connection = connection;
 	}
 
 
-	public void persistCompleteDatasets(List<CompleteDataset<? extends Record>> datasets)
-			throws FilePersistException {
+	public void persistCompleteDatasets(List<CompleteDataset<? extends Record>> datasets) throws FilePersistException {
 
-		logger.debug("Starting to put entities from datasetgroup.");
+		logger.debug("Starting to put records from dataset group.");
 
 		for (CompleteDataset<? extends Record> dataset : datasets) {
+			
 			persistCompleteDataset(dataset);
 		}
 
-		logger.debug("Done putting entities from datasetgroup.");
+		logger.debug("Done putting records from dataset group.");
 	}
 
 
+	@Override
 	public void persistCompleteDataset(CompleteDataset<?> dataset) throws FilePersistException {
 
 		if (!dataset.getType().isAnnotationPresent(Entity.class)) return;
@@ -67,8 +67,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 
 		MySQLTemporalTable table = getTable(dataset.getType());
 
-		logger.debug("persistDeltaDataset dataset: " + dataset.getEntityTypeDisplayName() + " with: "
-				+ dataset.getEntities().size() + " entities...");
+		logger.debug("persistDeltaDataset dataset: " + dataset.getEntityTypeDisplayName() + " with: " + dataset.getEntities().size() + " entities...");
 
 		int processedEntities = 0;
 
@@ -79,6 +78,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 			Date validFrom = sde.getValidFrom();
 
 			boolean exists = table.fetchEntityVersions(sde.getKey(), validFrom, sde.getValidTo());
+			
 			if (!exists) {
 				// Entity was not found, so create it
 				table.insertRow(sde, now);
@@ -118,8 +118,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 							if (dataEquals) {
 								// If necesary, increase validto on existing
 								// entity to our validTo.
-								if (table.getCurrentRowValidTo().before(sde.getValidTo()))
-									table.updateValidToOnCurrentRow(sde.getValidTo(), now);
+								if (table.getCurrentRowValidTo().before(sde.getValidTo())) table.updateValidToOnCurrentRow(sde.getValidTo(), now);
 								// No need to insert our version as the range is
 								// covered by existing version
 								insertVersion = false;
@@ -222,9 +221,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 			}
 		}
 
-		logger.debug("...persistDeltaDataset complete. " + processedEntities + " processed, "
-				+ table.getInsertedRows() + " inserted, " + table.getUpdatedRecords() + " updated, "
-				+ table.getDeletedRecords() + " deleted");
+		logger.debug("...persistDeltaDataset complete. " + processedEntities + " processed, " + table.getInsertedRows() + " inserted, " + table.getUpdatedRecords() + " updated, " + table.getDeletedRecords() + " deleted");
 	}
 
 
@@ -238,22 +235,19 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 	 * @param dataset
 	 * @throws FilePersistException
 	 */
-	private void updateValidToOnRecordsNotInDataset(CompleteDataset<? extends Record> dataset)
-			throws FilePersistException {
+	private void updateValidToOnRecordsNotInDataset(CompleteDataset<? extends Record> dataset) throws FilePersistException {
 
-		logger.debug("updateValidToOnRecordsNotInDataset " + dataset.getEntityTypeDisplayName()
-				+ " starting...");
+		logger.debug("updateValidToOnRecordsNotInDataset " + dataset.getEntityTypeDisplayName() + " starting...");
 
 		Date now = new Date();
 
 		MySQLTemporalTable table = getTable(dataset.getType());
 
-		List<StamdataEntityVersion> evs = table.getEntityVersions(dataset.getValidFrom(),
-				dataset.getValidTo());
+		List<RecordVersion> evs = table.getRecordVersions(dataset.getValidFrom(), dataset.getValidTo());
 
 		int nExisting = 0;
 
-		for (StamdataEntityVersion ev : evs) {
+		for (RecordVersion ev : evs) {
 
 			List<? extends Record> entitiesWithId = dataset.getEntitiesById(ev.id);
 
@@ -264,13 +258,11 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 			}
 
 			if (++nExisting % 10000 == 0) {
-				logger.debug("Processed " + nExisting + " existing records of type "
-						+ dataset.getEntityTypeDisplayName());
+				logger.debug("Processed " + nExisting + " existing records of type " + dataset.getEntityTypeDisplayName());
 			}
 		}
 
-		logger.debug("...updateValidToOnRecordsNotInDataset " + dataset.getEntityTypeDisplayName()
-				+ " complete. Updated: " + table.getUpdatedRecords() + " records.");
+		logger.debug("...updateValidToOnRecordsNotInDataset " + dataset.getEntityTypeDisplayName() + " complete. Updated: " + table.getUpdatedRecords() + " records.");
 	}
 
 

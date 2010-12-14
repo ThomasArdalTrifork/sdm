@@ -10,7 +10,6 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "Indikation")
 public class Indikation extends TakstRecord {
 
 	// Ref. t. LMS25

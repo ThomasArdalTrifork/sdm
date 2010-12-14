@@ -13,10 +13,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.sun.istack.internal.Nullable;
 import com.trifork.sdm.importer.TestHelper;
 import com.trifork.sdm.importer.importers.FileImporterException;
 import com.trifork.sdm.importer.importers.takst.TakstParser;
-import com.trifork.sdm.importer.persistence.StamdataVersionedDao;
+import com.trifork.sdm.importer.persistence.RecordDao;
 import com.trifork.sdm.importer.persistence.mysql.MySQLConnectionManager;
 import com.trifork.sdm.importer.persistence.mysql.MySQLTemporalDao;
 import com.trifork.sdm.models.takst.Takst;
@@ -24,10 +25,7 @@ import com.trifork.sdm.models.takst.Takst;
 
 /**
  * Integration test of the database access layer. Tests that a dataset can be
- * written to the database
- * 
- * @author Anders Bo Christensen
- * 
+ * written to the database.
  */
 public class DataLayerIntegrationTest {
 
@@ -70,7 +68,7 @@ public class DataLayerIntegrationTest {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
-		StamdataVersionedDao versionedDao = new MySQLTemporalDao(con);
+		RecordDao versionedDao = new MySQLTemporalDao(con);
 
 		// Act
 		versionedDao.persistCompleteDatasets(takst.getDatasets());
@@ -78,8 +76,7 @@ public class DataLayerIntegrationTest {
 		// Assert
 		Assert.assertEquals(new Integer(92), getRecordCount(versionedDao));
 
-		ResultSet rs = statement
-				.executeQuery("select * from Laegemiddel where DrugName like 'Kemadrin';");
+		ResultSet rs = statement.executeQuery("select * from Laegemiddel where DrugName like 'Kemadrin';");
 		if (!rs.next()) {
 			Assert.fail("Did not find expected Laegemiddel Kemadrin");
 		}
@@ -98,7 +95,7 @@ public class DataLayerIntegrationTest {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
-		StamdataVersionedDao versionedDao = new MySQLTemporalDao(con);
+		RecordDao versionedDao = new MySQLTemporalDao(con);
 
 		// Act
 		versionedDao.persistCompleteDatasets(takstinit.getDatasets());
@@ -107,13 +104,11 @@ public class DataLayerIntegrationTest {
 		// Assert
 		Assert.assertEquals(new Integer(93), getRecordCount(versionedDao));
 
-		ResultSet rs = statement
-				.executeQuery("select * from Laegemiddel where DrugName like 'Kemadrin';");
+		ResultSet rs = statement.executeQuery("select * from Laegemiddel where DrugName like 'Kemadrin';");
 		if (!rs.next()) {
 			Assert.fail("Did not find expected Laegemiddel Kemadrin");
 		}
 		Assert.assertEquals(dateFormat.parse("2009-07-30 00:00:00"), rs.getTimestamp("ValidTo"));
-
 
 		rs = statement.executeQuery("select * from Laegemiddel where DrugName like 'Kemadron';");
 		if (!rs.next()) {
@@ -135,18 +130,16 @@ public class DataLayerIntegrationTest {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
-		StamdataVersionedDao versionedDao = new MySQLTemporalDao(con);
+		RecordDao versionedDao = new MySQLTemporalDao(con);
 
 		// Act
 		versionedDao.persistCompleteDatasets(takstinit.getDatasets());
 		versionedDao.persistCompleteDatasets(deleteupd.getDatasets());
 
-
 		// Assert
 		Assert.assertEquals(new Integer(92), getRecordCount(versionedDao));
 
-		ResultSet rs = statement
-				.executeQuery("select * from Laegemiddel where DrugName like 'Kemadrin';");
+		ResultSet rs = statement.executeQuery("select * from Laegemiddel where DrugName like 'Kemadrin';");
 		if (!rs.next()) {
 			Assert.fail("Did not find expected Laegemiddel Kemadrin");
 		}
@@ -164,7 +157,7 @@ public class DataLayerIntegrationTest {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
-		StamdataVersionedDao versionedDao = new MySQLTemporalDao(con);
+		RecordDao versionedDao = new MySQLTemporalDao(con);
 
 		// Act
 		versionedDao.persistCompleteDatasets(takstinit.getDatasets());
@@ -174,24 +167,24 @@ public class DataLayerIntegrationTest {
 		con.close();
 	}
 
-
-	private Statement getStatement(StamdataVersionedDao versionedDao) throws SQLException {
+	
+	private Statement getStatement(RecordDao versionedDao) throws SQLException {
 
 		return ((MySQLTemporalDao) versionedDao).getConnection().createStatement();
 	}
 
 
-	private Integer getRecordCount(StamdataVersionedDao versionedDao) throws SQLException {
+	private Integer getRecordCount(RecordDao versionedDao) throws SQLException {
 
 		Statement statement = getStatement(versionedDao);
 
 		ResultSet rs = statement.executeQuery("Select count(*) from Laegemiddel");
 		Integer recordsfound = 0;
-		
+
 		if (rs.next()) {
 			recordsfound = rs.getInt(1);
 		}
-		
+
 		return recordsfound;
 	}
 
