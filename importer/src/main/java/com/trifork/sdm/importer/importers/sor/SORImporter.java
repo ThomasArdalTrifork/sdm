@@ -16,32 +16,28 @@ import com.trifork.sdm.importer.persistence.mysql.MySQLConnectionManager;
 import com.trifork.sdm.importer.persistence.mysql.MySQLTemporalDao;
 
 
-public class SORImporter implements FileImporterControlledIntervals
-{
+public class SORImporter implements FileImporterControlledIntervals {
 	private static final Logger logger = Logger.getLogger(SORImporter.class);
 
 
-	public boolean areRequiredInputFilesPresent(List<File> files)
-	{
+	public boolean areRequiredInputFilesPresent(List<File> files) {
+
 		if (files.size() == 0) return false;
 		boolean xmlpresent = false;
-		for (File file : files)
-		{
+		for (File file : files) {
 			if (file.getName().endsWith(".xml")) xmlpresent = true;
 		}
 		return xmlpresent;
 	}
 
 
-	public void importFiles(List<File> files) throws FileImporterException
-	{
+	public void importFiles(List<File> files) throws FileImporterException {
+
 		Connection connection = null;
-		try
-		{
+		try {
 			connection = MySQLConnectionManager.getConnection();
 			MySQLTemporalDao dao = new MySQLTemporalDao(connection);
-			for (File file : files)
-			{
+			for (File file : files) {
 				SORDataSets dataSets = SORParser.parse(file);
 				dao.persistCompleteDataset(dataSets.getPraksisDS());
 				dao.persistCompleteDataset(dataSets.getYderDS());
@@ -51,22 +47,18 @@ public class SORImporter implements FileImporterControlledIntervals
 			}
 			connection.commit();
 		}
-		catch (SQLException e)
-		{
-			try
-			{
+		catch (SQLException e) {
+			try {
 				connection.rollback();
 			}
-			catch (SQLException e1)
-			{
+			catch (SQLException e1) {
 				logger.error("Cannot rollback", e1);
 			}
 			String mess = "Error using database during import of autorisationsregister";
 			logger.error(mess, e);
 			throw new FileImporterException(mess, e);
 		}
-		finally
-		{
+		finally {
 			MySQLConnectionManager.close(connection);
 		}
 	}
@@ -75,8 +67,8 @@ public class SORImporter implements FileImporterControlledIntervals
 	/**
 	 * Should be updated every day
 	 */
-	public Date getNextImportExpectedBefore(Date lastImport)
-	{
+	public Date getNextImportExpectedBefore(Date lastImport) {
+
 		Calendar cal;
 
 		if (lastImport == null)
@@ -85,10 +77,9 @@ public class SORImporter implements FileImporterControlledIntervals
 			cal = new GregorianCalendar();
 			cal.setTime(lastImport);
 		}
-		
+
 		cal.add(Calendar.DATE, 3);
-		
-		
+
 		return cal.getTime();
 	}
 
