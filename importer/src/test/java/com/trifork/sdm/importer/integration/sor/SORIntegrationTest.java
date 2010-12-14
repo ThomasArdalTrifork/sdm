@@ -29,15 +29,17 @@ public class SORIntegrationTest {
 	@Before
 	public void cleanDb() throws Throwable {
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		Statement stmt = con.createStatement();
-		stmt.executeQuery("truncate table Praksis");
-		stmt.executeQuery("truncate table Yder");
-		stmt.executeQuery("truncate table Sygehus");
-		stmt.executeQuery("truncate table SygehusAfdeling");
-		stmt.executeQuery("truncate table Apotek");
-		stmt.close();
-		con.close();
+		Connection connection = MySQLConnectionManager.getAutoCommitConnection();
+		
+		Statement stm = connection.createStatement();
+		stm.executeQuery("truncate table Praksis");
+		stm.executeQuery("truncate table Yder");
+		stm.executeQuery("truncate table Sygehus");
+		stm.executeQuery("truncate table SygehusAfdeling");
+		stm.executeQuery("truncate table Apotek");
+		stm.close();
+		
+		connection.close();
 	}
 
 
@@ -46,9 +48,7 @@ public class SORIntegrationTest {
 
 		SORImporter importer = new SORImporter();
 		ArrayList<File> files = new ArrayList<File>();
-		// files.add(onePraksis);
-		// files.add(oneSygehus);
-		// files.add(oneApotek);
+
 		files.add(fullSor);
 		importer.importFiles(files);
 
@@ -56,27 +56,22 @@ public class SORIntegrationTest {
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("Select count(*) from Praksis");
 		rs.next();
-		// assertEquals(1, rs.getInt(1));
-		// assertEquals(2071, rs.getInt(1));
+
 		assertEquals(3148, rs.getInt(1));
 		rs.close();
 
 		rs = stmt.executeQuery("Select count(*) from Yder");
 		rs.next();
-		// assertEquals(1, rs.getInt(1));
-		// assertEquals(4171, rs.getInt(1));
 		assertEquals(5434, rs.getInt(1));
 		rs.close();
 
 		rs = stmt.executeQuery("Select count(*) from Sygehus");
 		rs.next();
-		// assertEquals(1, rs.getInt(1));
 		assertEquals(469, rs.getInt(1));
 		rs.close();
 
 		rs = stmt.executeQuery("Select count(*) from SygehusAfdeling");
 		rs.next();
-		// assertEquals(2, rs.getInt(1));
 		assertEquals(2890, rs.getInt(1));
 		rs.close();
 
@@ -138,6 +133,4 @@ public class SORIntegrationTest {
 		stmt.close();
 		con.close();
 	}
-
-
 }

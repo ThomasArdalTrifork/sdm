@@ -6,7 +6,6 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 import com.trifork.sdm.models.Record;
 import com.trifork.sdm.persistence.Dataset;
@@ -33,9 +32,9 @@ public class Pakning extends TakstRecord {
 	private Long opbevaringstidNumerisk; // Hos distributør
 	private String opbevaringstidEnhed; // Ref. t. LMS15, enhedstype 1
 	private String opbevaringsbetingelser; // Ref. t. LMS20
-	private Long oprettelsesdato; // Format: ååååmmdd
-	private Long datoForSenestePrisaendring; // Format: ååååmmdd
-	private Long udgaaetDato; // Format: ååååmmdd
+	private Long oprettelsesdato; // Format: YYYYMMDD
+	private Long datoForSenestePrisaendring; // Format: YYYYMMDD
+	private Long udgaaetDato; // YYYYMMDD
 	private String beregningskodeAIPRegpris; // Ref. t. LMS13
 	private String pakningOptagetITilskudsgruppe; // 2 muligh.: F eller blank
 	private String faerdigfremstillingsgebyr; // 2 muligh.: B eller blank
@@ -56,7 +55,7 @@ public class Pakning extends TakstRecord {
 
 
 	@Id
-	@Column(name = "Varenummer")
+	@Column
 	public Long getVarenummer() {
 
 		return this.varenummer;

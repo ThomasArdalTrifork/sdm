@@ -13,7 +13,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.sun.istack.internal.Nullable;
 import com.trifork.sdm.importer.TestHelper;
 import com.trifork.sdm.importer.importers.FileImporterException;
 import com.trifork.sdm.importer.importers.takst.TakstParser;

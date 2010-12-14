@@ -24,7 +24,7 @@ public class IntegrationTest {
 
 	public Module[] getConfiguration() {
 
-		resources = new ResourceModule().add(Apotek.class);
+		resources = new ResourceModule().addAll();
 
 		return new Module[] { new GatewayModule(), resources };
 	}

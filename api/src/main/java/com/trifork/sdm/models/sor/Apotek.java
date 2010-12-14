@@ -12,7 +12,7 @@ public class Apotek extends AbstractRecord {
 
 	private long sorNummer;
 	private Long apotekNummer;
-	private Long filialNummer;
+	private long filialNummer;
 	private Long eanLokationsnummer;
 	private long cvr;
 	private long pcvr;
@@ -59,7 +59,7 @@ public class Apotek extends AbstractRecord {
 	}
 
 
-	public void setFilialNummer(Long filialNummer) {
+	public void setFilialNummer(long filialNummer) {
 
 		this.filialNummer = filialNummer;
 	}
