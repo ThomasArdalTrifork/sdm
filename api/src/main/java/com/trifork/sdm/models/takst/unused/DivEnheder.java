@@ -6,6 +6,7 @@ import com.trifork.sdm.models.AbstractRecord;
 // Tidsenhed, Styrkeenhed, Pakningsstoerrelsesenhed
 
 public class DivEnheder extends AbstractRecord {
+	
 	private static final long ENHEDSTYPE_TID = 1;
 	private static final long ENHEDSTYPE_STYRKE = 3;
 	private static final long ENHEDSTYPE_PAKNING = 4;

@@ -9,10 +9,15 @@ import com.trifork.sdm.models.AbstractRecord;
 
 @Entity
 public class Klausulering extends AbstractRecord {
-	
-	private String kode; // Ref. t. LMS02, felt 13
-	private String kortTekst; // Klausultekst, forkortet
-	private String tekst; // Tilskudsklausul (sygdom/pensionist/kroniker)
+
+	// Ref. t. LMS02, felt 13
+	private String kode;
+
+	// Klausultekst, forkortet
+	private String kortTekst;
+
+	// Tilskudsklausul (sygdom/pensionist/kroniker)
+	private String tekst;
 
 
 	@Id

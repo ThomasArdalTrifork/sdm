@@ -11,7 +11,7 @@ import java.util.Set;
 import com.trifork.sdm.models.takst.unused.Beregningsregler;
 
 
-public class BeregningsreglerFactory extends AbstractFactory {
+public class BeregningsreglerParser extends AbstractFactory<Beregningsregler> {
 
 	private static void setFieldValue(Beregningsregler obj, int fieldNo, String value) {
 

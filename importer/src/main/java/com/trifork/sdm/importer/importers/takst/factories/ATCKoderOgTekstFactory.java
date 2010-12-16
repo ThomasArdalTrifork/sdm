@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.trifork.sdm.models.takst.ATCKoderOgTekst;
 
@@ -95,19 +95,22 @@ public class ATCKoderOgTekstFactory extends AbstractFactory<ATCKoderOgTekst> {
 	}
 
 
-	public Set<ATCKoderOgTekst> read(String rootFolder) throws IOException {
+	public Map<Object, ATCKoderOgTekst> read(String rootFolder) throws IOException {
 
 		File f = new File(rootFolder + getLmsName().toLowerCase() + ".txt");
 
-		Set<ATCKoderOgTekst> list = new HashSet<ATCKoderOgTekst>();
+		Map<Object, ATCKoderOgTekst> list = new HashMap<Object, ATCKoderOgTekst>();
 		BufferedReader reader = null;
 
 		try {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "CP865"));
 			while (reader.ready()) {
+				
 				String line = reader.readLine();
+				
 				if (line.length() > 0) {
-					list.add(parse(line));
+					ATCKoderOgTekst codeAndText = parse(line);
+					list.put(codeAndText.getKey(), codeAndText);
 				}
 			}
 			return list;

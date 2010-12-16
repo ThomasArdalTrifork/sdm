@@ -34,6 +34,7 @@ public class Pakning extends AbstractRecord {
 	// private String beregningskodeAIPRegpris; // Ref. t. LMS13
 	private String pakningOptagetITilskudsgruppe; // 2 muligh.: F eller blank
 	private String faerdigfremstillingsgebyr; // 2 muligh.: B eller blank
+	private Integer dosisdispenserbar;
 
 
 	// private Long pakningsdistributoer; // Ref. t. LMS09
@@ -270,9 +271,15 @@ public class Pakning extends AbstractRecord {
 	}
 
 
+	public void setDosisdispenserbar(Integer value) {
+
+		this.dosisdispenserbar = value;
+	}
+
+
 	@Column
 	public Integer getDosisdispenserbar() {
 
-		return takst.getRecord(Laegemiddel.class, drugid).getEgnetTilDosisdispensering();
+		return dosisdispenserbar;
 	}
 }

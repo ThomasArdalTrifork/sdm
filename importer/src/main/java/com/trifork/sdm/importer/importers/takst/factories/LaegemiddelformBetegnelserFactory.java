@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.trifork.sdm.models.takst.LaegemiddelformBetegnelser;
 
@@ -74,28 +74,30 @@ public class LaegemiddelformBetegnelserFactory extends AbstractFactory<Laegemidd
 	}
 
 
-	public Set<LaegemiddelformBetegnelser> read(String rootFolder) throws IOException {
+	public Map<Object, LaegemiddelformBetegnelser> read(String rootFolder) throws IOException {
 
 		File f = new File(rootFolder + getLmsName().toLowerCase() + ".txt");
 
-		Set<LaegemiddelformBetegnelser> list = new HashSet<LaegemiddelformBetegnelser>();
+		Map<Object, LaegemiddelformBetegnelser> list = new HashMap<Object, LaegemiddelformBetegnelser>();
 		BufferedReader reader = null;
 		
 		try {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "CP865"));
+			
 			while (reader.ready()) {
 				String line = reader.readLine();
+				
 				if (line.length() > 0) {
-					list.add(parse(line));
+					LaegemiddelformBetegnelser betegnelse = parse(line);
+					list.put(betegnelse.getKey(), betegnelse);
 				}
 			}
+			
 			return list;
 		}
 		finally {
 			try {
-				if (reader != null) {
-					reader.close();
-				}
+				if (reader != null)	reader.close();
 			}
 			catch (Exception e) {
 				logger.warn("Could not close FileReader");

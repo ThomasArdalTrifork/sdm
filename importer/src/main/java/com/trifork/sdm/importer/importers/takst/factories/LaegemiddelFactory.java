@@ -5,15 +5,29 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.trifork.sdm.models.takst.ATCKoderOgTekst;
 import com.trifork.sdm.models.takst.Laegemiddel;
+import com.trifork.sdm.models.takst.LaegemiddelformBetegnelser;
 
-public class LaegemiddelFactory extends AbstractFactory
-{
 
-	private static void setFieldValue(Laegemiddel obj, int fieldNo, String value)
-	{
+public class LaegemiddelFactory extends AbstractFactory<Laegemiddel> {
+
+	private final Map<Object, LaegemiddelformBetegnelser> betegnelser;
+	private final Map<Object, ATCKoderOgTekst> atcTexts;
+
+
+	public LaegemiddelFactory(Map<Object, LaegemiddelformBetegnelser> betegnelser, Map<Object, ATCKoderOgTekst> atcTexts) {
+
+		this.betegnelser = betegnelser;
+		this.atcTexts = atcTexts;
+	}
+
+
+	private void setFieldValue(Laegemiddel obj, int fieldNo, String value) {
+
 		if ("".equals(value)) value = null;
 		switch (fieldNo) {
 		case 0:
@@ -39,6 +53,7 @@ public class LaegemiddelFactory extends AbstractFactory
 			break;
 		case 7:
 			obj.setFormKode(value);
+			obj.setForm(betegnelser.get(value).getTekst());
 			break;
 		case 8:
 			obj.setKodeForYderligereFormOplysn(value);
@@ -60,6 +75,7 @@ public class LaegemiddelFactory extends AbstractFactory
 			break;
 		case 14:
 			obj.setATC(value);
+			obj.setATCTekst(atcTexts.get(value).getTekst());
 			break;
 		case 15:
 			obj.setAdministrationsvej(value);
@@ -88,8 +104,8 @@ public class LaegemiddelFactory extends AbstractFactory
 	}
 
 
-	private static int getOffset(int fieldNo)
-	{
+	private static int getOffset(int fieldNo) {
+
 		switch (fieldNo) {
 		case 0:
 			return 0;
@@ -141,8 +157,8 @@ public class LaegemiddelFactory extends AbstractFactory
 	}
 
 
-	private static int getLength(int fieldNo)
-	{
+	private static int getLength(int fieldNo) {
+
 		switch (fieldNo) {
 		case 0:
 			return 11;
@@ -194,69 +210,64 @@ public class LaegemiddelFactory extends AbstractFactory
 	}
 
 
-	private static int getNumberOfFields()
-	{
+	private static int getNumberOfFields() {
+
 		return 25;
 	}
 
 
-	public static String getLmsName()
-	{
+	public static String getLmsName() {
+
 		return "LMS01";
 	}
 
 
-	public static ArrayList<Laegemiddel> read(String rootFolder) throws IOException
-	{
+	public Map<Object, Laegemiddel> read(String rootFolder) throws IOException {
 
 		File f = new File(rootFolder + getLmsName().toLowerCase() + ".txt");
 
-		ArrayList<Laegemiddel> list = new ArrayList<Laegemiddel>();
+		Map<Object, Laegemiddel> list = new HashMap<Object, Laegemiddel>();
 		BufferedReader reader = null;
-		try
-		{
+
+		try {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "CP865"));
-			while (reader.ready())
-			{
+			while (reader.ready()) {
 				String line = reader.readLine();
-				if (line.length() > 0)
-				{
-					list.add(parse(line));
+
+				if (line.length() > 0) {
+					Laegemiddel drug = parse(line);
+					list.put(drug.getKey(), drug);
 				}
 			}
+
 			return list;
 		}
-		finally
-		{
-			try
-			{
-				if (reader != null)
-				{
+		finally {
+			try {
+				if (reader != null) {
 					reader.close();
 				}
 			}
-			catch (Exception e)
-			{
+			catch (Exception e) {
 				logger.warn("Could not close FileReader");
 			}
 		}
 	}
 
 
-	public static Laegemiddel parse(String line)
-	{
+	public Laegemiddel parse(String line) {
+
 		Laegemiddel obj = new Laegemiddel();
-		for (int fieldNo = 0; fieldNo < getNumberOfFields(); fieldNo++)
-		{
-			if (getLength(fieldNo) > 0)
-			{
-				// System.out.print("Getting field "+fieldNo+" from"+getOffset(fieldNo)+" to "+(getOffset(fieldNo)+getLength(fieldNo)));
-				String value = line.substring(getOffset(fieldNo),
-						getOffset(fieldNo) + getLength(fieldNo)).trim();
-				// System.out.println(": "+value);
+
+		for (int fieldNo = 0; fieldNo < getNumberOfFields(); fieldNo++) {
+
+			if (getLength(fieldNo) > 0) {
+
+				String value = line.substring(getOffset(fieldNo), getOffset(fieldNo) + getLength(fieldNo)).trim();
 				setFieldValue(obj, fieldNo, value);
 			}
 		}
+
 		return obj;
 	}
 }

@@ -10,7 +10,7 @@ import java.util.Set;
 
 import com.trifork.sdm.models.takst.Medicintilskud;
 
-public class MedicintilskudFactory extends AbstractFactory
+public class MedicintilskudFactory extends AbstractFactory<Medicintilskud>
 {
 
 	private static void setFieldValue(Medicintilskud obj, int fieldNo, String value)

@@ -9,7 +9,9 @@ import com.trifork.sdm.models.AbstractRecord;
 
 @Entity
 public class Medicintilskud extends AbstractRecord {
-	private String kode; // Ref. t. LMS02, felt 12
+	
+	// Ref. t. LMS02, felt 12
+	private String kode;
 	private String kortTekst;
 	private String tekst;
 

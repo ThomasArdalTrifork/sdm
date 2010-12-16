@@ -2,9 +2,11 @@ package com.trifork.sdm.models.takst.unused;
 
 import com.trifork.sdm.models.AbstractRecord;
 
+
 public class Opbevaringsbetingelser extends AbstractRecord {
-	
-	private String kode; // Ref. t. LMS02, felt 17
+
+	// Ref. t. LMS02, felt 17
+	private String kode;
 	private String kortTekst;
 	private String tekst;
 

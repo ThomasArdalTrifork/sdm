@@ -11,7 +11,7 @@ import java.util.Set;
 import com.trifork.sdm.models.takst.unused.Udleveringsbestemmelser;
 
 
-public class UdleveringsbestemmelserFactory extends AbstractFactory {
+public class UdleveringsbestemmelserFactory extends AbstractFactory<Udleveringsbestemmelser> {
 
 	private static void setFieldValue(Udleveringsbestemmelser obj, int fieldNo, String value) {
 

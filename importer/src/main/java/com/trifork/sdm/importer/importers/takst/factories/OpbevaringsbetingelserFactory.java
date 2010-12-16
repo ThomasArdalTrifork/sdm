@@ -5,14 +5,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.trifork.sdm.models.takst.unused.Opbevaringsbetingelser;
 
 
-public class OpbevaringsbetingelserFactory extends AbstractFactory {
+public class OpbevaringsbetingelserFactory extends AbstractFactory<Opbevaringsbetingelser> {
 
 	private static void setFieldValue(Opbevaringsbetingelser obj, int fieldNo, String value) {
 

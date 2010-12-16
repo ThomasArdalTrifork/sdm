@@ -6,17 +6,21 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.trifork.sdm.models.AbstractRecord;
+import com.trifork.sdm.models.Documented;
 
 
 @Entity
 @Table(name = "Formbetegnelse")
+@Documented("Ved en lægemiddelform forstås den fysiske form, som lægemidlet fremstilles som til administration hos brugeren.")
 public class LaegemiddelformBetegnelser extends AbstractRecord {
+	
 	// Ref. t. LMS01, felt 08
 	private String kode;
+	
 	private String tekst;
 
-	// A (Aktiv)=DLS o.l.-I (inaktiv)=Ikke
-	// anerkendt term
+	// A (Aktiv) = DLS o.l.
+	// I (Inaktiv) = Ikke anerkendt term
 	private String aktivInaktiv;
 
 
@@ -64,5 +68,4 @@ public class LaegemiddelformBetegnelser extends AbstractRecord {
 
 		return "" + this.kode;
 	}
-
 }

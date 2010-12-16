@@ -46,6 +46,9 @@ public class Laegemiddel extends AbstractRecord {
 	private String karantaenedato; // Format: ååååmmdd
 
 	private final Logger logger = Logger.getLogger(getClass());
+	
+	private String formBetegnelse;
+	private String atcTekst;
 
 
 	@Id
@@ -327,32 +330,38 @@ public class Laegemiddel extends AbstractRecord {
 		this.karantaenedato = karantaenedato;
 	}
 
-
+/*
 	public List<Administrationsvej> getAdministrationsveje() {
 
 		List<Administrationsvej> adminveje = new ArrayList<Administrationsvej>();
+
 		for (int idx = 0; idx < administrationsvej.length(); idx += 2) {
+
 			String avKode = administrationsvej.substring(idx, idx + 2);
+
 			Administrationsvej adminVej = takst.getRecord(Administrationsvej.class, avKode);
-			if (adminVej == null)
+
+			if (adminVej == null) {
 				logger.warn("Administaritonvej not found for kode: '" + avKode + "'");
-			else
+			}
+			else {
 				adminveje.add(adminVej);
+			}
 		}
 		return adminveje;
 	}
+*/
 
+	public void setForm(String form) {
+		
+		this.formBetegnelse = form;
+	}
+	
 
 	@Column(name = "FormTekst")
 	public String getForm() {
 
-		LaegemiddelformBetegnelser lmfb = takst.getRecord(LaegemiddelformBetegnelser.class, formKode);
-		
-		if (lmfb == null) {
-			return null;
-		}
-		
-		return lmfb.getTekst();
+		return formBetegnelse;
 	}
 
 
@@ -361,16 +370,18 @@ public class Laegemiddel extends AbstractRecord {
 
 		return aTC;
 	}
+	
+	
+	public void setATCTekst(String atcTekst) {
+		
+		this.atcTekst = atcTekst;
+	}
 
 
 	@Column(name = "ATCTekst")
 	public String getATCTekst() {
 
-		ATCKoderOgTekst atcObj = takst.getRecord(ATCKoderOgTekst.class, aTC);
-		
-		if (atcObj == null) return null;
-		
-		return atcObj.getTekst();
+		return atcTekst;
 	}
 
 
@@ -407,6 +418,7 @@ public class Laegemiddel extends AbstractRecord {
 	public Boolean isTilHumanAnvendelse() {
 
 		if (aTC == null) return null;
+
 		return !aTC.startsWith("Q");
 	}
 

@@ -9,16 +9,26 @@ import com.trifork.sdm.models.AbstractRecord;
 
 @Entity
 public class Dosering extends AbstractRecord {
-	
-	private Long doseringKode; // Ref. t. LMS27
+
+	// Ref. t. LMS27
+	private Long doseringKode;
+
 	private String doseringKortTekst;
-	private String doseringstekstTotal; // Felt 05 + 06 + 07
+
+	// Field 05 + 06 + 07
+	private String doseringstekstTotal;
+
 	private Long antalEnhDoegn;
+
 	private String doseringstekstLinie1;
+
 	private String doseringstekstLinie2;
+
 	private String doseringstekstLinie3;
-	private String aktivInaktiv; // A = Aktiv kode. I = Inaktiv kode (bør ikke
-									// anvendes)
+
+	// A = Aktiv kode. I = Inaktiv kode (should not be used)
+	// TODO: What does should not be used mean? That we should not export it or?
+	private String aktivInaktiv;
 
 
 	@Id

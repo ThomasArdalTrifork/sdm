@@ -12,8 +12,11 @@ import com.trifork.sdm.models.AbstractRecord;
 @Table(name = "LaegemiddelDoseringRef")
 public class Doseringskode extends AbstractRecord {
 	
-	private Long drugid; // Ref. t. LMS01
-	private Long doseringskode; // Ref. t. LMS28
+	// Ref. t. LMS01
+	private Long drugid;
+	
+	// Ref. t. LMS28
+	private Long doseringskode;
 
 
 	@Id

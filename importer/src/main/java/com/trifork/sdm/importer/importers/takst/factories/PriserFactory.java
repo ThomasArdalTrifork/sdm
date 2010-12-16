@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import com.trifork.sdm.models.takst.unused.Priser;
 
-public class PriserFactory extends AbstractFactory
+public class PriserFactory extends AbstractFactory<Priser>
 {
 
 	private static void setFieldValue(Priser obj, int fieldNo, String value)

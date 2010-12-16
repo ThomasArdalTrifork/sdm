@@ -11,7 +11,7 @@ import java.util.Set;
 import com.trifork.sdm.models.takst.unused.EmballagetypeKoder;
 
 
-public class EmballagetypeKoderFactory extends AbstractFactory {
+public class EmballagetypeKoderParser extends AbstractFactory<EmballagetypeKoder> {
 
 	private static void setFieldValue(EmballagetypeKoder obj, int fieldNo, String value) {
 

@@ -87,7 +87,7 @@ public class DivEnhederFactory extends AbstractFactory<DivEnheder> {
 
 		Set<DivEnheder> list = new HashSet<DivEnheder>();
 		BufferedReader reader = null;
-		
+
 		try {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "CP865"));
 			while (reader.ready()) {
@@ -114,14 +114,15 @@ public class DivEnhederFactory extends AbstractFactory<DivEnheder> {
 	private static DivEnheder parse(String line) {
 
 		DivEnheder obj = new DivEnheder();
+
 		for (int fieldNo = 0; fieldNo < getNumberOfFields(); fieldNo++) {
+
 			if (getLength(fieldNo) > 0) {
-				// System.out.print("Getting field "+fieldNo+" from"+getOffset(fieldNo)+" to "+(getOffset(fieldNo)+getLength(fieldNo)));
 				String value = line.substring(getOffset(fieldNo), getOffset(fieldNo) + getLength(fieldNo)).trim();
-				// System.out.println(": "+value);
 				setFieldValue(obj, fieldNo, value);
 			}
 		}
+
 		return obj;
 	}
 }
