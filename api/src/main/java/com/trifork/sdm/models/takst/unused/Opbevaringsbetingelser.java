@@ -1,8 +1,10 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
-public class EmballagetypeKoder extends TakstRecord {
+import com.trifork.sdm.models.AbstractRecord;
 
-	private String kode; // Ref. t. LMS02, felt 09
+public class Opbevaringsbetingelser extends AbstractRecord {
+	
+	private String kode; // Ref. t. LMS02, felt 17
 	private String kortTekst;
 	private String tekst;
 
@@ -48,5 +50,4 @@ public class EmballagetypeKoder extends TakstRecord {
 
 		return "" + this.kode;
 	}
-
 }

@@ -1,7 +1,9 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
-public class SpecialeForNBS extends TakstRecord {
+import com.trifork.sdm.models.AbstractRecord;
 
+public class SpecialeForNBS extends AbstractRecord {
+	
 	private String kode; // Ref. t. LMS02, felt 11
 	private String kortTekst; // Speciale, forkortet
 	private String tekst; // Tekst for speciale

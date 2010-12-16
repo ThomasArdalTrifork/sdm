@@ -1,11 +1,12 @@
 package com.trifork.sdm.replication.configuration;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.persistence.Entity;
 import javax.servlet.ServletException;
@@ -28,7 +29,7 @@ import com.trifork.sdm.replication.service.SecurityFilter;
 
 public class ResourceModule extends ServletModule implements Iterable<Class<? extends Record>>{
 
-	private Set<Class<? extends Record>> resources = new TreeSet<Class<? extends Record>>();
+	private List<Class<? extends Record>> resources = new ArrayList<Class<? extends Record>>();
 
 
 	@Override
@@ -79,7 +80,7 @@ public class ResourceModule extends ServletModule implements Iterable<Class<? ex
 
 
 	@SuppressWarnings("unchecked")
-	public ResourceModule addAll() {
+	public ResourceModule serveAllEntities() {
 
 		// Find all entities and serve them as resources.
 

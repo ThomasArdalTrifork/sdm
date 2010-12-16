@@ -4,9 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.trifork.sdm.models.AbstractRecord;
+
 
 @Entity
-public class LaegemiddelAdministrationsvejRef extends TakstRecord {
+public class LaegemiddelAdministrationsvejRef extends AbstractRecord {
+	
 	private long drugId;
 	private String AdministrationsvejKode;
 

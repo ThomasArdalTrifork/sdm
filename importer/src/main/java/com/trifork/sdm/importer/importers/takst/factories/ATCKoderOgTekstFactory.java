@@ -5,15 +5,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.trifork.sdm.models.takst.ATCKoderOgTekst;
 
-public class ATCKoderOgTekstFactory extends AbstractFactory
-{
 
-	private static void setFieldValue(ATCKoderOgTekst obj, int fieldNo, String value)
-	{
+public class ATCKoderOgTekstFactory extends AbstractFactory<ATCKoderOgTekst> {
+
+	private static void setFieldValue(ATCKoderOgTekst obj, int fieldNo, String value) {
+
 		if ("".equals(value)) value = null;
 		switch (fieldNo) {
 		case 0:
@@ -40,8 +41,8 @@ public class ATCKoderOgTekstFactory extends AbstractFactory
 	}
 
 
-	private static int getOffset(int fieldNo)
-	{
+	private static int getOffset(int fieldNo) {
+
 		switch (fieldNo) {
 		case 0:
 			return 0;
@@ -61,8 +62,8 @@ public class ATCKoderOgTekstFactory extends AbstractFactory
 	}
 
 
-	private static int getLength(int fieldNo)
-	{
+	private static int getLength(int fieldNo) {
+
 		switch (fieldNo) {
 		case 0:
 			return 2;
@@ -82,66 +83,54 @@ public class ATCKoderOgTekstFactory extends AbstractFactory
 	}
 
 
-	private static int getNumberOfFields()
-	{
+	private static int getNumberOfFields() {
+
 		return 7;
 	}
 
 
-	private static String getLmsName()
-	{
+	private static String getLmsName() {
+
 		return "LMS12";
 	}
 
 
-	public static ArrayList<ATCKoderOgTekst> read(String rootFolder) throws IOException
-	{
+	public Set<ATCKoderOgTekst> read(String rootFolder) throws IOException {
 
 		File f = new File(rootFolder + getLmsName().toLowerCase() + ".txt");
 
-		ArrayList<ATCKoderOgTekst> list = new ArrayList<ATCKoderOgTekst>();
+		Set<ATCKoderOgTekst> list = new HashSet<ATCKoderOgTekst>();
 		BufferedReader reader = null;
-		try
-		{
+
+		try {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "CP865"));
-			while (reader.ready())
-			{
+			while (reader.ready()) {
 				String line = reader.readLine();
-				if (line.length() > 0)
-				{
+				if (line.length() > 0) {
 					list.add(parse(line));
 				}
 			}
 			return list;
 		}
-		finally
-		{
-			try
-			{
-				if (reader != null)
-				{
+		finally {
+			try {
+				if (reader != null) {
 					reader.close();
 				}
 			}
-			catch (Exception e)
-			{
+			catch (Exception e) {
 				logger.warn("Could not close FileReader");
 			}
 		}
 	}
 
 
-	private static ATCKoderOgTekst parse(String line)
-	{
+	private static ATCKoderOgTekst parse(String line) {
+
 		ATCKoderOgTekst obj = new ATCKoderOgTekst();
-		for (int fieldNo = 0; fieldNo < getNumberOfFields(); fieldNo++)
-		{
-			if (getLength(fieldNo) > 0)
-			{
-				// System.out.print("Getting field "+fieldNo+" from"+getOffset(fieldNo)+" to "+(getOffset(fieldNo)+getLength(fieldNo)));
-				String value = line.substring(getOffset(fieldNo),
-						getOffset(fieldNo) + getLength(fieldNo)).trim();
-				// System.out.println(": "+value);
+		for (int fieldNo = 0; fieldNo < getNumberOfFields(); fieldNo++) {
+			if (getLength(fieldNo) > 0) {
+				String value = line.substring(getOffset(fieldNo), getOffset(fieldNo) + getLength(fieldNo)).trim();
 				setFieldValue(obj, fieldNo, value);
 			}
 		}

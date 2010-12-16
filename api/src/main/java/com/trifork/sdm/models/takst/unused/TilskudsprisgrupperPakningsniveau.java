@@ -1,7 +1,9 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
-public class TilskudsprisgrupperPakningsniveau extends TakstRecord {
+import com.trifork.sdm.models.AbstractRecord;
 
+public class TilskudsprisgrupperPakningsniveau extends AbstractRecord {
+	
 	private Long tilskudsprisGruppe;
 	private Long varenummer; // Ref. t. LMS02
 

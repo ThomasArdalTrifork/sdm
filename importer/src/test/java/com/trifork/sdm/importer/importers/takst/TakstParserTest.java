@@ -53,7 +53,7 @@ public class TakstParserTest {
 		Takst takst = new Takst(now, now);
 		TakstDataset<Laegemiddel> ds = new TakstDataset<Laegemiddel>(takst, drugs,
 				Laegemiddel.class);
-		takst.addDataset(ds);
+		takst.addRecordSet(ds);
 
 		drug = drugs.get(0);
 		assertEquals("Kemadrin", drug.getNavn());
@@ -97,7 +97,7 @@ public class TakstParserTest {
 		
 		TakstDataset<Laegemiddel> ds = new TakstDataset<Laegemiddel>(takst, drugs,
 				Laegemiddel.class);
-		takst.addDataset(ds);
+		takst.addRecordSet(ds);
 
 		drug = drugs.get(0);
 		assertEquals("Xylocain", drug.getNavn());
@@ -252,32 +252,32 @@ public class TakstParserTest {
 		TakstDataset<Pakning> pkr = new TakstDataset<Pakning>(takst, pakninger, Pakning.class);
 		TakstDataset<ATCKoderOgTekst> atcr = new TakstDataset<ATCKoderOgTekst>(takst, atcKoder,
 				ATCKoderOgTekst.class);
-		takst.addDataset(lmr);
-		takst.addDataset(pkr);
-		takst.addDataset(atcr);
+		takst.addRecordSet(lmr);
+		takst.addRecordSet(pkr);
+		takst.addRecordSet(atcr);
 
 		// check that all is behaving as expected before filtering
 		assertFalse(pakVet.isTilHumanAnvendelse());
 		assertTrue(pakHuman.isTilHumanAnvendelse());
 		assertFalse(atcVet.isTilHumanAnvendelse());
 		assertTrue(atcHum.isTilHumanAnvendelse());
-		assertNotNull(takst.getEntity(Pakning.class, pakVet.getKey()));
-		assertNotNull(takst.getEntity(Pakning.class, pakHuman.getKey()));
-		assertNotNull(takst.getEntity(Laegemiddel.class, lmVet.getKey()));
-		assertNotNull(takst.getEntity(Laegemiddel.class, lmHum.getKey()));
-		assertNotNull(takst.getEntity(ATCKoderOgTekst.class, atcVet.getKey()));
-		assertNotNull(takst.getEntity(ATCKoderOgTekst.class, atcHum.getKey()));
+		assertNotNull(takst.getRecord(Pakning.class, pakVet.getKey()));
+		assertNotNull(takst.getRecord(Pakning.class, pakHuman.getKey()));
+		assertNotNull(takst.getRecord(Laegemiddel.class, lmVet.getKey()));
+		assertNotNull(takst.getRecord(Laegemiddel.class, lmHum.getKey()));
+		assertNotNull(takst.getRecord(ATCKoderOgTekst.class, atcVet.getKey()));
+		assertNotNull(takst.getRecord(ATCKoderOgTekst.class, atcHum.getKey()));
 
 		// Filter the takst
 		TakstParser.filterOutVetDrugs(takst);
 
 		// Check that the correct entities were removed from takst
-		assertNull(takst.getEntity(Pakning.class, pakVet.getKey()));
-		assertNotNull(takst.getEntity(Pakning.class, pakHuman.getKey()));
-		assertNull(takst.getEntity(Laegemiddel.class, lmVet.getKey()));
-		assertNotNull(takst.getEntity(Laegemiddel.class, lmHum.getKey()));
-		assertNull(takst.getEntity(ATCKoderOgTekst.class, atcVet.getKey()));
-		assertNotNull(takst.getEntity(ATCKoderOgTekst.class, atcHum.getKey()));
+		assertNull(takst.getRecord(Pakning.class, pakVet.getKey()));
+		assertNotNull(takst.getRecord(Pakning.class, pakHuman.getKey()));
+		assertNull(takst.getRecord(Laegemiddel.class, lmVet.getKey()));
+		assertNotNull(takst.getRecord(Laegemiddel.class, lmHum.getKey()));
+		assertNull(takst.getRecord(ATCKoderOgTekst.class, atcVet.getKey()));
+		assertNotNull(takst.getRecord(ATCKoderOgTekst.class, atcHum.getKey()));
 	}
 
 }

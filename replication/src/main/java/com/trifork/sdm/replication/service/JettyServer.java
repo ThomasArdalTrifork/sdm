@@ -20,6 +20,7 @@ public class JettyServer implements Server {
 	protected org.mortbay.jetty.Server server;
 	private final EventListener dispatcher;
 
+
 	@Inject
 	JettyServer(@Host String host, @Port int port, EventListener dispatcher) {
 

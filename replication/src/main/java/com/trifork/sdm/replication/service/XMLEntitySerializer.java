@@ -147,8 +147,7 @@ public class XMLEntitySerializer implements EntitySerializer {
 
 			StringBuilder builder = new StringBuilder();
 
-			builder.append(String.format("\t<%s recordId=\"%d\" updateToken=\"%s\">\n", entityXMLName,
-					record.getPID(), updateToken));
+			builder.append(String.format("\t<%s recordId=\"%d\" updateToken=\"%s\">\n", entityXMLName, record.getPID(), updateToken));
 
 			for (EntityEntry entry : elements) {
 

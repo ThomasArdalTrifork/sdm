@@ -4,10 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.trifork.sdm.models.AbstractRecord;
+
 
 @Entity
-public class Dosering extends TakstRecord {
-
+public class Dosering extends AbstractRecord {
+	
 	private Long doseringKode; // Ref. t. LMS27
 	private String doseringKortTekst;
 	private String doseringstekstTotal; // Felt 05 + 06 + 07

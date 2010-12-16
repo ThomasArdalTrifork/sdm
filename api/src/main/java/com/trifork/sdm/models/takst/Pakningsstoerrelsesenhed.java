@@ -4,9 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.trifork.sdm.models.AbstractRecord;
+import com.trifork.sdm.models.takst.unused.DivEnheder;
+
 
 @Entity
-public class Pakningsstoerrelsesenhed extends TakstRecord {
+public class Pakningsstoerrelsesenhed extends AbstractRecord {
 
 	private final DivEnheder enheder;
 
@@ -37,5 +40,4 @@ public class Pakningsstoerrelsesenhed extends TakstRecord {
 
 		return enheder.getKode();
 	}
-
 }

@@ -1,12 +1,17 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
-public class Rekommandationer extends TakstRecord {
+import com.trifork.sdm.models.AbstractRecord;
+
+
+public class Rekommandationer extends AbstractRecord {
 
 	private Long rekommandationsgruppe;
+
 	private Long drugID; // Ref. t. LMS01
 	private Long varenummer; // Ref. t. LMS02
-	private String rekommandationsniveau; // Værdier: Anbefales / … med
-											// forbehold / …ikke
+
+	// Værdier: Anbefales / Anbefales med forbehold / Anbefales ikke
+	private String rekommandationsniveau;
 
 
 	public Long getRekommandationsgruppe() {

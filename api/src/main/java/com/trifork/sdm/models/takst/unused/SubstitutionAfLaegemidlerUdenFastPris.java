@@ -1,7 +1,9 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
-public class SubstitutionAfLaegemidlerUdenFastPris extends TakstRecord {
+import com.trifork.sdm.models.AbstractRecord;
 
+public class SubstitutionAfLaegemidlerUdenFastPris extends AbstractRecord {
+	
 	private Long substitutionsgruppenummer; // Substitutionsgruppe for pakningen
 	private Long varenummer;
 
@@ -35,5 +37,4 @@ public class SubstitutionAfLaegemidlerUdenFastPris extends TakstRecord {
 
 		return varenummer;
 	}
-
 }

@@ -4,10 +4,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.trifork.sdm.models.AbstractRecord;
+
 
 @Entity
-public class Medicintilskud extends TakstRecord {
-
+public class Medicintilskud extends AbstractRecord {
 	private String kode; // Ref. t. LMS02, felt 12
 	private String kortTekst;
 	private String tekst;

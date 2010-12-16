@@ -5,11 +5,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.trifork.sdm.models.AbstractRecord;
+
 
 @Entity
 @Table(name = "Formbetegnelse")
-public class LaegemiddelformBetegnelser extends TakstRecord {
-
+public class LaegemiddelformBetegnelser extends AbstractRecord {
 	// Ref. t. LMS01, felt 08
 	private String kode;
 	private String tekst;

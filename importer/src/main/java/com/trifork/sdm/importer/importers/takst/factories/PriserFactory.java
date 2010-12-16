@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import com.trifork.sdm.models.takst.Priser;
+import com.trifork.sdm.models.takst.unused.Priser;
 
 public class PriserFactory extends AbstractFactory
 {

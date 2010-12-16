@@ -20,10 +20,10 @@ import org.junit.Test;
 
 import com.trifork.sdm.importer.persistence.mysql.MySQLTemporalTable.RecordVersion;
 import com.trifork.sdm.models.Record;
-import com.trifork.sdm.models.takst.DivEnheder;
 import com.trifork.sdm.models.takst.Laegemiddel;
 import com.trifork.sdm.models.takst.Takst;
 import com.trifork.sdm.models.takst.TakstDataset;
+import com.trifork.sdm.models.takst.unused.DivEnheder;
 import com.trifork.sdm.util.DateUtils;
 
 
@@ -53,7 +53,7 @@ public class MySQLStamDAOTest {
 
 		TakstDataset<Laegemiddel> dataset = new TakstDataset<Laegemiddel>(takst, list, Laegemiddel.class);
 
-		takst.addDataset(dataset);
+		takst.addRecordSet(dataset);
 
 		/*
 		 * Add an empty dataset to the takst (should be ignored)
@@ -70,7 +70,7 @@ public class MySQLStamDAOTest {
 		
 		TakstDataset<DivEnheder> hiddenDataset = new TakstDataset<DivEnheder>(takst, enheder,
 				DivEnheder.class);
-		takst.addDataset(hiddenDataset);
+		takst.addRecordSet(hiddenDataset);
 
 		// Setup database mocking.
 
@@ -159,7 +159,7 @@ public class MySQLStamDAOTest {
 		takst = new Takst(DateUtils.toDate(2009, 7, 1), DateUtils.toDate(2009, 7, 14));
 		// ..with an empty dataset
 		TakstDataset<Laegemiddel> lmr = new TakstDataset<Laegemiddel>(takst, new ArrayList<Laegemiddel>(), Laegemiddel.class);
-		takst.addDataset(lmr);
+		takst.addRecordSet(lmr);
 
 		List<RecordVersion> sev = new ArrayList<RecordVersion>();
 		// Simulate that there is one record

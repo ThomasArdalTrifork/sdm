@@ -1,4 +1,4 @@
-package com.trifork.sdm.replication.integration;
+package com.trifork.sdm.replication;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -8,11 +8,6 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,60 +16,30 @@ import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import com.trifork.sdm.models.NamingConvention;
 import com.trifork.sdm.models.Record;
 import com.trifork.sdm.models.sor.Apotek;
-import com.trifork.sdm.replication.ReplicationTest;
 import com.trifork.sdm.replication.client.Client;
-import com.trifork.sdm.replication.client.JdbcXMLRecordPersister;
 import com.trifork.sdm.replication.configuration.GatewayModule;
-import com.trifork.sdm.replication.configuration.DatabaseModule;
 import com.trifork.sdm.replication.configuration.ResourceModule;
-import com.trifork.sdm.replication.configuration.ServerModule;
-import com.trifork.sdm.replication.configuration.properties.Secret;
-import com.trifork.sdm.replication.service.GatewayServlet;
-import com.trifork.sdm.replication.service.RecordPersister;
-import com.trifork.sdm.replication.service.ResourceServlet;
-import com.trifork.sdm.replication.service.SecurityFilter;
-import com.trifork.sdm.replication.service.Server;
 
 
 public class ClientTest extends ReplicationTest {
 
-	private static Client client;
-	private static String resource = "apotek";
+	private static Class<? extends Record> entity = Apotek.class;
 
 
 	public void initialize() {
 
-		bindConstant().annotatedWith(Secret.class).to("weeswfwe23");
-
-		serve("/gateway").with(GatewayServlet.class);
-
-		Map entities = new HashMap<String, Class<? extends Record>>();
-		entities.put("/apotek", Apotek.class);
-		bind(Map.class).toInstance(entities);
-		serve("/apotek").with(ResourceServlet.class);
-
-		filter("/apotek").through(SecurityFilter.class);
-
-		// Initialize the client.
-
-		try {
-			client = new Client("0.0.0.0", 3001);
-		}
-		catch (MalformedURLException e) {
-
-			throw new RuntimeException(e);
-		}
+		install(new GatewayModule());
+		install(new ResourceModule().add(entity));
 	}
 
 
 	@Test
-	public void should_behave_correctly_durring_bootstrap() throws IOException {
+	public void should_behave_correctly_durring_bootstrap(Client client) throws IOException {
 
-		InputStream input = client.replicate(resource);
+		InputStream input = client.replicate(NamingConvention.getResourceName(entity));
 		Document document = parse(input, true);
 
 		// Make sure the page borders contain the records we expect.
@@ -89,11 +54,11 @@ public class ClientTest extends ReplicationTest {
 
 
 	@Test
-	public void should_behave_correctly_durring_an_update() throws IOException {
+	public void should_behave_correctly_durring_an_update(Client client) throws IOException {
 
 		String offset = "12920249380000000022";
 
-		InputStream input = client.replicate(resource, offset);
+		InputStream input = client.replicate(NamingConvention.getResourceName(entity), offset);
 		Document document = parse(input, true);
 
 		// TODO: Change some validTo.
@@ -114,22 +79,18 @@ public class ClientTest extends ReplicationTest {
 
 		// Replicate the servers database.
 		/*
-		Client client = new Client("0.0.0.0", 3000);
-		
-		for (String resource : resources) {
-
-			String offset = null;
-			boolean hasMore = true;
-
-			while (hasMore) {
-
-				InputStream inputStream = client.replicate(resource, offset);
-				hasMore = persister.persist(inputStream);
-			}
-		}
-
-		// TODO: Assert that the contents of the databases are the same.
-		 
+		 * Client client = new Client("0.0.0.0", 3000);
+		 * 
+		 * for (String resource : resources) {
+		 * 
+		 * String offset = null; boolean hasMore = true;
+		 * 
+		 * while (hasMore) {
+		 * 
+		 * InputStream inputStream = client.replicate(resource, offset); hasMore
+		 * = persister.persist(inputStream); } }
+		 * 
+		 * // TODO: Assert that the contents of the databases are the same.
 		 */
 	}
 

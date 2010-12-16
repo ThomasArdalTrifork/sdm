@@ -5,15 +5,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.trifork.sdm.models.takst.Dosering;
 
-public class DoseringFactory extends AbstractFactory
-{
 
-	private static void setFieldValue(Dosering obj, int fieldNo, String value)
-	{
+public class DoseringFactory extends AbstractFactory<Dosering> {
+
+	private static void setFieldValue(Dosering obj, int fieldNo, String value) {
+
 		if ("".equals(value)) value = null;
 		switch (fieldNo) {
 		case 0:
@@ -46,8 +47,8 @@ public class DoseringFactory extends AbstractFactory
 	}
 
 
-	private static int getOffset(int fieldNo)
-	{
+	private static int getOffset(int fieldNo) {
+
 		switch (fieldNo) {
 		case 0:
 			return 0;
@@ -71,8 +72,8 @@ public class DoseringFactory extends AbstractFactory
 	}
 
 
-	private static int getLength(int fieldNo)
-	{
+	private static int getLength(int fieldNo) {
+
 		switch (fieldNo) {
 		case 0:
 			return 7;
@@ -96,65 +97,55 @@ public class DoseringFactory extends AbstractFactory
 	}
 
 
-	private static int getNumberOfFields()
-	{
+	private static int getNumberOfFields() {
+
 		return 8;
 	}
 
 
-	private static String getLmsName()
-	{
+	private static String getLmsName() {
+
 		return "LMS28";
 	}
 
 
-	public static ArrayList<Dosering> read(String rootFolder) throws IOException
-	{
+	public Set<Dosering> read(String rootFolder) throws IOException {
 
 		File f = new File(rootFolder + getLmsName().toLowerCase() + ".txt");
 
-		ArrayList<Dosering> list = new ArrayList<Dosering>();
+		Set<Dosering> list = new HashSet<Dosering>();
 		BufferedReader reader = null;
-		try
-		{
+		
+		try {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "CP865"));
-			while (reader.ready())
-			{
+			while (reader.ready()) {
 				String line = reader.readLine();
-				if (line.length() > 0)
-				{
+				if (line.length() > 0) {
 					list.add(parse(line));
 				}
 			}
 			return list;
 		}
-		finally
-		{
-			try
-			{
-				if (reader != null)
-				{
+		finally {
+			try {
+				if (reader != null) {
 					reader.close();
 				}
 			}
-			catch (Exception e)
-			{
+			catch (Exception e) {
 				logger.warn("Could not close FileReader");
 			}
 		}
 	}
 
 
-	private static Dosering parse(String line)
-	{
+	private static Dosering parse(String line) {
+
 		Dosering obj = new Dosering();
-		for (int fieldNo = 0; fieldNo < getNumberOfFields(); fieldNo++)
-		{
-			if (getLength(fieldNo) > 0)
-			{
+		for (int fieldNo = 0; fieldNo < getNumberOfFields(); fieldNo++) {
+			if (getLength(fieldNo) > 0) {
 				// System.out.print("Getting field "+fieldNo+" from"+getOffset(fieldNo)+" to "+(getOffset(fieldNo)+getLength(fieldNo)));
-				String value = line.substring(getOffset(fieldNo),
-						getOffset(fieldNo) + getLength(fieldNo)).trim();
+				String value = line.substring(getOffset(fieldNo), getOffset(fieldNo) + getLength(fieldNo)).trim();
 				// System.out.println(": "+value);
 				setFieldValue(obj, fieldNo, value);
 			}

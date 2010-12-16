@@ -1,7 +1,11 @@
 package com.trifork.sdm.replication.junit;
 
+import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,35 +21,56 @@ import org.junit.runners.model.Statement;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.google.inject.Module;
-import com.trifork.sdm.replication.configuration.DatabaseModule;
-import com.trifork.sdm.replication.configuration.DateFormatModule;
-import com.trifork.sdm.replication.configuration.TestServerModule;
+import com.trifork.sdm.replication.ReplicationTest;
+import com.trifork.sdm.replication.configuration.ServerModule;
 
 
 public class TestRunner extends BlockJUnit4ClassRunner {
 
 	private Injector injector;
-	private Object instance;
+	private ReplicationTest instance;
+
+	{
+		ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
+
+		// Add the conf dir to the classpath
+		// Chain the current thread classloader
+
+		URLClassLoader urlClassLoader = null;
+
+		try {
+			urlClassLoader = new URLClassLoader(new URL[] { new File("test-classes").toURL() }, currentThreadClassLoader);
+		}
+		catch (MalformedURLException e) {
+
+			e.printStackTrace();
+		}
+		
+		Thread.currentThread().setContextClassLoader(urlClassLoader);
+
+		// This should work now!
+		Thread.currentThread().getContextClassLoader().getResourceAsStream("context.xml");
+	}
 
 
-	public TestRunner(Class<?> type) throws InitializationError, SecurityException, NoSuchMethodException,
-			IllegalArgumentException, InstantiationException, IllegalAccessException,
-			InvocationTargetException {
+	public TestRunner(Class<?> type) throws InitializationError, SecurityException, NoSuchMethodException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
 		super(type);
-
-		Module testModule = (Module) type.getConstructor().newInstance();
-
-		injector = Guice.createInjector(new TestServerModule(), new DateFormatModule(), new DatabaseModule(),
-				testModule);
+		
+		injector = Guice.createInjector(new ServerModule());
 	}
 
 
 	@Override
 	protected Object createTest() throws Exception {
 
-		instance = super.createTest();
+		instance = (ReplicationTest) super.createTest();
+
+		injector = injector.createChildInjector(instance.getConfiguration());
+		injector = injector.createChildInjector(instance);
+
 		return instance;
 	}
 
@@ -58,8 +83,7 @@ public class TestRunner extends BlockJUnit4ClassRunner {
 
 
 	@Override
-	protected void validatePublicVoidNoArgMethods(Class<? extends Annotation> annotation, boolean isStatic,
-			List<Throwable> errors) {
+	protected void validatePublicVoidNoArgMethods(Class<? extends Annotation> annotation, boolean isStatic, List<Throwable> errors) {
 
 		// Overridden to prevent errors when the test methods take parameters.
 	}
@@ -93,13 +117,28 @@ public class TestRunner extends BlockJUnit4ClassRunner {
 		eachNotifier.fireTestStarted();
 
 		try {
+			// Look up the type in Guice.
 
 			List<Object> parameters = new ArrayList<Object>();
 
-			for (Class<?> type : method.getMethod().getParameterTypes()) {
-				// Look up the type in Guice.
-				// TODO: We should also take parameter annotations into account.
-				Object param = injector.getInstance(type);
+			Class<?>[] paramTypes = method.getMethod().getParameterTypes();
+			Annotation[][] paramAnnotations = method.getMethod().getParameterAnnotations();
+
+			for (int i = 0; i < paramTypes.length; i++) {
+
+				Class<?> type = paramTypes[i];
+				
+				Object param;
+				
+				// TODO: At the moment we only support one annotation on params.
+				if (paramAnnotations[i].length > 0) {
+					Annotation annotation = paramAnnotations[i][0];
+					param = injector.getInstance(Key.get(type, annotation));
+				}
+				else {
+					param = injector.getInstance(type);
+				}
+				
 				parameters.add(param);
 			}
 

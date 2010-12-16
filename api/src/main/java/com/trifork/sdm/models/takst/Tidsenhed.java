@@ -4,10 +4,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.trifork.sdm.models.AbstractRecord;
+import com.trifork.sdm.models.takst.unused.DivEnheder;
+
 
 @Entity
-public class Tidsenhed extends TakstRecord {
-
+public class Tidsenhed extends AbstractRecord {
+	
 	private final DivEnheder enheder;
 
 
@@ -37,5 +40,4 @@ public class Tidsenhed extends TakstRecord {
 
 		return enheder.getKode();
 	}
-
 }

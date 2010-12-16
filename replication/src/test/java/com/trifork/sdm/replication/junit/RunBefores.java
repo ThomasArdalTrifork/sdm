@@ -33,9 +33,10 @@ public class RunBefores extends Statement {
 			List<Object> parameters = new ArrayList<Object>();
 
 			for (Class<?> type : method.getMethod().getParameterTypes()) {
+				
 				// Look up the type in Guice.
 				// TODO: We should also take parameter annotations into account.
-				
+
 				try {
 					Object param = injector.getInstance(type);
 					parameters.add(param);
@@ -43,7 +44,7 @@ public class RunBefores extends Statement {
 				catch (Throwable t) {
 					t.printStackTrace();
 					System.exit(-1);
-				}					
+				}
 			}
 
 			if (parameters.isEmpty())

@@ -1,18 +1,19 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
 import javax.persistence.Column;
 
+import com.trifork.sdm.models.AbstractRecord;
 
-public class NumeriskMedEnhed extends TakstRecord {
 
+public class NumeriskMedEnhed extends AbstractRecord {
+	
 	private String klartekst;
 	private double numerisk;
 	private Object enhed;
 
 
-	public NumeriskMedEnhed(Takst takst, String klartekst, double numerisk, Object enhed) {
+	public NumeriskMedEnhed(String klartekst, double numerisk, Object enhed) {
 
-		this.takst = takst;
 		this.klartekst = klartekst;
 		this.numerisk = numerisk;
 		this.enhed = enhed;

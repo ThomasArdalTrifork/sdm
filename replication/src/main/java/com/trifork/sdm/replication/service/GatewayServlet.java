@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.trifork.sdm.replication.configuration.properties.AuthorizationTTL;
-import com.trifork.sdm.replication.configuration.properties.Host;
 import com.trifork.sdm.replication.configuration.properties.DefaultPageSize;
+import com.trifork.sdm.replication.configuration.properties.Host;
 import com.trifork.sdm.replication.configuration.properties.Port;
 import com.trifork.sdm.replication.configuration.properties.Secret;
 

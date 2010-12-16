@@ -13,11 +13,14 @@ cobertura {
 
 
 replication {
+	host = '0.0.0.0'
+	port = 3000
+
 	defaults.pageSize = 1000
 	
 	security.secret = "CHANGE ME!"
 	security.urlTimeToLive = 15
-}                              
+}                          
 
 // Environment specific settings.
 // These will override the defaults settings above.
@@ -30,5 +33,7 @@ environments {
 	test {
 		db.schema = "sdm_test"
 		db.housekeeping.schema = "sdm_housekeeping_test"
+		
+		replication.port = 3001
 	}
 }

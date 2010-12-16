@@ -4,12 +4,17 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.trifork.sdm.models.AbstractRecord;
+
 
 @Entity
-public class Administrationsvej extends TakstRecord {
+public class Administrationsvej extends AbstractRecord {
 
-	private String kode; // Ref. t. LMS01, felt 16
+	// Reference to LMS01, field 16
+	private String kode;
+
 	private String kortTekst;
+
 	private String tekst;
 
 
@@ -17,7 +22,7 @@ public class Administrationsvej extends TakstRecord {
 	@Column(name = "AdministrationsvejKode")
 	public String getKode() {
 
-		return this.kode;
+		return kode;
 	}
 
 
@@ -29,7 +34,7 @@ public class Administrationsvej extends TakstRecord {
 
 	public String getKortTekst() {
 
-		return this.kortTekst;
+		return kortTekst;
 	}
 
 
@@ -42,7 +47,7 @@ public class Administrationsvej extends TakstRecord {
 	@Column(name = "AdministrationsvejTekst")
 	public String getTekst() {
 
-		return this.tekst;
+		return tekst;
 	}
 
 
@@ -55,7 +60,6 @@ public class Administrationsvej extends TakstRecord {
 	@Override
 	public String getKey() {
 
-		return "" + this.kode;
+		return kode.toString();
 	}
-
 }

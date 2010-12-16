@@ -1,7 +1,9 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
-public class Tilskudsintervaller extends TakstRecord {
+import com.trifork.sdm.models.AbstractRecord;
 
+public class Tilskudsintervaller extends AbstractRecord {
+	
 	private Long type; // Patienttype: almen, barn, kroniker, terminal
 	private Long niveau; // fx 1-4 for alment tilskud, 1-3 for barn
 	private Long nedreGraense; // Nedre beløbsgrænse for niveauet (i øre)

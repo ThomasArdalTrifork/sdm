@@ -1,14 +1,23 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
-public class PakningskombinationerUdenPriser extends TakstRecord {
+import com.trifork.sdm.models.AbstractRecord;
 
-	private Long varenummerOrdineret; // Vnr. på pakningen anført på recepten
-	private Long varenummerSubstitueret; // Vnr. på en pakning der evt. kan
-											// substitueres til
-	private Long varenummerAlternativt; // Vnr. for en mindre, billigere pakning
-	private Long antalPakninger; // Antal af den alternative pakning
-	private String informationspligtMarkering; // Markering (stjerne *) for
-												// informationspligt
+public class PakningskombinationerUdenPriser extends AbstractRecord {
+
+	// Vnr. på pakningen anført på recepten.
+	private Long varenummerOrdineret;
+
+	// Vnr. på en pakning der evt. kan substitueres til.
+	private Long varenummerSubstitueret;
+
+	// Vnr. for en mindre, billigere pakning.
+	private Long varenummerAlternativt;
+
+	// Antal af den alternative pakning
+	private Long antalPakninger;
+
+	// Markering (stjerne *) for informationspligt.
+	private String informationspligtMarkering;
 
 
 	public Long getVarenummerOrdineret() {
@@ -61,7 +70,7 @@ public class PakningskombinationerUdenPriser extends TakstRecord {
 
 	public String getInformationspligtMarkering() {
 
-		return this.informationspligtMarkering;
+		return informationspligtMarkering;
 	}
 
 
@@ -72,9 +81,8 @@ public class PakningskombinationerUdenPriser extends TakstRecord {
 
 
 	@Override
-	public Long getKey() {
+	public Object getKey() {
 
-		return this.varenummerOrdineret;
+		return varenummerOrdineret;
 	}
-
 }

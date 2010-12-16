@@ -25,6 +25,6 @@ public class TakstModelTest extends TestCase {
 		
 		TakstDataset<ATCKoderOgTekst> atckoder = new TakstDataset<ATCKoderOgTekst>(takst,
 				new ArrayList<ATCKoderOgTekst>(), ATCKoderOgTekst.class);
-		takst.addDataset(atckoder);
+		takst.addRecordSet(atckoder);
 	}
 }

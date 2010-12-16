@@ -8,13 +8,22 @@ import java.net.URL;
 
 import org.junit.Test;
 
+import com.google.inject.Module;
+
 
 public class ResourceServletTest extends ReplicationTest {
 
 	@Override
 	public void initialize() {
 
-		//serve("/resource").with(servlet(Resource.class));
+		// serve("/resource").with(servlet(Resource.class));
+	}
+
+
+	@Override
+	public Module[] getConfiguration() {
+
+		return new Module[] { this };
 	}
 
 

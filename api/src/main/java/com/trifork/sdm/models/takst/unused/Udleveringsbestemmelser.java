@@ -1,7 +1,9 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
-public class Udleveringsbestemmelser extends TakstRecord {
+import com.trifork.sdm.models.AbstractRecord;
 
+public class Udleveringsbestemmelser extends AbstractRecord {
+	
 	private String kode; // Ref. t. LMS02, felt 10
 	private String udleveringsgruppe; // Recept: A eller B, håndkøb: H
 	private String kortTekst;

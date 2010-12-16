@@ -1,9 +1,9 @@
 package com.trifork.sdm.replication.client;
 
-import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
-import static javax.xml.stream.XMLStreamConstants.START_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.*;
 
 import java.io.InputStream;
+import java.sql.Connection;
 
 import javax.inject.Inject;
 import javax.xml.stream.XMLInputFactory;
@@ -27,16 +27,21 @@ public class JdbcXMLRecordPersister implements RecordPersister {
 
 
 	@Override
-	public boolean persist(InputStream inputStream) throws XMLStreamException {
+	public String persist(InputStream inputStream) throws XMLStreamException {
 
 		XMLInputFactory factory = (XMLInputFactory) XMLInputFactory.newInstance();
 		XMLStreamReader staxXmlReader = (XMLStreamReader) factory.createXMLStreamReader(inputStream);
 
+		Connection connection = connectionFactory.create();
+
+		String offset = null;
+
 		for (int event = staxXmlReader.next(); event != END_DOCUMENT; event = staxXmlReader.next()) {
 
-			if (event == START_DOCUMENT) {
+			if (event == START_ELEMENT) {
 
 				String s = staxXmlReader.getLocalName();
+				int i = 0;
 			}
 
 			// Method setter = EntityHelper.getSetterFromGetter(entity, getter);
@@ -44,6 +49,6 @@ public class JdbcXMLRecordPersister implements RecordPersister {
 			// staxXmlReader.getLocalName();
 		}
 
-		return false;
+		return offset;
 	}
 }

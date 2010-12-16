@@ -5,7 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.trifork.sdm.models.takst.Medicintilskud;
 
@@ -73,12 +74,12 @@ public class MedicintilskudFactory extends AbstractFactory
 	}
 
 
-	public static ArrayList<Medicintilskud> read(String rootFolder) throws IOException
+	public Set<Medicintilskud> read(String rootFolder) throws IOException
 	{
 
 		File f = new File(rootFolder + getLmsName().toLowerCase() + ".txt");
 
-		ArrayList<Medicintilskud> list = new ArrayList<Medicintilskud>();
+		Set<Medicintilskud> list = new HashSet<Medicintilskud>();
 		BufferedReader reader = null;
 		try
 		{

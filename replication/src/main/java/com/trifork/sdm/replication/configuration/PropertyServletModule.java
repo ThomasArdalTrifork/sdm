@@ -3,10 +3,10 @@ package com.trifork.sdm.replication.configuration;
 import java.io.InputStream;
 import java.util.Properties;
 
-import com.google.inject.AbstractModule;
+import com.google.inject.servlet.ServletModule;
 
 
-public abstract class PropertyModule extends AbstractModule {
+public abstract class PropertyServletModule extends ServletModule {
 
 	private static Properties properties;
 
@@ -25,7 +25,13 @@ public abstract class PropertyModule extends AbstractModule {
 
 
 	protected String property(String propertyName) {
+		
+		return property(propertyName, "");
+	}
 
-		return properties.getProperty(propertyName, "");
+
+	protected String property(String propertyName, String defaultValue) {
+
+		return properties.getProperty(propertyName, defaultValue);
 	}
 }

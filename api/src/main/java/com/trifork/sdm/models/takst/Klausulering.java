@@ -4,10 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.trifork.sdm.models.AbstractRecord;
+
 
 @Entity
-public class Klausulering extends TakstRecord {
-
+public class Klausulering extends AbstractRecord {
+	
 	private String kode; // Ref. t. LMS02, felt 13
 	private String kortTekst; // Klausultekst, forkortet
 	private String tekst; // Tilskudsklausul (sygdom/pensionist/kroniker)

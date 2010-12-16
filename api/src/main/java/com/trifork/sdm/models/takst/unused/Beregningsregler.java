@@ -1,9 +1,12 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
 import javax.persistence.Column;
 
+import com.trifork.sdm.models.AbstractRecord;
 
-public class Beregningsregler extends TakstRecord {
+
+public class Beregningsregler extends AbstractRecord {
+
 	private String kode; // Ref. t. LMS02, felt 21
 	private String tekst;
 

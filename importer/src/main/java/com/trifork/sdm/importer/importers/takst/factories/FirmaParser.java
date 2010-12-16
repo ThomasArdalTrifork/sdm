@@ -8,23 +8,28 @@ import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.trifork.sdm.models.takst.unused.SpecialeForNBS;
+import com.trifork.sdm.models.takst.unused.Firma;
 
 
-public class SpecialeForNBSFactory extends AbstractFactory<SpecialeForNBS> {
+public class FirmaParser extends AbstractFactory<Firma> {
+	private static final int NUM_FIELDS = 4;
 
-	private static void setFieldValue(SpecialeForNBS obj, int fieldNo, String value) {
+
+	private static void setFieldValue(Firma obj, int fieldNo, String value) {
 
 		if ("".equals(value)) value = null;
 		switch (fieldNo) {
 		case 0:
-			obj.setKode(value);
+			obj.setFirmanummer(toLong(value));
 			break;
 		case 1:
-			obj.setKortTekst(value);
+			obj.setFirmamaerkeKort(value);
 			break;
 		case 2:
-			obj.setTekst(value);
+			obj.setFirmamaerkeLangtNavn(value);
+			break;
+		case 3:
+			obj.setParallelimportoerKode(value);
 			break;
 		default:
 			break;
@@ -38,9 +43,11 @@ public class SpecialeForNBSFactory extends AbstractFactory<SpecialeForNBS> {
 		case 0:
 			return 0;
 		case 1:
-			return 5;
+			return 6;
 		case 2:
-			return 15;
+			return 26;
+		case 3:
+			return 58;
 		default:
 			return -1;
 		}
@@ -51,70 +58,67 @@ public class SpecialeForNBSFactory extends AbstractFactory<SpecialeForNBS> {
 
 		switch (fieldNo) {
 		case 0:
-			return 5;
+			return 6;
 		case 1:
-			return 10;
+			return 20;
 		case 2:
-			return 50;
+			return 32;
+		case 3:
+			return 2;
 		default:
 			return -1;
 		}
 	}
 
 
-	private static int getNumberOfFields() {
+	@Override
+	public Set<Firma> read(String rootFolder) throws IOException {
 
-		return 3;
-	}
+		File f = new File(rootFolder + "lms09.txt");
 
-
-	private static String getLmsName() {
-
-		return "LMS19";
-	}
-
-
-	public Set<SpecialeForNBS> read(String rootFolder) throws IOException {
-
-		File f = new File(rootFolder + getLmsName().toLowerCase() + ".txt");
-
-		Set<SpecialeForNBS> list = new HashSet<SpecialeForNBS>();
+		Set<Firma> list = new HashSet<Firma>();
 		BufferedReader reader = null;
-		
+
 		try {
+
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "CP865"));
+
 			while (reader.ready()) {
+
 				String line = reader.readLine();
+
 				if (line.length() > 0) {
 					list.add(parse(line));
 				}
 			}
-			return list;
 		}
 		finally {
+
 			try {
-				if (reader != null) {
-					reader.close();
-				}
+				if (reader != null) reader.close();
 			}
 			catch (Exception e) {
 				logger.warn("Could not close FileReader");
 			}
 		}
+
+		return list;
 	}
 
 
-	private static SpecialeForNBS parse(String line) {
+	private static Firma parse(String line) {
 
-		SpecialeForNBS obj = new SpecialeForNBS();
-		for (int fieldNo = 0; fieldNo < getNumberOfFields(); fieldNo++) {
-			if (getLength(fieldNo) > 0) {
-				// System.out.print("Getting field "+fieldNo+" from"+getOffset(fieldNo)+" to "+(getOffset(fieldNo)+getLength(fieldNo)));
+		Firma obj = new Firma();
+
+		for (int fieldNo = 0; fieldNo < NUM_FIELDS; fieldNo++) {
+			
+			 if (getLength(fieldNo) > 0) {
+				
 				String value = line.substring(getOffset(fieldNo), getOffset(fieldNo) + getLength(fieldNo)).trim();
-				// System.out.println(": "+value);
 				setFieldValue(obj, fieldNo, value);
 			}
 		}
+
 		return obj;
 	}
 }

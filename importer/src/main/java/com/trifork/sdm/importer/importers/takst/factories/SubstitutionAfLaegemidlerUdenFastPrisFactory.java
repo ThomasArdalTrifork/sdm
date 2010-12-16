@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import com.trifork.sdm.models.takst.SubstitutionAfLaegemidlerUdenFastPris;
+import com.trifork.sdm.models.takst.unused.SubstitutionAfLaegemidlerUdenFastPris;
 
 public class SubstitutionAfLaegemidlerUdenFastPrisFactory extends AbstractFactory
 {

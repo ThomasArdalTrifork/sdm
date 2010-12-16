@@ -5,11 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.trifork.sdm.models.AbstractRecord;
+
 
 @Entity
 @Table(name = "LaegemiddelDoseringRef")
-public class Doseringskode extends TakstRecord {
-
+public class Doseringskode extends AbstractRecord {
+	
 	private Long drugid; // Ref. t. LMS01
 	private Long doseringskode; // Ref. t. LMS28
 

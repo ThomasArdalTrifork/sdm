@@ -11,20 +11,22 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import com.trifork.sdm.importer.importers.FileParseException;
 import com.trifork.sdm.importer.importers.takst.factories.ATCKoderOgTekstFactory;
-import com.trifork.sdm.importer.importers.takst.factories.AdministrationsvejFactory;
+import com.trifork.sdm.importer.importers.takst.factories.AdministrationsvejParser;
 import com.trifork.sdm.importer.importers.takst.factories.BeregningsreglerFactory;
 import com.trifork.sdm.importer.importers.takst.factories.DivEnhederFactory;
 import com.trifork.sdm.importer.importers.takst.factories.DoseringFactory;
 import com.trifork.sdm.importer.importers.takst.factories.DoseringskodeFactory;
 import com.trifork.sdm.importer.importers.takst.factories.EmballagetypeKoderFactory;
 import com.trifork.sdm.importer.importers.takst.factories.EnhedspriserFactory;
-import com.trifork.sdm.importer.importers.takst.factories.FirmaFactory;
+import com.trifork.sdm.importer.importers.takst.factories.FirmaParser;
 import com.trifork.sdm.importer.importers.takst.factories.IndholdsstofferFactory;
 import com.trifork.sdm.importer.importers.takst.factories.IndikationFactory;
 import com.trifork.sdm.importer.importers.takst.factories.IndikationskodeFactory;
@@ -49,41 +51,40 @@ import com.trifork.sdm.importer.importers.takst.factories.UdgaaedeNavneFactory;
 import com.trifork.sdm.importer.importers.takst.factories.UdleveringsbestemmelserFactory;
 import com.trifork.sdm.models.takst.ATCKoderOgTekst;
 import com.trifork.sdm.models.takst.Administrationsvej;
-import com.trifork.sdm.models.takst.Beregningsregler;
-import com.trifork.sdm.models.takst.DivEnheder;
 import com.trifork.sdm.models.takst.Dosering;
 import com.trifork.sdm.models.takst.Doseringskode;
-import com.trifork.sdm.models.takst.EmballagetypeKoder;
-import com.trifork.sdm.models.takst.Enhedspriser;
-import com.trifork.sdm.models.takst.Firma;
-import com.trifork.sdm.models.takst.Indholdsstoffer;
 import com.trifork.sdm.models.takst.Indikation;
 import com.trifork.sdm.models.takst.Indikationskode;
 import com.trifork.sdm.models.takst.Klausulering;
 import com.trifork.sdm.models.takst.Laegemiddel;
 import com.trifork.sdm.models.takst.LaegemiddelAdministrationsvejRef;
 import com.trifork.sdm.models.takst.LaegemiddelformBetegnelser;
-import com.trifork.sdm.models.takst.Laegemiddelnavn;
 import com.trifork.sdm.models.takst.Medicintilskud;
-import com.trifork.sdm.models.takst.Opbevaringsbetingelser;
-import com.trifork.sdm.models.takst.OplysningerOmDosisdispensering;
 import com.trifork.sdm.models.takst.Pakning;
-import com.trifork.sdm.models.takst.Pakningskombinationer;
-import com.trifork.sdm.models.takst.PakningskombinationerUdenPriser;
 import com.trifork.sdm.models.takst.Pakningsstoerrelsesenhed;
-import com.trifork.sdm.models.takst.Priser;
-import com.trifork.sdm.models.takst.Rekommandationer;
-import com.trifork.sdm.models.takst.SpecialeForNBS;
 import com.trifork.sdm.models.takst.Styrkeenhed;
-import com.trifork.sdm.models.takst.Substitution;
-import com.trifork.sdm.models.takst.SubstitutionAfLaegemidlerUdenFastPris;
 import com.trifork.sdm.models.takst.Takst;
-import com.trifork.sdm.models.takst.TakstDataset;
 import com.trifork.sdm.models.takst.Tidsenhed;
-import com.trifork.sdm.models.takst.Tilskudsintervaller;
-import com.trifork.sdm.models.takst.TilskudsprisgrupperPakningsniveau;
-import com.trifork.sdm.models.takst.UdgaaedeNavne;
-import com.trifork.sdm.models.takst.Udleveringsbestemmelser;
+import com.trifork.sdm.models.takst.unused.Beregningsregler;
+import com.trifork.sdm.models.takst.unused.DivEnheder;
+import com.trifork.sdm.models.takst.unused.EmballagetypeKoder;
+import com.trifork.sdm.models.takst.unused.Enhedspriser;
+import com.trifork.sdm.models.takst.unused.Firma;
+import com.trifork.sdm.models.takst.unused.Indholdsstoffer;
+import com.trifork.sdm.models.takst.unused.Laegemiddelnavn;
+import com.trifork.sdm.models.takst.unused.Opbevaringsbetingelser;
+import com.trifork.sdm.models.takst.unused.OplysningerOmDosisdispensering;
+import com.trifork.sdm.models.takst.unused.Pakningskombinationer;
+import com.trifork.sdm.models.takst.unused.PakningskombinationerUdenPriser;
+import com.trifork.sdm.models.takst.unused.Priser;
+import com.trifork.sdm.models.takst.unused.Rekommandationer;
+import com.trifork.sdm.models.takst.unused.SpecialeForNBS;
+import com.trifork.sdm.models.takst.unused.Substitution;
+import com.trifork.sdm.models.takst.unused.SubstitutionAfLaegemidlerUdenFastPris;
+import com.trifork.sdm.models.takst.unused.Tilskudsintervaller;
+import com.trifork.sdm.models.takst.unused.TilskudsprisgrupperPakningsniveau;
+import com.trifork.sdm.models.takst.unused.UdgaaedeNavne;
+import com.trifork.sdm.models.takst.unused.Udleveringsbestemmelser;
 import com.trifork.sdm.persistence.Dataset;
 import com.trifork.sdm.util.DateUtils;
 
@@ -99,16 +100,15 @@ public class TakstParser {
 		String rootFolder = "";
 
 		for (File file : files) {
-			
+
 			if (file.getName().endsWith(TakstImporter.requiredFileNames[0])) {
-				
+
 				rootFolder = file.getParent() + "/";
 				break;
 			}
 		}
 
-		if ("".equals(rootFolder))
-			throw new FileParseException("Cannot extract root folder for takst parsing");
+		if ("".equals(rootFolder)) throw new FileParseException("Cannot extract root folder for takst parsing");
 
 		return parseTakst(rootFolder);
 	}
@@ -117,141 +117,142 @@ public class TakstParser {
 	public Takst parseTakst(String rootFolder) throws FileParseException {
 
 		Takst takst;
+
 		try {
 			// Parse required meta information first
+
 			String systemline = getSystemLine(rootFolder);
 			String version = getVersion(systemline);
-			if (!SUPPORTED_TAKST_VERSION.equals(version))
-				logger.warn("Trying to parse unknown version: '" + version
-						+ "' of the takst! Only known version is: '" + SUPPORTED_TAKST_VERSION + "'");
+
+			if (!SUPPORTED_TAKST_VERSION.equals(version)) {
+
+				logger.warn("Trying to parse unknown version: '" + version + "' of the takst! Only known version is: '" + SUPPORTED_TAKST_VERSION + "'");
+			}
+
 			Date fromDate = getValidFromDate(systemline);
+
 			logger.debug("Parsing takst version: '" + version + "' validFrom '" + fromDate.toString());
+
 			takst = new Takst(fromDate, DateUtils.FUTURE);
 
 			// Add the takst itself to the takst as a "meta entity" to represent
-			// in DB that the takst was loaded
+			// in DB that the takst was loaded.
+
 			takst.setValidityWeekNumber(getValidWeek(systemline));
 			takst.setValidityYear(getValidYear(systemline));
-			List<Takst> takstMetaEntity = new ArrayList<Takst>();
-			takstMetaEntity.add(takst);
-			takst.addDataset(new TakstDataset<Takst>(takst, takstMetaEntity, Takst.class));
 		}
 		catch (Exception e) {
+
 			throw new FileParseException("An error occured while reading takst metadata", e);
 		}
+
 		try {
-			// Now parse the required data files
-			takst.addDataset(new TakstDataset<Laegemiddel>(takst, LaegemiddelFactory.read(rootFolder),
-					Laegemiddel.class));
-			takst.addDataset(new TakstDataset<Pakning>(takst, PakningFactory.read(rootFolder), Pakning.class));
-			takst.addDataset(new TakstDataset<Priser>(takst, PriserFactory.read(rootFolder), Priser.class));
-			takst.addDataset(new TakstDataset<Substitution>(takst, SubstitutionFactory.read(rootFolder),
-					Substitution.class));
-			takst.addDataset(new TakstDataset<SubstitutionAfLaegemidlerUdenFastPris>(takst,
-					SubstitutionAfLaegemidlerUdenFastPrisFactory.read(rootFolder),
-					SubstitutionAfLaegemidlerUdenFastPris.class));
-			takst.addDataset(new TakstDataset<TilskudsprisgrupperPakningsniveau>(takst,
-					TilskudsprisgrupperPakningsniveauFactory.read(rootFolder),
-					TilskudsprisgrupperPakningsniveau.class));
-			takst.addDataset(new TakstDataset<Firma>(takst, FirmaFactory.read(rootFolder), Firma.class));
-			takst.addDataset(new TakstDataset<UdgaaedeNavne>(takst, UdgaaedeNavneFactory.read(rootFolder),
-					UdgaaedeNavne.class));
-			takst.addDataset(new TakstDataset<Administrationsvej>(takst, AdministrationsvejFactory
-					.read(rootFolder), Administrationsvej.class));
-			takst.addDataset(new TakstDataset<ATCKoderOgTekst>(takst,
-					ATCKoderOgTekstFactory.read(rootFolder), ATCKoderOgTekst.class));
-			takst.addDataset(new TakstDataset<Beregningsregler>(takst, BeregningsreglerFactory
-					.read(rootFolder), Beregningsregler.class));
-			takst.addDataset(new TakstDataset<EmballagetypeKoder>(takst, EmballagetypeKoderFactory
-					.read(rootFolder), EmballagetypeKoder.class));
-			takst.addDataset(new TakstDataset<DivEnheder>(takst, DivEnhederFactory.read(rootFolder),
-					DivEnheder.class));
-			takst.addDataset(new TakstDataset<Medicintilskud>(takst, MedicintilskudFactory.read(rootFolder),
-					Medicintilskud.class));
-			takst.addDataset(new TakstDataset<Klausulering>(takst, KlausuleringFactory.read(rootFolder),
-					Klausulering.class));
-			takst.addDataset(new TakstDataset<Udleveringsbestemmelser>(takst, UdleveringsbestemmelserFactory
-					.read(rootFolder), Udleveringsbestemmelser.class));
-			takst.addDataset(new TakstDataset<SpecialeForNBS>(takst, SpecialeForNBSFactory.read(rootFolder),
-					SpecialeForNBS.class));
-			takst.addDataset(new TakstDataset<Opbevaringsbetingelser>(takst, OpbevaringsbetingelserFactory
-					.read(rootFolder), Opbevaringsbetingelser.class));
-			takst.addDataset(new TakstDataset<Tilskudsintervaller>(takst, TilskudsintervallerFactory
-					.read(rootFolder), Tilskudsintervaller.class));
-			takst.addDataset(new TakstDataset<OplysningerOmDosisdispensering>(takst,
-					OplysningerOmDosisdispenseringFactory.read(rootFolder),
-					OplysningerOmDosisdispensering.class));
-			takst.addDataset(new TakstDataset<Indikationskode>(takst,
-					IndikationskodeFactory.read(rootFolder), Indikationskode.class));
-			takst.addDataset(new TakstDataset<Indikation>(takst, IndikationFactory.read(rootFolder),
-					Indikation.class));
-			takst.addDataset(new TakstDataset<Doseringskode>(takst, DoseringskodeFactory.read(rootFolder),
-					Doseringskode.class));
-			takst.addDataset(new TakstDataset<Dosering>(takst, DoseringFactory.read(rootFolder),
-					Dosering.class));
+			// Parse the required data files
+
+			takst.drugs = new HashSet<Laegemiddel>(LaegemiddelFactory.read(rootFolder));
+
+			takst.packaging = new HashSet<Pakning>(PakningFactory.read(rootFolder));
+
+			takst.prices = new HashSet<Priser>(PriserFactory.read(rootFolder));
+
+			takst.substitutions = new HashSet<Substitution>(SubstitutionFactory.read(rootFolder));
+
+			takst.substitutionAfLaegemidlerUdenFastPris = new HashSet<SubstitutionAfLaegemidlerUdenFastPris>(SubstitutionAfLaegemidlerUdenFastPrisFactory.read(rootFolder));
+
+			takst.tilskudsprisgrupperPakningsniveau = new HashSet<TilskudsprisgrupperPakningsniveau>(TilskudsprisgrupperPakningsniveauFactory.read(rootFolder));
+
+			takst.firmaer = new FirmaParser().read(rootFolder);
+
+			takst.udgaaedeNavne = new HashSet<UdgaaedeNavne>(UdgaaedeNavneFactory.read(rootFolder));
+
+			takst.administrationsveje = new AdministrationsvejParser().read(rootFolder);
+
+			takst.atcKoderOgTekster = new ATCKoderOgTekstFactory().read(rootFolder);
+
+			takst.beregningsregler = new BeregningsreglerFactory().read(rootFolder);
+
+			takst.emballagetypeKoder = new EmballagetypeKoderFactory().read(rootFolder);
+
+			takst.divEnheder = new DivEnhederFactory().read(rootFolder);
+
+			takst.medicintilskud = new MedicintilskudFactory().read(rootFolder);
+
+			takst.klausulering = new KlausuleringFactory().read(rootFolder);
+
+			takst.udleveringsbestemmelser = new UdleveringsbestemmelserFactory().read(rootFolder);
+
+			takst.specialeForNBS = new SpecialeForNBSFactory().read(rootFolder);
+
+			takst.opbevaringsbetingelser = new OpbevaringsbetingelserFactory().read(rootFolder);
+
+			takst.tilskudsintervaller = new TilskudsintervallerFactory().read(rootFolder);
+
+			takst.oplysningerOmDosisdispensering = new OplysningerOmDosisdispenseringFactory().read(rootFolder);
+
+			takst.indikationskoder = new IndikationskodeFactory().read(rootFolder);
+
+			takst.indikation = new IndikationFactory().read(rootFolder);
+
+			takst.doseringskode = new DoseringskodeFactory().read(rootFolder);
+
+			takst.dosering = new DoseringFactory().read(rootFolder);
 		}
 		catch (Exception e) {
 			throw new FileParseException("An error occured while reading takst data", e);
 		}
-		// Now parse optional files one at a time, to be robust to them not
-		// being present
+
+		// Now parse optional files one at a time.
+
 		try {
-			takst.addDataset(new TakstDataset<Laegemiddelnavn>(takst,
-					LaegemiddelnavnFactory.read(rootFolder), Laegemiddelnavn.class));
+			takst.laegemiddelnavne = new LaegemiddelnavnFactory().read(rootFolder);
 		}
 		catch (IOException e) {
-			logger.debug(LaegemiddelFactory.getLmsName()
-					+ " could not be read. Ignoring as it is not required");
+			logger.debug(LaegemiddelFactory.getLmsName() + " could not be read. Ignoring as it is not required");
 		}
+
 		try {
-			takst.addDataset(new TakstDataset<LaegemiddelformBetegnelser>(takst,
-					LaegemiddelformBetegnelserFactory.read(rootFolder), LaegemiddelformBetegnelser.class));
+			takst.laegemiddelformBetegnelser = new LaegemiddelformBetegnelserFactory().read(rootFolder);
 		}
 		catch (IOException e) {
-			logger.debug(LaegemiddelformBetegnelserFactory.getLmsName()
-					+ " could not be read. Ignoring as it is not required");
+			logger.debug(LaegemiddelformBetegnelserFactory.getLmsName() + " could not be read. Ignoring as it is not required");
 		}
+
 		try {
-			takst.addDataset(new TakstDataset<Rekommandationer>(takst, RekommandationerFactory
-					.read(rootFolder), Rekommandationer.class));
+			takst.rekommandationer = new RekommandationerFactory().read(rootFolder);
 		}
 		catch (IOException e) {
-			logger.debug(RekommandationerFactory.getLmsName()
-					+ " could not be read. Ignoring as it is not required");
+			logger.debug(RekommandationerFactory.getLmsName() + " could not be read. Ignoring as it is not required");
 		}
+
 		try {
-			takst.addDataset(new TakstDataset<Indholdsstoffer>(takst,
-					IndholdsstofferFactory.read(rootFolder), Indholdsstoffer.class));
+			takst.indholdsstoffer = new IndholdsstofferFactory().read(rootFolder);
 		}
 		catch (IOException e) {
-			logger.debug(IndholdsstofferFactory.getLmsName()
-					+ " could not be read. Ignoring as it is not required");
+			logger.debug(IndholdsstofferFactory.getLmsName() + " could not be read. Ignoring as it is not required");
 		}
+
 		try {
-			takst.addDataset(new TakstDataset<Enhedspriser>(takst, EnhedspriserFactory.read(rootFolder),
-					Enhedspriser.class));
+			takst.enhedspriser = new EnhedspriserFactory().read(rootFolder);
 		}
 		catch (IOException e) {
-			logger.debug(EnhedspriserFactory.getLmsName()
-					+ " could not be read. Ignoring as it is not required");
+			logger.debug(EnhedspriserFactory.getLmsName() + " could not be read. Ignoring as it is not required");
 		}
+
 		try {
-			takst.addDataset(new TakstDataset<Pakningskombinationer>(takst, PakningskombinationerFactory
-					.read(rootFolder), Pakningskombinationer.class));
-			takst.addDataset(new TakstDataset<PakningskombinationerUdenPriser>(takst,
-					PakningskombinationerUdenPriserFactory.read(rootFolder),
-					PakningskombinationerUdenPriser.class));
+			takst.pakningskombinationer = new PakningskombinationerFactory().read(rootFolder);
+			takst.pakningskombinationerUdenPriser = new PakningskombinationerUdenPriserFactory().read(rootFolder);
 		}
 		catch (IOException e) {
-			logger.debug(PakningskombinationerFactory.getLmsName() + " or "
-					+ PakningskombinationerUdenPriserFactory.getLmsName()
-					+ " could not be read. Ignoring as they are not required");
+			logger.debug(PakningskombinationerFactory.getLmsName() + " or " + PakningskombinationerUdenPriserFactory.getLmsName() + " could not be read. Ignoring as they are not required");
 		}
+
 		try {
-			// Post process takst
+			// Post process.
+
 			addTypedDivEnheder(takst);
 			addLaegemiddelAdministrationsvejRefs(takst);
 			filterOutVetDrugs(takst);
+
 			return takst;
 		}
 		catch (Exception e) {
@@ -261,21 +262,21 @@ public class TakstParser {
 
 
 	/**
-	 * Extracts the administrationsveje and adds them to the takst
-	 * 
-	 * @param takst
+	 * Extracts the administrationsveje and adds them to the release.
 	 */
 	private void addLaegemiddelAdministrationsvejRefs(Takst takst) {
 
-		TakstDataset<Laegemiddel> lmr = takst.getDatasetOfType(Laegemiddel.class);
-		List<LaegemiddelAdministrationsvejRef> lars = new ArrayList<LaegemiddelAdministrationsvejRef>();
-		for (Laegemiddel lm : lmr.getEntities()) {
-			for (Administrationsvej av : lm.getAdministrationsveje())
+		Set<LaegemiddelAdministrationsvejRef> lars = new HashSet<LaegemiddelAdministrationsvejRef>();
+		
+		for (Laegemiddel lm : takst.drugs) {
+			
+			for (Administrationsvej av : lm.getAdministrationsveje()) {
+				
 				lars.add(new LaegemiddelAdministrationsvejRef(lm, av));
+			}
 		}
-		takst.addDataset(new TakstDataset<LaegemiddelAdministrationsvejRef>(takst, lars,
-				LaegemiddelAdministrationsvejRef.class));
-
+		
+		takst.laegemiddelAdministrationsvejRef = lars;
 	}
 
 
@@ -293,26 +294,29 @@ public class TakstParser {
 	 */
 	private void addTypedDivEnheder(Takst takst) {
 
-		List<Tidsenhed> tidsenhed = new ArrayList<Tidsenhed>();
-		List<Pakningsstoerrelsesenhed> pakEnheder = new ArrayList<Pakningsstoerrelsesenhed>();
-		List<Styrkeenhed> styrkeEnheder = new ArrayList<Styrkeenhed>();
-		Dataset<DivEnheder> divEnheder = takst.getDatasetOfType(DivEnheder.class);
-		for (DivEnheder enhed : divEnheder.getEntities()) {
+		Set<Tidsenhed> tidsenheder = new HashSet<Tidsenhed>();
+		Set<Pakningsstoerrelsesenhed> pakEnheder = new HashSet<Pakningsstoerrelsesenhed>();
+		Set<Styrkeenhed> styrkeEnheder = new HashSet<Styrkeenhed>();
+
+		for (DivEnheder enhed : takst.divEnheder) {
+			
 			if (enhed.isEnhedstypeTid()) {
-				tidsenhed.add(new Tidsenhed(enhed));
+				
+				tidsenheder.add(new Tidsenhed(enhed));
 			}
 			else if (enhed.isEnhedstypePakning()) {
+				
 				pakEnheder.add(new Pakningsstoerrelsesenhed(enhed));
 			}
 			else if (enhed.isEnhedstypeStyrke()) {
+				
 				styrkeEnheder.add(new Styrkeenhed(enhed));
 			}
 		}
 
-		takst.addDataset(new TakstDataset<Tidsenhed>(takst, tidsenhed, Tidsenhed.class));
-		takst.addDataset(new TakstDataset<Pakningsstoerrelsesenhed>(takst, pakEnheder,
-				Pakningsstoerrelsesenhed.class));
-		takst.addDataset(new TakstDataset<Styrkeenhed>(takst, styrkeEnheder, Styrkeenhed.class));
+		takst.tidsenheder = tidsenheder;
+		takst.pakningsstoerrelsesenheder = pakEnheder;
+		takst.styrkeenheder = styrkeEnheder;
 	}
 
 
@@ -323,17 +327,24 @@ public class TakstParser {
 	 */
 	static void filterOutVetDrugs(Takst takst) {
 
-		logger.debug("Number of entities before filtering: " + takst.getEntities().size());
+		logger.debug("Filtering input.");
+		
 		List<Pakning> pakningerToBeRemoved = new ArrayList<Pakning>();
+
 		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);
+
 		if (pakninger != null) {
 			for (Pakning pakning : pakninger.getEntities()) {
 				if (!pakning.isTilHumanAnvendelse()) pakningerToBeRemoved.add(pakning);
 			}
+			
 			pakninger.removeRecords(pakningerToBeRemoved);
 		}
-		logger.debug("Number of entities after filtering pakninger: " + takst.getEntities().size());
+
+		logger.debug("Number of entities after filtering pakninger: " + takst.getAllRecords().size());
+
 		Dataset<Laegemiddel> lmr = takst.getDatasetOfType(Laegemiddel.class);
+
 		List<Laegemiddel> laegemidlerToBeRemoved = new ArrayList<Laegemiddel>();
 		if (lmr != null) {
 			for (Laegemiddel lm : lmr.getEntities()) {
@@ -341,16 +352,21 @@ public class TakstParser {
 			}
 			lmr.removeRecords(laegemidlerToBeRemoved);
 		}
-		logger.debug("Number of entities after filtering lmr: " + takst.getEntities().size());
+
+		logger.debug("Number of entities after filtering lmr: " + takst.getAllRecords().size());
+
 		Dataset<ATCKoderOgTekst> atckoder = takst.getDatasetOfType(ATCKoderOgTekst.class);
+
 		List<ATCKoderOgTekst> atcToBeRemoved = new ArrayList<ATCKoderOgTekst>();
+
 		if (atckoder != null) {
 			for (ATCKoderOgTekst atc : atckoder.getEntities()) {
 				if (!atc.isTilHumanAnvendelse()) atcToBeRemoved.add(atc);
 			}
 			atckoder.removeRecords(atcToBeRemoved);
 		}
-		logger.debug("Number of entities after filtering atc: " + takst.getEntities().size());
+
+		logger.debug("Number of entities after filtering atc: " + takst.getAllRecords().size());
 	}
 
 
@@ -369,18 +385,18 @@ public class TakstParser {
 	public Date getValidFromDate(String line) {
 
 		try {
-			
+
 			String dateline = line.substring(47, 55);
 			DateFormat df = new SimpleDateFormat("yyyyMMdd");
 			Date d = df.parse(dateline);
 			System.out.println(dateline);
 			Calendar ikraftdato = GregorianCalendar.getInstance();
 			ikraftdato.setTime(d);
-			
+
 			return ikraftdato.getTime();
 		}
 		catch (ParseException e) {
-			
+
 			logger.error("getValidFromDate(" + line + ")", e);
 			return null;
 		}
@@ -394,8 +410,7 @@ public class TakstParser {
 			return br.readLine();
 		}
 		catch (Exception e) {
-			throw new FileParseException("Error parsing takst: Could not read from " + rootFolder
-					+ "/system.txt", e);
+			throw new FileParseException("Error parsing takst: Could not read from " + rootFolder + "/system.txt", e);
 		}
 	}
 }

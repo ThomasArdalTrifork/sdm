@@ -1,9 +1,11 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
+import com.trifork.sdm.models.AbstractRecord;
 import com.trifork.sdm.util.DateUtils;
 
 
-public class UdgaaedeNavne extends TakstRecord {
+public class UdgaaedeNavne extends AbstractRecord {
+	
 	private Long drugid; // Ref. t. LMS01
 	private Long datoForAendringen;
 	private String tidligereNavn;

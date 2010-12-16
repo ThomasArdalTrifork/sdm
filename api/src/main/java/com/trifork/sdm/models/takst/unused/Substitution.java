@@ -1,7 +1,9 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
-public class Substitution extends TakstRecord {
+import com.trifork.sdm.models.AbstractRecord;
 
+public class Substitution extends AbstractRecord {
+	
 	private Long substitutionsgruppenummer; // Substitutionsgruppe for pakningen
 	private Long receptensVarenummer; // Varenr. hvis substitutionsmuligheder
 										// skal findes

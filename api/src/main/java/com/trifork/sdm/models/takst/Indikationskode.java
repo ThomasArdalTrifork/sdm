@@ -5,11 +5,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.trifork.sdm.models.AbstractRecord;
+
 
 @Entity
 @Table(name = "IndikationATCRef")
-public class Indikationskode extends TakstRecord {
-
+public class Indikationskode extends AbstractRecord {
 	private String aTC; // Ref. t. LMS01
 	private Long indikationskode; // Ref. t. LMS26
 	private Long drugID; // Ref. t. LMS01, felt 01

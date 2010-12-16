@@ -84,5 +84,11 @@ public class NamingConvention {
 		}
 
 		return columns;
-	}	
+	}
+
+
+	public static String getResourceName(Class<? extends Record> entity) {
+
+		return entity.getSimpleName().toLowerCase();
+	}
 }

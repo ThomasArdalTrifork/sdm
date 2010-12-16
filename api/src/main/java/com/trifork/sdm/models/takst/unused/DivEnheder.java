@@ -1,10 +1,11 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
+
+import com.trifork.sdm.models.AbstractRecord;
 
 // the entities of this type are output by these classes:
 // Tidsenhed, Styrkeenhed, Pakningsstoerrelsesenhed
 
-public class DivEnheder extends TakstRecord {
-
+public class DivEnheder extends AbstractRecord {
 	private static final long ENHEDSTYPE_TID = 1;
 	private static final long ENHEDSTYPE_STYRKE = 3;
 	private static final long ENHEDSTYPE_PAKNING = 4;

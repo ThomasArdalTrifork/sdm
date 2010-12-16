@@ -1,16 +1,14 @@
 package com.trifork.sdm.models.takst;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
+
+import com.trifork.sdm.models.AbstractRecord;
 
 
 @Entity
-public class Indikation extends TakstRecord {
+public class Indikation extends AbstractRecord {
 
 	// Ref. t. LMS25
 	private Long indikationskode;
@@ -23,18 +21,6 @@ public class Indikation extends TakstRecord {
 
 	// A = Aktiv kode. I = Inaktiv kode (This field is not used currently).
 	private String aktivInaktiv;
-
-
-	public List<ATCKoderOgTekst> getATC() {
-
-		TakstDataset<Indikationskode> indikationskoder = takst.getDatasetOfType(Indikationskode.class);
-		List<ATCKoderOgTekst> atcKoder = new ArrayList<ATCKoderOgTekst>();
-		for (Indikationskode ik : indikationskoder.getEntities()) {
-			if (ik.getIndikationskode().equals(this.getIndikationskode()))
-				atcKoder.add(takst.getEntity(ATCKoderOgTekst.class, ik.getATC()));
-		}
-		return atcKoder;
-	}
 
 
 	@Id

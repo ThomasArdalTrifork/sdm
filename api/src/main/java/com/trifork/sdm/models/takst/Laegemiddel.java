@@ -11,12 +11,14 @@ import javax.persistence.Id;
 
 import org.apache.log4j.Logger;
 
-import com.trifork.sdm.models.Versioned;
+import com.trifork.sdm.models.AbstractRecord;
+import com.trifork.sdm.models.takst.unused.Firma;
+import com.trifork.sdm.models.takst.unused.UdgaaedeNavne;
 import com.trifork.sdm.persistence.Dataset;
 
 
 @Entity
-public class Laegemiddel extends TakstRecord {
+public class Laegemiddel extends AbstractRecord {
 
 	private Long drugid;
 	private String varetype; // Udfyldt med SP (Specialiteter)
@@ -206,21 +208,9 @@ public class Laegemiddel extends TakstRecord {
 	}
 
 
-	public Firma getMTIndehaver() {
-
-		return takst.getEntity(Firma.class, this.mTIndehaver);
-	}
-
-
 	public void setMTIndehaver(Long mTIndehaver) {
 
 		this.mTIndehaver = mTIndehaver;
-	}
-
-
-	public Firma getRepraesentantDistributoer() {
-
-		return takst.getEntity(Firma.class, this.repraesentantDistributoer);
 	}
 
 
@@ -293,7 +283,8 @@ public class Laegemiddel extends TakstRecord {
 
 	public String getDatoForAfregistrAfLaegemiddel() {
 
-		if (this.datoForAfregistrAfLaegemiddel == null || "".equals(this.datoForAfregistrAfLaegemiddel)) {
+		if (datoForAfregistrAfLaegemiddel == null || datoForAfregistrAfLaegemiddel.isEmpty()) {
+
 			return null;
 		}
 
@@ -304,8 +295,7 @@ public class Laegemiddel extends TakstRecord {
 			return outformat.format(informat.parse(this.datoForAfregistrAfLaegemiddel));
 		}
 		catch (ParseException e) {
-			logger.error("Error converting DatoForAfregistrAfLaegemiddel to iso 8601 date format. Returning unformated string: '"
-					+ this.datoForAfregistrAfLaegemiddel + "'");
+			logger.error("Error converting DatoForAfregistrAfLaegemiddel to iso 8601 date format. Returning unformated string: '" + this.datoForAfregistrAfLaegemiddel + "'");
 			return this.datoForAfregistrAfLaegemiddel;
 		}
 	}
@@ -338,24 +328,12 @@ public class Laegemiddel extends TakstRecord {
 	}
 
 
-	public List<UdgaaedeNavne> getUdgaaedeNavne() {
-
-		List<UdgaaedeNavne> unavne = new ArrayList<UdgaaedeNavne>();
-		Dataset<UdgaaedeNavne> unds = takst.getDatasetOfType(UdgaaedeNavne.class);
-		if (unds == null) return null;
-		for (UdgaaedeNavne un : unds.getEntities()) {
-			if (un.getDrugid().equals(drugid)) unavne.add(un);
-		}
-		return unavne;
-	}
-
-
 	public List<Administrationsvej> getAdministrationsveje() {
 
 		List<Administrationsvej> adminveje = new ArrayList<Administrationsvej>();
 		for (int idx = 0; idx < administrationsvej.length(); idx += 2) {
 			String avKode = administrationsvej.substring(idx, idx + 2);
-			Administrationsvej adminVej = takst.getEntity(Administrationsvej.class, avKode);
+			Administrationsvej adminVej = takst.getRecord(Administrationsvej.class, avKode);
 			if (adminVej == null)
 				logger.warn("Administaritonvej not found for kode: '" + avKode + "'");
 			else
@@ -368,58 +346,13 @@ public class Laegemiddel extends TakstRecord {
 	@Column(name = "FormTekst")
 	public String getForm() {
 
-		LaegemiddelformBetegnelser lmfb = takst.getEntity(LaegemiddelformBetegnelser.class, formKode);
+		LaegemiddelformBetegnelser lmfb = takst.getRecord(LaegemiddelformBetegnelser.class, formKode);
+		
 		if (lmfb == null) {
 			return null;
 		}
+		
 		return lmfb.getTekst();
-	}
-
-
-	/*
-	 * tom@trifork.com: Doseringer vil jeg nok udelade lige nu, her er vi ved at
-	 * lave store ændringer (evt. kan du bare udkommentere koden i første
-	 * omgang, hvis vi fortryder)
-	 */
-	public List<Dosering> getDoseringer() {
-
-		List<Dosering> result = new ArrayList<Dosering>();
-		Dataset<Doseringskode> doseringskoder = takst.getDatasetOfType(Doseringskode.class);
-		if (doseringskoder == null) return null;
-		for (Doseringskode d : doseringskoder.getEntities()) {
-			if (this.drugid.equals(getDrugid())) {
-				result.add(takst.getEntity(Dosering.class, d.getDoseringskode()));
-			}
-		}
-		return result;
-	}
-
-
-	public List<Indikation> getIndikationer() {
-
-		List<Indikation> result = new ArrayList<Indikation>();
-		Dataset<Indikationskode> indikationskode = takst.getDatasetOfType(Indikationskode.class);
-		if (indikationskode == null) return null;
-		for (Indikationskode i : indikationskode.getEntities()) {
-			if (i.getDrugID().equals(this.drugid)) {
-				result.add(takst.getEntity(Indikation.class, i.getIndikationskode()));
-			}
-		}
-		return result;
-	}
-
-
-	public List<Pakning> getPakninger() {
-
-		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);
-		if (pakninger == null) return null;
-		List<Pakning> pakningerWithThisLaegemiddel = new ArrayList<Pakning>();
-		for (Pakning pakning : pakninger.getEntities()) {
-			if (pakning.getDrugid().equals(this.drugid)) {
-				pakningerWithThisLaegemiddel.add(pakning);
-			}
-		}
-		return pakningerWithThisLaegemiddel;
 	}
 
 
@@ -433,8 +366,10 @@ public class Laegemiddel extends TakstRecord {
 	@Column(name = "ATCTekst")
 	public String getATCTekst() {
 
-		ATCKoderOgTekst atcObj = takst.getEntity(ATCKoderOgTekst.class, aTC);
+		ATCKoderOgTekst atcObj = takst.getRecord(ATCKoderOgTekst.class, aTC);
+		
 		if (atcObj == null) return null;
+		
 		return atcObj.getTekst();
 	}
 
@@ -454,25 +389,6 @@ public class Laegemiddel extends TakstRecord {
 	public Object getRepraesentantDistributoerKode() {
 
 		return repraesentantDistributoer;
-	}
-
-
-	public List<Indholdsstoffer> getIndholdsstoffer() {
-
-		List<Indholdsstoffer> result = new ArrayList<Indholdsstoffer>();
-		Dataset<Indholdsstoffer> indholdsstoffer = takst.getDatasetOfType(Indholdsstoffer.class);
-		if (indholdsstoffer == null) return null;
-		for (Indholdsstoffer stof : indholdsstoffer.getEntities()) {
-			if (stof.getDrugID().equals(this.drugid)) {
-
-				if (!result.contains(stof)) {
-					result.add(stof);
-				}
-
-			}
-		}
-
-		return result;
 	}
 
 

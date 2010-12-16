@@ -1,27 +1,38 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
 import javax.persistence.Column;
 
+import com.trifork.sdm.models.AbstractRecord;
+import com.trifork.sdm.models.takst.Takst;
 
-public class Priser extends TakstRecord {
 
-	private Long varenummer; // Ref. t. LMS02, felt 02
-	private Long aIP; // Apotekets indkøbspris
-	private Long registerpris; // Beregning i prisbekendtg., § 2, stk. 1, 9 og
-								// 10
-	private Long ekspeditionensSamlPrisESP; // Reg.pris + evt. receptur- og
-											// færdigtilb.gebyr
-	private Long tilskudsprisTSP; // Tilskudspris (human) eller 000000000
-									// (veterinær)
-	private Long leveranceprisTilHospitaler; // Beregning i
-												// prisbekendtgørelsen, § 2,
-												// stk. 3, 4, 5, 9 og 10
-	private Long ikkeTilskudsberettigetDel; // Fx utensilie eller del af
-											// kombinationspakn.
+public class Priser extends AbstractRecord {
 
+	// Ref. t. LMS02, felt 02
+	private Long varenummer;
+
+	// Apotekets indkøbspris
+	private Long aIP;
+
+	// Beregning i prisbekendtg., § 2, stk. 1, 9 og 10
+	private Long registerpris;
+
+	// Reg.pris + evt. receptur- og færdigtilb.gebyr
+	private Long ekspeditionensSamlPrisESP;
+
+	// Tilskudspris (human) eller 000000000 (veterinær)
+	private Long tilskudsprisTSP;
+
+	// Beregning i prisbekendtgørelsen, §2 stk. 3, 4, 5, 9 og 10
+	private Long leveranceprisTilHospitaler;
+
+	// Fx utensilie eller del af kombinationspakn.
+	private Long ikkeTilskudsberettigetDel;
+
+	// HACK: Number formats should not be inside an entity!
 	private final NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("da", "DK"));
 
 
@@ -53,8 +64,7 @@ public class Priser extends TakstRecord {
 	@Column
 	public NumeriskMedEnhed getRegisterpris() {
 
-		return new NumeriskMedEnhed(takst, nf.format(this.registerpris / 100.0), this.registerpris / 100.0,
-				"DKK");
+		return new NumeriskMedEnhed(takst, nf.format(this.registerpris / 100.0), this.registerpris / 100.0, "DKK");
 	}
 
 
@@ -67,8 +77,7 @@ public class Priser extends TakstRecord {
 	@Column(name = "ekspeditionensSamledePris")
 	public NumeriskMedEnhed getEkspeditionensSamlPrisESP() {
 
-		return new NumeriskMedEnhed(takst, nf.format(this.ekspeditionensSamlPrisESP / 100.0),
-				this.ekspeditionensSamlPrisESP / 100.0, "DKK");
+		return new NumeriskMedEnhed(takst, nf.format(this.ekspeditionensSamlPrisESP / 100.0), this.ekspeditionensSamlPrisESP / 100.0, "DKK");
 	}
 
 
@@ -81,8 +90,7 @@ public class Priser extends TakstRecord {
 	@Column(name = "tilskudspris")
 	public NumeriskMedEnhed getTilskudsprisTSP() {
 
-		return new NumeriskMedEnhed(takst, nf.format(this.tilskudsprisTSP / 100.0),
-				this.tilskudsprisTSP / 100.0, "DKK");
+		return new NumeriskMedEnhed(takst, nf.format(this.tilskudsprisTSP / 100.0), this.tilskudsprisTSP / 100.0, "DKK");
 	}
 
 
@@ -95,8 +103,7 @@ public class Priser extends TakstRecord {
 	@Column
 	public NumeriskMedEnhed getLeveranceprisTilHospitaler() {
 
-		return new NumeriskMedEnhed(takst, nf.format(this.leveranceprisTilHospitaler / 100.0),
-				this.leveranceprisTilHospitaler / 100.0, "DKK");
+		return new NumeriskMedEnhed(takst, nf.format(this.leveranceprisTilHospitaler / 100.0), this.leveranceprisTilHospitaler / 100.0, "DKK");
 	}
 
 
@@ -109,8 +116,7 @@ public class Priser extends TakstRecord {
 	@Column
 	public NumeriskMedEnhed getIkkeTilskudsberettigetDel() {
 
-		return new NumeriskMedEnhed(takst, nf.format(this.ikkeTilskudsberettigetDel / 100.0),
-				this.ikkeTilskudsberettigetDel / 100.0, "DKK");
+		return new NumeriskMedEnhed(takst, nf.format(this.ikkeTilskudsberettigetDel / 100.0), this.ikkeTilskudsberettigetDel / 100.0, "DKK");
 	}
 
 

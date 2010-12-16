@@ -1,10 +1,12 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
 import javax.persistence.Column;
 
+import com.trifork.sdm.models.AbstractRecord;
 
-public class Firma extends TakstRecord {
 
+public class Firma extends AbstractRecord {
+	
 	private Long firmanummer; // Ref. t. LMS01, felt 13 - 14
 	private String firmamaerkeKort; // TODO: P.t. tomt
 

@@ -20,6 +20,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
+import com.google.inject.Module;
 import com.google.inject.Provides;
 import com.google.inject.servlet.ServletModule;
 import com.mysql.jdbc.AssertionFailedException;
@@ -71,6 +72,11 @@ public abstract class ReplicationTest extends ServletModule {
 		}
 
 		return Long.toString(time.getTimeInMillis() / 1000);
+	}
+	
+	public Module[] getConfiguration() {
+		
+		return new Module[] {};
 	}
 
 

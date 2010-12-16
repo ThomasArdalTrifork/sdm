@@ -1,17 +1,16 @@
 package com.trifork.sdm.models.takst;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.trifork.sdm.models.AbstractRecord;
+
 
 @Entity
 @Table(name = "ATC")
-public class ATCKoderOgTekst extends TakstRecord {
+public class ATCKoderOgTekst extends AbstractRecord {
 
 	private String aTCNiveau1; // Felt 01-05 ref. t. LMS01, felt 15
 	private String aTCNiveau2;
@@ -117,15 +116,5 @@ public class ATCKoderOgTekst extends TakstRecord {
 	}
 
 
-	public List<Indikation> getIndikationer() {
-
-		TakstDataset<Indikationskode> indikationskoder = takst.getDatasetOfType(Indikationskode.class);
-		List<Indikation> indikationer = new ArrayList<Indikation>();
-		for (Indikationskode ik : indikationskoder.getEntities()) {
-			if (ik.getATC().equals(this.getKey()))
-				indikationer.add(takst.getEntity(Indikation.class, ik.getIndikationskode()));
-		}
-		return indikationer;
-	}
-
+	
 }

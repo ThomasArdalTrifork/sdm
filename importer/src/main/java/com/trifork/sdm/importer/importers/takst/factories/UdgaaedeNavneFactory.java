@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import com.trifork.sdm.models.takst.UdgaaedeNavne;
+import com.trifork.sdm.models.takst.unused.UdgaaedeNavne;
 
 public class UdgaaedeNavneFactory extends AbstractFactory
 {

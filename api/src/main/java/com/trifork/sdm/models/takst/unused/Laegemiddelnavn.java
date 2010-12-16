@@ -1,7 +1,9 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
-public class Laegemiddelnavn extends TakstRecord {
+import com.trifork.sdm.models.AbstractRecord;
 
+public class Laegemiddelnavn extends AbstractRecord {
+	
 	private Long drugid; // Ref. t. LMS01, felt 01
 	private String laegemidletsUforkortedeNavn;
 
@@ -35,5 +37,4 @@ public class Laegemiddelnavn extends TakstRecord {
 
 		return "" + this.drugid;
 	}
-
 }

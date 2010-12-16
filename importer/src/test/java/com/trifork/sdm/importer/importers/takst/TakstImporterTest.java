@@ -100,8 +100,8 @@ public class TakstImporterTest {
 		dk.add(d);
 
 		TakstDataset<Doseringskode> dataset = new TakstDataset<Doseringskode>(takst, dk, Doseringskode.class);
-		takst.addDataset(dataset);
-		assertEquals(1, takst.getEntities().size());
+		takst.addRecordSet(dataset);
+		assertEquals(1, takst.getAllRecords().size());
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		MySQLTemporalDao dao = new MySQLTemporalDao(con);
 		dao.persistCompleteDataset(dataset);

@@ -1,25 +1,31 @@
 package com.trifork.sdm.replication.configuration;
 
-import java.util.Properties;
+import java.security.SecureRandom;
 
 import com.trifork.sdm.replication.configuration.properties.AuthorizationTTL;
 import com.trifork.sdm.replication.configuration.properties.DefaultPageSize;
 import com.trifork.sdm.replication.configuration.properties.Secret;
+import com.trifork.sdm.replication.service.GatewayServlet;
 
 
-public class GatewayModule extends PropertyModule {
+public class GatewayModule extends PropertyServletModule {
 
-	private static final String PROPERTY_PAGE_SIZE = "replication.defaults.pageSize";
-
-	private static final String PROPERTY_SECRET = "replication.security.secret";
-	private static final String PROPERTY_URL_TTL = "replication.security.urlTimeToLive";
+	private static final String PROPERTY_PAGE_SIZE = "replication.pageSize";
+	private static final String PROPERTY_SECRET = "replication.secret";
+	private static final String PROPERTY_URL_TTL = "replication.urlTimeToLive";
 
 
 	@Override
-	protected void configure(Properties properties) {
+	protected void configureServlets() {
+		
+		SecureRandom random = new SecureRandom();
+		byte[] secret = new byte[512];
+		random.nextBytes(secret);
 
-		bindConstant().annotatedWith(Secret.class).to(properties.getProperty(PROPERTY_SECRET));
-		bindConstant().annotatedWith(DefaultPageSize.class).to(Integer.parseInt(properties.getProperty(PROPERTY_PAGE_SIZE)));
-		bindConstant().annotatedWith(AuthorizationTTL.class).to(Integer.parseInt(properties.getProperty(PROPERTY_URL_TTL)));
+		bindConstant().annotatedWith(Secret.class).to(property(PROPERTY_SECRET, new String(secret)));
+		bindConstant().annotatedWith(DefaultPageSize.class).to(Integer.parseInt(property(PROPERTY_PAGE_SIZE)));
+		bindConstant().annotatedWith(AuthorizationTTL.class).to(Integer.parseInt(property(PROPERTY_URL_TTL)));
+	
+		serve("/gateway").with(GatewayServlet.class);
 	}
 }

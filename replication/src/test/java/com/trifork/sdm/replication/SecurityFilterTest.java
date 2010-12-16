@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Test;
 
+import com.google.inject.Module;
 import com.trifork.sdm.replication.configuration.Bucket;
 import com.trifork.sdm.replication.configuration.properties.Secret;
 import com.trifork.sdm.replication.service.SecurityFilter;
@@ -32,6 +33,13 @@ public class SecurityFilterTest extends ReplicationTest {
 	private String secret = "ef_fwefoihe%wu32ew";
 	private String username = "gateway";
 	private final static String bucket = "/resource";
+
+
+	@Override
+	public Module[] getConfiguration() {
+
+		return new Module[] { this };
+	}
 
 
 	@Override
@@ -51,8 +59,7 @@ public class SecurityFilterTest extends ReplicationTest {
 
 
 			@Override
-			protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-					IOException {
+			protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 				resp.setStatus(HTTP_OK);
 			}
@@ -68,16 +75,17 @@ public class SecurityFilterTest extends ReplicationTest {
 		final String correctURL = new URLBuilder(bucketURL, username, secret, getTomorrow()).build();
 		assertStatus(correctURL, HTTP_OK);
 	}
-	
+
+
 	@Test
 	public void should_have_a_valid_expires_date(URL bucketURL) {
-		
+
 		Date expires = getTomorrow();
 		String tomorrow = Long.toString(expires.getTime());
 		String invalidDateFormat = "78S66(2i8";
-		
+
 		String correctURL = new URLBuilder(bucketURL, username, secret, expires).build();
-		
+
 		assertURLNotAuthorized(correctURL, tomorrow, invalidDateFormat, HTTP_BAD_REQUEST);
 	}
 
@@ -91,25 +99,23 @@ public class SecurityFilterTest extends ReplicationTest {
 
 
 	@Test
-	public void request_with_a_signature_that_does_not_match_should_be_rejected(URL bucketURL)
-			throws IOException {
+	public void request_with_a_signature_that_does_not_match_should_be_rejected(URL bucketURL) throws IOException {
 
 		Date expires = getTomorrow();
-		
+
 		String yesterday = Long.toString(getYesterday().getTime());
 		String twoDaysAgo = Long.toString(getTwoDaysAgo().getTime());
 		String tomorrow = Long.toString(expires.getTime());
 		String inTwoDays = Long.toString(getInTwoDays().getTime());
-		
-		String correctURL = new URLBuilder(bucketURL, username, secret, expires)
-			.setQueryParameter("since", yesterday).build();
+
+		String correctURL = new URLBuilder(bucketURL, username, secret, expires).setQueryParameter("since", yesterday).build();
 
 		assertURLNotAuthorized(correctURL, bucket, "/otherResource", HTTP_FORBIDDEN);
-		
+
 		assertURLNotAuthorized(correctURL, username, "otherUser", HTTP_FORBIDDEN);
 
 		assertURLNotAuthorized(correctURL, yesterday, twoDaysAgo, HTTP_FORBIDDEN);
-		
+
 		assertURLNotAuthorized(correctURL, tomorrow, inTwoDays, HTTP_FORBIDDEN);
 	}
 
@@ -143,7 +149,8 @@ public class SecurityFilterTest extends ReplicationTest {
 		calendar.add(Calendar.DATE, 2);
 		return calendar.getTime();
 	}
-	
+
+
 	protected Date getTomorrow() {
 
 		Calendar calendar = Calendar.getInstance();
@@ -151,14 +158,17 @@ public class SecurityFilterTest extends ReplicationTest {
 		return calendar.getTime();
 	}
 
+
 	protected Date getYesterday() {
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DATE, -1);
 		return calendar.getTime();
 	}
-	
+
+
 	protected Date getTwoDaysAgo() {
+
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DATE, -2);
 		return calendar.getTime();

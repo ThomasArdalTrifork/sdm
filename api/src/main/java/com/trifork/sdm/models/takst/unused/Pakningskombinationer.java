@@ -1,7 +1,9 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
-public class Pakningskombinationer extends TakstRecord {
+import com.trifork.sdm.models.AbstractRecord;
 
+public class Pakningskombinationer extends AbstractRecord {
+	
 	private Long varenummerOrdineret; // Vnr. på pakningen anført på recepten
 	private Long varenummerSubstitueret; // Vnr. på en pakning der evt. kan
 											// substitueres til

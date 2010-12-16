@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import com.trifork.sdm.models.takst.TilskudsprisgrupperPakningsniveau;
+import com.trifork.sdm.models.takst.unused.TilskudsprisgrupperPakningsniveau;
 
 public class TilskudsprisgrupperPakningsniveauFactory extends AbstractFactory
 {

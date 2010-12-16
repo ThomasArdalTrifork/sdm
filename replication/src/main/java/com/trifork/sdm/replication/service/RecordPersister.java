@@ -8,5 +8,5 @@ import javax.xml.stream.XMLStreamException;
 
 public interface RecordPersister {
 
-	boolean persist(InputStream inputStream) throws XMLStreamException;
+	String persist(InputStream inputStream) throws XMLStreamException;
 }

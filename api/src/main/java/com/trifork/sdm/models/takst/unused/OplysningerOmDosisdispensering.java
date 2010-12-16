@@ -1,6 +1,8 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
-public class OplysningerOmDosisdispensering extends TakstRecord {
+import com.trifork.sdm.models.AbstractRecord;
+
+public class OplysningerOmDosisdispensering extends AbstractRecord {
 
 	private Long drugid; // Ref. t. LMS01, felt 01
 	private Long varenummer; // Ref. t. LMS02, felt 02

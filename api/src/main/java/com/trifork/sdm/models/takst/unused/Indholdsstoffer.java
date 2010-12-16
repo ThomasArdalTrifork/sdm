@@ -1,10 +1,12 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
 import javax.persistence.Column;
 
+import com.trifork.sdm.models.AbstractRecord;
 
-public class Indholdsstoffer extends TakstRecord {
 
+public class Indholdsstoffer extends AbstractRecord {
+	
 	private Long drugID; // Ref. t. LMS01
 	private Long varenummer; // Ref. t. LMS02
 

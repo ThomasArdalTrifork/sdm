@@ -1,7 +1,9 @@
-package com.trifork.sdm.models.takst;
+package com.trifork.sdm.models.takst.unused;
 
-public class Enhedspriser extends TakstRecord {
+import com.trifork.sdm.models.AbstractRecord;
 
+public class Enhedspriser extends AbstractRecord {
+	
 	private Long drugID; // Ref. t. LMS01
 	private Long varenummer; // Ref. t. LMS02
 	private Long prisPrEnhed; // Pris = Ekspeditionens samlede pris (ESP)

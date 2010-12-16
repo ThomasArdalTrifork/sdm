@@ -17,9 +17,7 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
-import com.trifork.sdm.replication.configuration.Bucket;
-import com.trifork.sdm.replication.configuration.properties.Secret;
-import com.trifork.sdm.replication.service.GatewayServlet;
+import com.trifork.sdm.replication.configuration.GatewayModule;
 import com.trifork.sdm.replication.service.SignatureBuilder;
 import com.trifork.sdm.replication.service.SignatureBuilder.HTTPMethod;
 
@@ -42,13 +40,10 @@ public class GatewayTest extends ReplicationTest {
 	@Override
 	public void initialize() {
 
-		bindConstant().annotatedWith(Bucket.class).to("/gateway");
-		serve("/gateway").with(GatewayServlet.class);
-
-		bindConstant().annotatedWith(Secret.class).to(secret);
+		install(new GatewayModule());
 	}
-	
-	
+
+
 	@Test
 	public void should_require_a_bucket_header(HttpURLConnection connection) throws IOException {
 
@@ -88,8 +83,7 @@ public class GatewayTest extends ReplicationTest {
 
 
 	@Test
-	public void should_return_a_signature_that_matches_a_request_with_no_parameters(
-			HttpURLConnection connection) throws IOException, IllegalStateException, SignatureException {
+	public void should_return_a_signature_that_matches_a_request_with_no_parameters(HttpURLConnection connection) throws IOException, IllegalStateException, SignatureException {
 
 		connection.setRequestProperty("X-Sdm-Bucket", bucket);
 		connection.connect();
@@ -99,8 +93,7 @@ public class GatewayTest extends ReplicationTest {
 		String parameter = getURLSegment(response, EXPIRES_PARAMETER);
 		long expires = Long.parseLong(parameter);
 
-		SignatureBuilder signatureBuilder = new SignatureBuilder(HTTPMethod.GET, GATEWAY_USERNAME, secret,
-				bucket, expires);
+		SignatureBuilder signatureBuilder = new SignatureBuilder(HTTPMethod.GET, GATEWAY_USERNAME, secret, bucket, expires);
 		String expectedSignature = signatureBuilder.build();
 
 		String signature = getURLSegment(response, SIGNATURE_PARAMETER);
@@ -110,8 +103,7 @@ public class GatewayTest extends ReplicationTest {
 
 
 	@Test
-	public void should_return_a_username(HttpURLConnection connection) throws IOException,
-			IllegalStateException, SignatureException {
+	public void should_return_a_username(HttpURLConnection connection) throws IOException, IllegalStateException, SignatureException {
 
 		connection.setRequestProperty("X-Sdm-Bucket", bucket);
 		connection.connect();
@@ -133,8 +125,7 @@ public class GatewayTest extends ReplicationTest {
 
 
 	@Test
-	public void should_return_a_signature_and_query_that_matches_a_request_with_parameters(
-			HttpURLConnection connection) throws IOException, IllegalStateException, SignatureException {
+	public void should_return_a_signature_and_query_that_matches_a_request_with_parameters(HttpURLConnection connection) throws IOException, IllegalStateException, SignatureException {
 
 		connection.setRequestProperty("X-Sdm-Bucket", bucket);
 		connection.setRequestProperty("X-Sdm-Since", Long.toString(PAST_DATE.getTime()));
@@ -145,8 +136,7 @@ public class GatewayTest extends ReplicationTest {
 		String expiresParameter = getURLSegment(response, EXPIRES_PARAMETER);
 		long expires = Long.parseLong(expiresParameter);
 
-		SignatureBuilder signatureBuilder = new SignatureBuilder(HTTPMethod.GET, GATEWAY_USERNAME, secret,
-				bucket, expires).setSince(PAST_DATE);
+		SignatureBuilder signatureBuilder = new SignatureBuilder(HTTPMethod.GET, GATEWAY_USERNAME, secret, bucket, expires).setSince(PAST_DATE);
 
 		Date sinceParameter = new Date(Long.parseLong(getURLSegment(response, SINCE_PARAMETER)));
 		assertThat(sinceParameter, is(equalTo(PAST_DATE)));
