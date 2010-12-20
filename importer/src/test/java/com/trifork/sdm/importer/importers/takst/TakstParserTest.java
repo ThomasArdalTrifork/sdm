@@ -22,12 +22,12 @@ import org.junit.Test;
 
 import com.trifork.sdm.importer.TestHelper;
 import com.trifork.sdm.importer.importers.FileParseException;
-import com.trifork.sdm.importer.importers.takst.factories.LaegemiddelFactory;
+import com.trifork.sdm.importer.importers.takst.parsers.LaegemiddelParser;
 import com.trifork.sdm.models.takst.ATCKoderOgTekst;
 import com.trifork.sdm.models.takst.Laegemiddel;
 import com.trifork.sdm.models.takst.Pakning;
-import com.trifork.sdm.models.takst.Takst;
-import com.trifork.sdm.models.takst.TakstDataset;
+import com.trifork.sdm.models.takst.TakstRelease;
+import com.trifork.sdm.models.takst.TakstRelease;
 
 
 public class TakstParserTest {
@@ -42,7 +42,7 @@ public class TakstParserTest {
 		String line = "28100009555SPLMKEMADR00100065Kemadrin                      tabletter           TAB           5 mg                0000005000MG 059300059300 N04AA04OR               D                ";
 
 		// Act
-		Laegemiddel drug = LaegemiddelFactory.parse(line);
+		Laegemiddel drug = LaegemiddelParser.parse(line);
 
 		// Assert
 		List<Laegemiddel> drugs = new ArrayList<Laegemiddel>();
@@ -50,7 +50,7 @@ public class TakstParserTest {
 		
 		Date now = new Date();
 		
-		Takst takst = new Takst(now, now);
+		TakstRelease takst = new TakstRelease(now, now);
 		TakstDataset<Laegemiddel> ds = new TakstDataset<Laegemiddel>(takst, drugs,
 				Laegemiddel.class);
 		takst.addRecordSet(ds);
@@ -86,14 +86,14 @@ public class TakstParserTest {
 		String line = "28100110949SPLMXYLOCA00200985Xylocain                      inj.væske, opløsningINJVSKO       10 mg/ml            0000010000MGM056100056100 N01BB02EDIRIVPE                          ";
 
 		// Act
-		Laegemiddel drug = LaegemiddelFactory.parse(line);
+		Laegemiddel drug = LaegemiddelParser.parse(line);
 
 		// Assert
 		List<Laegemiddel> drugs = new ArrayList<Laegemiddel>();
 		drugs.add(drug);
 		
 		Date now = new Date();
-		Takst takst = new Takst(now, now);
+		TakstRelease takst = new TakstRelease(now, now);
 		
 		TakstDataset<Laegemiddel> ds = new TakstDataset<Laegemiddel>(takst, drugs,
 				Laegemiddel.class);
@@ -246,7 +246,7 @@ public class TakstParserTest {
 
 		// Add the arrays to the takst as datasets
 		Date date = new Date();
-		Takst takst = new Takst(date, date);
+		TakstRelease takst = new TakstRelease(date, date);
 		TakstDataset<Laegemiddel> lmr = new TakstDataset<Laegemiddel>(takst, laegemidler,
 				Laegemiddel.class);
 		TakstDataset<Pakning> pkr = new TakstDataset<Pakning>(takst, pakninger, Pakning.class);

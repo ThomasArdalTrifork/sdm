@@ -57,50 +57,59 @@ public class GatewayServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 
-		// FIXME: Pull the request's data from the SOAP envelope, and
-		// authenticate.
+		// <<---
+		// THOMAS: This is where you should parse the request's SOAP envelope.
+		// See the documentation document to see which params should be read.
+		// --->>
 
-		final String resource = request.getParameter("resource");
+		final String resource = request.getParameter("resource"); // Remove (SOAP)
 
 		if (resource == null || resource.isEmpty()) {
 
 			response.setStatus(HttpURLConnection.HTTP_BAD_REQUEST);
-			response.getOutputStream().println("A request must contain a 'resource' parameter.");
+			response.getOutputStream().println("A request must contain a 'resource' parameter."); // Change (SOAP)
 		}
 		else {
 
 			// Authorize the user for a time window.
+			
 			Calendar expires = Calendar.getInstance();
 			expires.add(Calendar.SECOND, timeToLive);
 
-			// HACK: Don't hard-code the host and port.
-			URL bucketURL = new URL(baseURL, "/" + resource);
+			URL resourceURL = new URL(baseURL, "/" + resource);
 
-			URLBuilder builder = new URLBuilder(bucketURL, username, key, expires.getTime());
+			// The URL builder helps us construct the final URL
+			// that is returned to the user.
+			// The builder will automatically sign the URL so it is secure,
+			// and we don't have to keep sessions.
+			
+			URLBuilder builder = new URLBuilder(resourceURL, username, key, expires.getTime());
 
 			// Query parameters
 
-			// NOTE: At the moment we only support one query parameter,
-			// namely since. This should be generalized in the future.
+			// The 'start' is not required.
 
-			// Since is not required. If it isn't there we make an
-			// initialization.
-
-			String token = request.getParameter("token");
+			String token = request.getParameter("start"); // Remove (SOAP)
 			
 			if (token != null) {
 				
-				builder.setQueryParameter("token", token);
+				builder.setQueryParameter("start", token);
 			}
 
 			// Create the response.
 			response.setContentType("application/soap+xml; charset=UTF-8");
 			response.setStatus(200);
 
-			String resourceURL = builder.build();
+			// Build the URL.
+			String returnedURL = builder.build();
 
 			// TODO: Should be written in a DGWS envelope.
-			response.getOutputStream().println(resourceURL);
+			
+			// <<---
+			// THOMAS: This is where you should output the SOAP envalope.
+			// --->>
+			
+			response.getOutputStream().println(returnedURL);
 		}
 
 		// TODO: Should we even do this?

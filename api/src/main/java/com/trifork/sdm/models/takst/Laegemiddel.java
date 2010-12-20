@@ -2,8 +2,8 @@ package com.trifork.sdm.models.takst;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,15 +12,13 @@ import javax.persistence.Id;
 import org.apache.log4j.Logger;
 
 import com.trifork.sdm.models.AbstractRecord;
-import com.trifork.sdm.models.takst.unused.Firma;
-import com.trifork.sdm.models.takst.unused.UdgaaedeNavne;
-import com.trifork.sdm.persistence.Dataset;
 
 
 @Entity
 public class Laegemiddel extends AbstractRecord {
 
 	private Long drugid;
+
 	private String varetype; // Udfyldt med SP (Specialiteter)
 	private String varedeltype; // Udfyldt med LM (lægemiddel, reg.)
 	private String alfabetSekvensplads;
@@ -33,22 +31,38 @@ public class Laegemiddel extends AbstractRecord {
 	private Long styrkeNumerisk;
 	private String styrkeEnhed; // Ref. t. LMS15, enhedstype 3
 	private Long mTIndehaver; // Ref. t. LMS09
-	private Long repraesentantDistributoer; // Ref. t. LMS09
-	private String aTC; // Ref. t. LMS12
-	private String administrationsvej; // 4 x 2 kar. (Ref. t. LMS11)
-	private String trafikadvarsel; // 2 muligh.: J eller blank
-	private String substitution; // 2 muligh.: G eller blank
-	private String laegemidletsSubstitutionsgruppe; // Substitutionsgruppenr.
-													// på
-	// Drugid-niveau
-	private String egnetTilDosisdispensering; // 2 muligh.: D eller blank
-	private String datoForAfregistrAfLaegemiddel; // Format: ååååmmdd
-	private String karantaenedato; // Format: ååååmmdd
+	private Long repraesentantDistributoer;
+
+	// Ref. t. LMS12
+	private String aTC;
+
+	// 4 x 2 kar. (Ref. t. LMS11)
+	// private String administrationsvej;
+
+	// 2 muligh.: J eller blank
+	private String trafikadvarsel;
+
+	// 2 muligh.: G eller blank
+	private String substitution;
+
+	// Substitutionsgruppenr. på Drugid-niveau
+	private String laegemidletsSubstitutionsgruppe;
+
+	// 2 choices: D eller blank
+	private String egnetTilDosisdispensering;
+
+	// Format: YYYYMMDD
+	private String datoForAfregistrAfLaegemiddel;
+
+	// Format: YYYYMMDD
+	private String karantaenedato;
 
 	private final Logger logger = Logger.getLogger(getClass());
-	
+
 	private String formBetegnelse;
 	private String atcTekst;
+
+	private Set<String> administrationCodes = new HashSet<String>();
 
 
 	@Id
@@ -229,9 +243,15 @@ public class Laegemiddel extends AbstractRecord {
 	}
 
 
-	public void setAdministrationsvej(String administrationsvej) {
+	public void addAdministrationCode(String code) {
 
-		this.administrationsvej = administrationsvej;
+		administrationCodes.add(code);
+	}
+
+
+	public Set<String> getAdministrationCodes() {
+
+		return administrationCodes;
 	}
 
 
@@ -330,33 +350,12 @@ public class Laegemiddel extends AbstractRecord {
 		this.karantaenedato = karantaenedato;
 	}
 
-/*
-	public List<Administrationsvej> getAdministrationsveje() {
-
-		List<Administrationsvej> adminveje = new ArrayList<Administrationsvej>();
-
-		for (int idx = 0; idx < administrationsvej.length(); idx += 2) {
-
-			String avKode = administrationsvej.substring(idx, idx + 2);
-
-			Administrationsvej adminVej = takst.getRecord(Administrationsvej.class, avKode);
-
-			if (adminVej == null) {
-				logger.warn("Administaritonvej not found for kode: '" + avKode + "'");
-			}
-			else {
-				adminveje.add(adminVej);
-			}
-		}
-		return adminveje;
-	}
-*/
 
 	public void setForm(String form) {
-		
+
 		this.formBetegnelse = form;
 	}
-	
+
 
 	@Column(name = "FormTekst")
 	public String getForm() {
@@ -370,10 +369,10 @@ public class Laegemiddel extends AbstractRecord {
 
 		return aTC;
 	}
-	
-	
+
+
 	public void setATCTekst(String atcTekst) {
-		
+
 		this.atcTekst = atcTekst;
 	}
 
@@ -382,12 +381,6 @@ public class Laegemiddel extends AbstractRecord {
 	public String getATCTekst() {
 
 		return atcTekst;
-	}
-
-
-	public String getAdministrationsvejKode() {
-
-		return administrationsvej;
 	}
 
 
@@ -421,5 +414,4 @@ public class Laegemiddel extends AbstractRecord {
 
 		return !aTC.startsWith("Q");
 	}
-
 }

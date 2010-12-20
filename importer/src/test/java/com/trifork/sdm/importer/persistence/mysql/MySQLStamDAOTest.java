@@ -21,15 +21,15 @@ import org.junit.Test;
 import com.trifork.sdm.importer.persistence.mysql.MySQLTemporalTable.RecordVersion;
 import com.trifork.sdm.models.Record;
 import com.trifork.sdm.models.takst.Laegemiddel;
-import com.trifork.sdm.models.takst.Takst;
-import com.trifork.sdm.models.takst.TakstDataset;
+import com.trifork.sdm.models.takst.TakstRelease;
+import com.trifork.sdm.models.takst.TakstRelease;
 import com.trifork.sdm.models.takst.unused.DivEnheder;
 import com.trifork.sdm.util.DateUtils;
 
 
 public class MySQLStamDAOTest {
 
-	private Takst takst;
+	private TakstRelease takst;
 	private Laegemiddel laegemiddel;
 	private MySQLTemporalDao dao;
 
@@ -39,7 +39,7 @@ public class MySQLStamDAOTest {
 	@Before
 	public void setUp() throws Exception {
 
-		takst = new Takst(DateUtils.toDate(2009, 7, 1), DateUtils.toDate(2009, 7, 14));
+		takst = new TakstRelease(DateUtils.toDate(2009, 7, 1), DateUtils.toDate(2009, 7, 14));
 
 		// Add a dataset to the takst with one member
 
@@ -156,7 +156,7 @@ public class MySQLStamDAOTest {
 	public void testDeltaPutRemoved() throws Exception {
 
 		// An empty takst
-		takst = new Takst(DateUtils.toDate(2009, 7, 1), DateUtils.toDate(2009, 7, 14));
+		takst = new TakstRelease(DateUtils.toDate(2009, 7, 1), DateUtils.toDate(2009, 7, 14));
 		// ..with an empty dataset
 		TakstDataset<Laegemiddel> lmr = new TakstDataset<Laegemiddel>(takst, new ArrayList<Laegemiddel>(), Laegemiddel.class);
 		takst.addRecordSet(lmr);

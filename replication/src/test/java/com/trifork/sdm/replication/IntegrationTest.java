@@ -8,6 +8,8 @@ import javax.xml.stream.XMLStreamException;
 
 import org.junit.Test;
 
+import com.trifork.sdm.models.sor.Apotek;
+import com.trifork.sdm.models.sor.Praksis;
 import com.trifork.sdm.replication.client.Client;
 import com.trifork.sdm.replication.client.JdbcXMLRecordPersister;
 import com.trifork.sdm.replication.configuration.ClientModule;
@@ -24,7 +26,7 @@ public class IntegrationTest extends ReplicationTest {
 		install(new DatabaseModule());
 		
 		install(new GatewayModule());
-		install(new ResourceModule().serveAllEntities());
+		install(new ResourceModule().add(Apotek.class).add(Praksis.class));
 	}
 
 
@@ -47,13 +49,10 @@ public class IntegrationTest extends ReplicationTest {
 			String url = null;
 			
 			do {
-				
 				InputStream inputStream = client.replicate(resource, offset);
 				url = persister.persist(inputStream);
 			}
 			while (url != null);
 		}
-
-		// TODO: Assert that the contents of the databases are the same.
 	}
 }

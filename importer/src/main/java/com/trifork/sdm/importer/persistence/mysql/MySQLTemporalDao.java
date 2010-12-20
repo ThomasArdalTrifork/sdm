@@ -1,8 +1,10 @@
 package com.trifork.sdm.importer.persistence.mysql;
 
 import java.sql.Connection;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 
@@ -12,6 +14,7 @@ import com.trifork.sdm.importer.persistence.FilePersistException;
 import com.trifork.sdm.importer.persistence.RecordDao;
 import com.trifork.sdm.importer.persistence.mysql.MySQLTemporalTable.RecordVersion;
 import com.trifork.sdm.models.Record;
+import com.trifork.sdm.models.takst.ATCKoderOgTekst;
 import com.trifork.sdm.persistence.CompleteDataset;
 import com.trifork.sdm.persistence.Dataset;
 
@@ -33,7 +36,7 @@ public class MySQLTemporalDao implements RecordDao {
 		logger.debug("Starting to put records from dataset group.");
 
 		for (CompleteDataset<? extends Record> dataset : datasets) {
-			
+
 			persistCompleteDataset(dataset);
 		}
 
@@ -42,7 +45,7 @@ public class MySQLTemporalDao implements RecordDao {
 
 
 	@Override
-	public void persistCompleteDataset(CompleteDataset<?> dataset) throws FilePersistException {
+	public void persistCompleteDataset(CompleteDataset<? extends Record> dataset) throws FilePersistException {
 
 		if (!dataset.getType().isAnnotationPresent(Entity.class)) return;
 
@@ -78,7 +81,7 @@ public class MySQLTemporalDao implements RecordDao {
 			Date validFrom = sde.getValidFrom();
 
 			boolean exists = table.fetchEntityVersions(sde.getKey(), validFrom, sde.getValidTo());
-			
+
 			if (!exists) {
 				// Entity was not found, so create it
 				table.insertRow(sde, now);
@@ -269,5 +272,17 @@ public class MySQLTemporalDao implements RecordDao {
 	public Connection getConnection() {
 
 		return this.connection;
+	}
+
+
+	public <T extends Record> void persist(T record) {
+
+		
+	}
+
+
+	public <T extends Record> void persist(Collection<T> records) {
+
+		CompleteDataset<T> s;
 	}
 }

@@ -22,8 +22,8 @@ import com.trifork.sdm.importer.TestHelper;
 import com.trifork.sdm.importer.persistence.mysql.MySQLConnectionManager;
 import com.trifork.sdm.importer.persistence.mysql.MySQLTemporalDao;
 import com.trifork.sdm.models.takst.Doseringskode;
-import com.trifork.sdm.models.takst.Takst;
-import com.trifork.sdm.models.takst.TakstDataset;
+import com.trifork.sdm.models.takst.TakstRelease;
+import com.trifork.sdm.models.takst.TakstRelease;
 import com.trifork.sdm.util.DateUtils;
 
 
@@ -86,12 +86,15 @@ public class TakstImporterTest {
 
 
 	@Test
-	public void testLaegemiddelDoseringRef() throws Exception {
+	public void test_lægemiddel_dosering_ref() throws Exception {
 
 		Date from = DateUtils.toDate(2008, 01, 01);
 		Date to = DateUtils.toDate(2009, 01, 01);
 
-		Takst takst = new Takst(from, to);
+		int week = 1;
+		int year = 2008;
+		
+		TakstRelease takst = new TakstRelease(from, to, year, week);
 
 		Doseringskode d = new Doseringskode();
 		d.setDoseringskode(1l);

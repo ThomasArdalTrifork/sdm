@@ -12,7 +12,8 @@ import com.trifork.sdm.models.AbstractRecord;
 @Table(name = "ATC")
 public class ATCKoderOgTekst extends AbstractRecord {
 
-	private String aTCNiveau1; // Felt 01-05 ref. t. LMS01, felt 15
+	// Felt 01-05 ref. t. LMS01, felt 15
+	private String aTCNiveau1; 
 	private String aTCNiveau2;
 	private String aTCNiveau3;
 	private String aTCNiveau4;

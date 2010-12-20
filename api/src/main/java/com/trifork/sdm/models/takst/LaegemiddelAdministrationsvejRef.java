@@ -28,7 +28,7 @@ public class LaegemiddelAdministrationsvejRef extends AbstractRecord {
 		return drugId + "-" + AdministrationsvejKode;
 	}
 
-
+	
 	@Column
 	public long getDrugId() {
 

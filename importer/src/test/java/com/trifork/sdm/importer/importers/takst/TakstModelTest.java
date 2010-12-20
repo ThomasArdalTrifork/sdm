@@ -8,8 +8,8 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import com.trifork.sdm.models.takst.ATCKoderOgTekst;
-import com.trifork.sdm.models.takst.Takst;
-import com.trifork.sdm.models.takst.TakstDataset;
+import com.trifork.sdm.models.takst.TakstRelease;
+import com.trifork.sdm.models.takst.TakstRelease;
 import com.trifork.sdm.util.DateUtils;
 
 
@@ -21,7 +21,7 @@ public class TakstModelTest extends TestCase {
 		Date from = DateUtils.toDate(2000, 1, 1);
 		Date to = DateUtils.toDate(2000, 15, 1);
 		
-		Takst takst = new Takst(from, to);
+		TakstRelease takst = new TakstRelease(from, to);
 		
 		TakstDataset<ATCKoderOgTekst> atckoder = new TakstDataset<ATCKoderOgTekst>(takst,
 				new ArrayList<ATCKoderOgTekst>(), ATCKoderOgTekst.class);

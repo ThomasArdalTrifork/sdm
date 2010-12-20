@@ -19,7 +19,7 @@ import com.trifork.sdm.importer.importers.takst.TakstParser;
 import com.trifork.sdm.importer.persistence.RecordDao;
 import com.trifork.sdm.importer.persistence.mysql.MySQLConnectionManager;
 import com.trifork.sdm.importer.persistence.mysql.MySQLTemporalDao;
-import com.trifork.sdm.models.takst.Takst;
+import com.trifork.sdm.models.takst.TakstRelease;
 
 
 /**
@@ -63,7 +63,7 @@ public class DataLayerIntegrationTest {
 	public void ImportTest() throws Exception {
 
 		// Arrange
-		Takst takst = parseTakst(TAKST_TESTDATA_DIR + "/initial");
+		TakstRelease takst = parseTakst(TAKST_TESTDATA_DIR + "/initial");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
@@ -89,8 +89,8 @@ public class DataLayerIntegrationTest {
 	public void UpdateTest() throws Exception {
 
 		// Arrange
-		Takst takstinit = parseTakst(TAKST_TESTDATA_DIR + "/initial");
-		Takst takstupd = parseTakst(TAKST_TESTDATA_DIR + "/update");
+		TakstRelease takstinit = parseTakst(TAKST_TESTDATA_DIR + "/initial");
+		TakstRelease takstupd = parseTakst(TAKST_TESTDATA_DIR + "/update");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
@@ -124,8 +124,8 @@ public class DataLayerIntegrationTest {
 	public void DeleteTest() throws Exception {
 
 		// Arrange
-		Takst takstinit = parseTakst(TAKST_TESTDATA_DIR + "/initial");
-		Takst deleteupd = parseTakst(TAKST_TESTDATA_DIR + "/delete");
+		TakstRelease takstinit = parseTakst(TAKST_TESTDATA_DIR + "/initial");
+		TakstRelease deleteupd = parseTakst(TAKST_TESTDATA_DIR + "/delete");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
@@ -152,7 +152,7 @@ public class DataLayerIntegrationTest {
 	public void RealTest() throws Exception {
 
 		// Arrange
-		Takst takstinit = parseTakst(TAKST_TESTDATA_DIR + "/realtakst");
+		TakstRelease takstinit = parseTakst(TAKST_TESTDATA_DIR + "/realtakst");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
@@ -188,10 +188,10 @@ public class DataLayerIntegrationTest {
 	}
 
 
-	private Takst parseTakst(String dir) throws FileImporterException {
+	private TakstRelease parseTakst(String dir) throws FileImporterException {
 
 		TakstParser tp = new TakstParser();
-		Takst takst = tp.parseTakst(Arrays.asList(TestHelper.getFile(dir).listFiles()));
+		TakstRelease takst = tp.parseTakst(Arrays.asList(TestHelper.getFile(dir).listFiles()));
 
 		return takst;
 	}

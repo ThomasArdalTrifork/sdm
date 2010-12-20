@@ -3,6 +3,7 @@ package com.trifork.sdm.replication.configuration;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ import com.trifork.sdm.replication.service.SecurityFilter;
 
 public class ResourceModule extends ServletModule implements Iterable<Class<? extends Record>>{
 
-	private List<Class<? extends Record>> resources = new ArrayList<Class<? extends Record>>();
+	private Set<Class<? extends Record>> resources = new HashSet<Class<? extends Record>>();
 
 
 	@Override
@@ -73,7 +74,7 @@ public class ResourceModule extends ServletModule implements Iterable<Class<? ex
 
 	public ResourceModule add(Class<? extends Record> entity) {
 
-		if (!resources.contains(entity)) resources.add(entity);
+		resources.add(entity);
 
 		return this;
 	}
